@@ -83,17 +83,6 @@ namespace GraphicsLabor.Scripts.Editor.CustomInspector
                 LaborerEditorGUI.Button(serializedObject.targetObject, method);
             }
         }
-
-        private static GUIStyle GetHeaderGUIStyle()
-        {
-            GUIStyle style = new(EditorStyles.centeredGreyMiniLabel)
-            {
-                fontStyle = FontStyle.Bold,
-                alignment = TextAnchor.UpperCenter
-            };
-
-            return style;
-        }
     }
 }
 

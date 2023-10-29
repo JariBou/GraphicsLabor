@@ -92,11 +92,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             return GetAllMethods(target, m => m.Name.Equals(methodName, StringComparison.Ordinal)).FirstOrDefault();
         }
 
-        public static Type GetListElementType(Type listType)
-        {
-            return listType.IsGenericType ? listType.GetGenericArguments()[0] : listType.GetElementType();
-        }
-
         /// <summary>
         ///		Get type and all base types of target, sorted as following:
         ///		<para />[target's type, base type, base's base type, ...]
