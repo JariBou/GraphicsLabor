@@ -1,6 +1,6 @@
-namespace GraphicsLabor.Scripts.Core
+namespace GraphicsLabor.Scripts.Core.Laborers.Utils
 {
-    public enum DrawMode
+    public enum LaborerDrawMode
     {
         Wired = 0,
         Filled = 1,

@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
 using GraphicsLabor.Scripts.Core;
 using GraphicsLabor.Scripts.Core.Laborers;
+using GraphicsLabor.Scripts.Core.Laborers.Utils;
 using GraphicsLabor.Scripts.Core.Shapes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GraphicsLabor.Tests
 {
@@ -13,25 +15,25 @@ namespace GraphicsLabor.Tests
         public bool _drawQuad;
         public Quad _quad;
         public Color _quadBorderColor;
-        public DrawMode _quadDrawMode;
+        [FormerlySerializedAs("_quadDrawMode")] public LaborerDrawMode _quadLaborerDrawMode;
         
         [Space, Header("Cube")] 
         public bool _drawCube;
         public Cube _cube;
         public Color _cubeBorderColor;
-        public DrawMode _cubeDrawMode;
+        [FormerlySerializedAs("_cubeDrawMode")] public LaborerDrawMode _cubeLaborerDrawMode;
         
         [Space, Header("Circle")]
         public bool _drawCircle;
         public Circle _circle;
         public Color _circleBorderColor;
-        public DrawMode _circleDrawMode;
+        [FormerlySerializedAs("_circleDrawMode")] public LaborerDrawMode _circleLaborerDrawMode;
 
         [Space, Header("Triangle")]
         public bool _drawTriangle;
         public Triangle _triangle;
         public Color _triangleBorderColor;
-        public DrawMode _triangleDrawMode;
+        [FormerlySerializedAs("_triangleDrawMode")] public LaborerDrawMode _triangleLaborerDrawMode;
 
         [Space, Header("Polygon")]
         public bool _drawPolygon;
@@ -39,7 +41,7 @@ namespace GraphicsLabor.Tests
         public List<Transform> _polygonPoints;
         public Polygon _polygon;
         public Color _polygonBorderColor;
-        public DrawMode _polygonDrawMode;
+        [FormerlySerializedAs("_polygonDrawMode")] public LaborerDrawMode _polygonLaborerDrawMode;
         
         void OnEnable()
         {
@@ -55,24 +57,24 @@ namespace GraphicsLabor.Tests
         {
             if (_drawQuad)
             {
-                Laborer2D.DrawQuad(_quad, _quadDrawMode, _quadBorderColor);
+                Laborer2D.DrawQuad(_quad, _quadLaborerDrawMode, _quadBorderColor);
             }
             if (_drawCircle)
             {
-                Laborer2D.DrawCircle(_circle, _circleDrawMode, _circleBorderColor);
+                Laborer2D.DrawCircle(_circle, _circleLaborerDrawMode, _circleBorderColor);
             }
             if (_drawTriangle)
             {
-                Laborer2D.DrawTriangle(_triangle, _triangleDrawMode, _triangleBorderColor);
+                Laborer2D.DrawTriangle(_triangle, _triangleLaborerDrawMode, _triangleBorderColor);
             }
             if (_drawPolygon)
             {
                 GatherPolygonPoints();
-                Laborer2D.DrawPolygon(_polygon, _polygonDrawMode, _polygonBorderColor);
+                Laborer2D.DrawPolygon(_polygon, _polygonLaborerDrawMode, _polygonBorderColor);
             }
             if (_drawCube)
             {
-                Laborer3D.DrawCube(_cube, _cubeDrawMode, _cubeBorderColor); 
+                Laborer3D.DrawCube(_cube, _cubeLaborerDrawMode, _cubeBorderColor); 
             }
         }
         

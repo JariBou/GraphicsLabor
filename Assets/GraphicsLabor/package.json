@@ -1,8 +1,8 @@
 {
   "name": "com.jaribou.graphicslabor",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "displayName": "GraphicsLabor",
-  "description": "Unity's GL made simple, uses unity's URP",
+  "description": "Unity's GL made simple and More Attributes to help developing",
   "unity": "2022.3",
   "unityRelease": "12f1",
   "author": {
