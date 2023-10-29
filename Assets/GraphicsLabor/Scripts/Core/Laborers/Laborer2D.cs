@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GraphicsLabor.Scripts.Core.Laborers.Utils;
 using GraphicsLabor.Scripts.Core.Shapes;
 using UnityEngine;
 
@@ -9,25 +10,25 @@ namespace GraphicsLabor.Scripts.Core.Laborers
     {
         #region Quads
         
-        public static void DrawQuad(Quad quad, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawQuad(Quad quad, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
             CreateLineMaterial();
             
             int glDrawMode;
-            switch (drawMode)
+            switch (laborerDrawMode)
             {
-                case DrawMode.Wired:
+                case LaborerDrawMode.Wired:
                     glDrawMode = GL.LINE_STRIP;
                     break;
-                case DrawMode.Filled:
+                case LaborerDrawMode.Filled:
                     glDrawMode = GL.QUADS;
                     break;
-                case DrawMode.FilledWithBorders:
+                case LaborerDrawMode.FilledWithBorders:
                     glDrawMode = GL.QUADS;
                     if (borderColor == default) borderColor = BaseBorderColor;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(drawMode), drawMode, null);
+                    throw new ArgumentOutOfRangeException(nameof(laborerDrawMode), laborerDrawMode, null);
             }
             
             GL.PushMatrix();
@@ -41,14 +42,14 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.Vertex(quad.PointC);
             GL.Vertex(quad.PointD);
             
-            if (drawMode == DrawMode.Wired)
+            if (laborerDrawMode == LaborerDrawMode.Wired)
             {
                 GL.Vertex(quad.PointA);
             } 
             
             GL.End();
             
-            if (drawMode == DrawMode.FilledWithBorders)
+            if (laborerDrawMode == LaborerDrawMode.FilledWithBorders)
             {
                 DrawQuad(quad.CopyWithColor(borderColor));
             }
@@ -56,22 +57,22 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PopMatrix();
         }
         
-        public static void DrawQuad(Vector2 center, Vector2 size, Color color, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawQuad(Vector2 center, Vector2 size, Color color, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
-            DrawQuad(new Quad(center, size, color), drawMode, borderColor);
+            DrawQuad(new Quad(center, size, color), laborerDrawMode, borderColor);
         }
 
-        public static void DrawQuad(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Color color, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawQuad(Vector2 a, Vector2 b, Vector2 c, Vector2 d, Color color, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
-            DrawQuad(new Quad(a, b, c, d, color), drawMode, borderColor);
+            DrawQuad(new Quad(a, b, c, d, color), laborerDrawMode, borderColor);
         }
         
         // TODO: maybe Queue draw calls? and apply them after... should look into that for optimization
-        public static void DrawQuads(IEnumerable<Quad> quads, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawQuads(IEnumerable<Quad> quads, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
             foreach (Quad quad in quads)
             {
-                DrawQuad(quad, drawMode, borderColor);
+                DrawQuad(quad, laborerDrawMode, borderColor);
             }
         }
         
@@ -258,10 +259,10 @@ namespace GraphicsLabor.Scripts.Core.Laborers
         ///
         /// </summary>
         /// <param name="circle"></param>
-        /// <param name="drawMode"></param>
+        /// <param name="laborerDrawMode"></param>
         /// <param name="borderColor"></param>
         /// <exception cref="ArgumentException"></exception>
-        public static void DrawCircle(Circle circle, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawCircle(Circle circle, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
             if (circle.Precision <= 0)
                 throw new ArgumentException(
@@ -285,12 +286,12 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             }
             circlePoints.Add(firstPoint);
 
-            switch (drawMode)
+            switch (laborerDrawMode)
             {
-                case DrawMode.Wired:
+                case LaborerDrawMode.Wired:
                     DrawBrokenLine(circlePoints, circle.GetColor);
                     break;
-                case DrawMode.InternalWired:
+                case LaborerDrawMode.InternalWired:
                     for (int i = 0; i < circlePoints.Count-1; i++)
                     {
                         Triangle tempTriangle = new Triangle(circle.Center, circlePoints[i], circlePoints[i + 1],
@@ -298,40 +299,40 @@ namespace GraphicsLabor.Scripts.Core.Laborers
                         DrawTriangle(tempTriangle);
                     }
                     break;
-                case DrawMode.Filled:
+                case LaborerDrawMode.Filled:
                     for (int i = 0; i < circlePoints.Count-1; i++)
                     {
                         Triangle tempTriangle = new Triangle(circle.Center, circlePoints[i], circlePoints[i + 1],
                             circle.GetColor);
-                        DrawTriangle(tempTriangle, DrawMode.Filled);
+                        DrawTriangle(tempTriangle, LaborerDrawMode.Filled);
                     }
                     break;
-                case DrawMode.FilledWithBorders:
+                case LaborerDrawMode.FilledWithBorders:
                     for (int i = 0; i < circlePoints.Count-1; i++)
                     {
                         Triangle tempTriangle = new Triangle(circle.Center, circlePoints[i], circlePoints[i + 1],
                             circle.GetColor);
-                        DrawTriangle(tempTriangle, DrawMode.Filled);
+                        DrawTriangle(tempTriangle, LaborerDrawMode.Filled);
                     }
                     DrawBrokenLine(circlePoints, borderColor);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(drawMode), drawMode, null);
+                    throw new ArgumentOutOfRangeException(nameof(laborerDrawMode), laborerDrawMode, null);
             } 
         }
 
         public static void DrawCircle(Vector2 center, float radius, Color color, int precision = 1,
-            DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+            LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
-            DrawCircle(new Circle(center, radius, color, precision), drawMode, borderColor);
+            DrawCircle(new Circle(center, radius, color, precision), laborerDrawMode, borderColor);
         }
 
         public static void DrawCircles(IEnumerable<Circle> circles, int precision = 1,
-            DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+            LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
             foreach (Circle circle in circles)
             {
-                DrawCircle(circle, drawMode, borderColor);
+                DrawCircle(circle, laborerDrawMode, borderColor);
             }
         }
 
@@ -472,33 +473,33 @@ namespace GraphicsLabor.Scripts.Core.Laborers
         /// Filled and InternalWired options are unsafe to use and may cause problems
         /// </summary>
         /// <param name="polygon"></param>
-        /// <param name="drawMode"></param>
+        /// <param name="laborerDrawMode"></param>
         /// <param name="borderColor"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void DrawPolygon(Polygon polygon, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawPolygon(Polygon polygon, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
             CreateLineMaterial();
 
-            switch (drawMode)
+            switch (laborerDrawMode)
             {
-                case DrawMode.Filled:
-                    DrawTriangles(PolygonTriangulator.TriangulatePolygon(polygon), DrawMode.Filled);
+                case LaborerDrawMode.Filled:
+                    DrawTriangles(PolygonTriangulator.TriangulatePolygon(polygon), LaborerDrawMode.Filled);
                     break;
-                case DrawMode.InternalWired:
+                case LaborerDrawMode.InternalWired:
                     DrawTriangles(PolygonTriangulator.TriangulatePolygon(polygon));
                     break;
-                case DrawMode.Wired:
+                case LaborerDrawMode.Wired:
                     List<Vector2> polygonPoints = new List<Vector2>(polygon.Points);
                     if (polygon.Points[^1] != polygon.Points[0]) polygonPoints.Add(polygon.Points[0]);
 
                     DrawBrokenLine(polygonPoints, polygon.GetColor);
                     break;
-                case DrawMode.FilledWithBorders:
-                    DrawTriangles(PolygonTriangulator.TriangulatePolygon(polygon), DrawMode.Filled);
+                case LaborerDrawMode.FilledWithBorders:
+                    DrawTriangles(PolygonTriangulator.TriangulatePolygon(polygon), LaborerDrawMode.Filled);
                     DrawPolygon(polygon.CopyWithColor(borderColor));
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(drawMode), drawMode, null);
+                    throw new ArgumentOutOfRangeException(nameof(laborerDrawMode), laborerDrawMode, null);
             }
         }
 
@@ -507,25 +508,25 @@ namespace GraphicsLabor.Scripts.Core.Laborers
         /// </summary>
         /// <param name="points"></param>
         /// <param name="color"></param>
-        /// <param name="drawMode"></param>
+        /// <param name="laborerDrawMode"></param>
         /// <param name="borderColor"></param>
-        public static void DrawPolygon(List<Vector2> points, Color color, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawPolygon(List<Vector2> points, Color color, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
-            DrawPolygon(new Polygon(points, color), drawMode, borderColor);
+            DrawPolygon(new Polygon(points, color), laborerDrawMode, borderColor);
         }
 
         /// <summary>
         /// Filled and InternalWired options are unsafe to use and may cause problems
         /// </summary>
         /// <param name="polygons"></param>
-        /// <param name="drawMode"></param>
+        /// <param name="laborerDrawMode"></param>
         /// <param name="borderColor"></param>
-        public static void DrawPolygons(IEnumerable<Polygon> polygons, DrawMode drawMode = DrawMode.Wired,
+        public static void DrawPolygons(IEnumerable<Polygon> polygons, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired,
             Color borderColor = default)
         {
             foreach (Polygon polygon in polygons)
             {
-                DrawPolygon(polygon, drawMode, borderColor);
+                DrawPolygon(polygon, laborerDrawMode, borderColor);
             }
         }
 
@@ -622,25 +623,25 @@ namespace GraphicsLabor.Scripts.Core.Laborers
 
         #region Triangles
 
-        public static void DrawTriangle(Triangle triangle, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawTriangle(Triangle triangle, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
             CreateLineMaterial();
             
             int glDrawMode;
-            switch (drawMode)
+            switch (laborerDrawMode)
             {
-                case DrawMode.Wired:
+                case LaborerDrawMode.Wired:
                     glDrawMode = GL.LINE_STRIP;
                     break;
-                case DrawMode.Filled:
+                case LaborerDrawMode.Filled:
                     glDrawMode = GL.TRIANGLES;
                     break;
-                case DrawMode.FilledWithBorders:
+                case LaborerDrawMode.FilledWithBorders:
                     glDrawMode = GL.TRIANGLES;
                     if (borderColor == default) borderColor = BaseBorderColor;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(drawMode), drawMode, null);
+                    throw new ArgumentOutOfRangeException(nameof(laborerDrawMode), laborerDrawMode, null);
             }
             
             GL.PushMatrix();
@@ -653,14 +654,14 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.Vertex(triangle.PointB);
             GL.Vertex(triangle.PointC);
             
-            if (drawMode == DrawMode.Wired)
+            if (laborerDrawMode == LaborerDrawMode.Wired)
             {
                 GL.Vertex(triangle.PointA);
             } 
             
             GL.End();
             
-            if (drawMode == DrawMode.FilledWithBorders)
+            if (laborerDrawMode == LaborerDrawMode.FilledWithBorders)
             {
                 DrawTriangle(triangle.CopyWithColor(borderColor));
             }
@@ -668,16 +669,16 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PopMatrix();
         }
         
-        public static void DrawTriangle(Vector2 a, Vector2 b, Vector2 c, Color color, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawTriangle(Vector2 a, Vector2 b, Vector2 c, Color color, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
-            DrawTriangle(new Triangle(a, b, c, color), drawMode, borderColor);
+            DrawTriangle(new Triangle(a, b, c, color), laborerDrawMode, borderColor);
         }
         
-        public static void DrawTriangles(IEnumerable<Triangle> triangles, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawTriangles(IEnumerable<Triangle> triangles, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
             foreach (Triangle triangle in triangles)
             {
-                DrawTriangle(triangle, drawMode, borderColor);
+                DrawTriangle(triangle, laborerDrawMode, borderColor);
             }
         }
         

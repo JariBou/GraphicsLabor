@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using GraphicsLabor.Scripts.Core.Shapes;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Core
+namespace GraphicsLabor.Scripts.Core.Laborers.Utils
 {
     // Implementation inspired by the ear clipping algorithm
     public class PolygonTriangulator : MonoBehaviour
