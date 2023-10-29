@@ -1,4 +1,5 @@
 using System;
+using GraphicsLabor.Scripts.Core.Laborers.Utils;
 using GraphicsLabor.Scripts.Core.Shapes;
 using UnityEngine;
 
@@ -8,25 +9,25 @@ namespace GraphicsLabor.Scripts.Core.Laborers
     {
         #region Faces
 
-        public static void DrawFace(Face face, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawFace(Face face, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
             CreateLineMaterial();
             
             int glDrawMode;
-            switch (drawMode)
+            switch (laborerDrawMode)
             {
-                case DrawMode.Wired:
+                case LaborerDrawMode.Wired:
                     glDrawMode = GL.LINE_STRIP;
                     break;
-                case DrawMode.Filled:
+                case LaborerDrawMode.Filled:
                     glDrawMode = GL.QUADS;
                     break;
-                case DrawMode.FilledWithBorders:
+                case LaborerDrawMode.FilledWithBorders:
                     glDrawMode = GL.QUADS;
                     if (borderColor == default) borderColor = BaseBorderColor;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(drawMode), drawMode, null);
+                    throw new ArgumentOutOfRangeException(nameof(laborerDrawMode), laborerDrawMode, null);
             }
             
             GL.PushMatrix();
@@ -40,14 +41,14 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.Vertex(face.PointB);
             GL.Vertex(face.PointC);
             GL.Vertex(face.PointD);
-            if (drawMode == DrawMode.Wired)
+            if (laborerDrawMode == LaborerDrawMode.Wired)
             {
                 GL.Vertex(face.PointA);
             }
             
             GL.End();
             
-            if (drawMode == DrawMode.FilledWithBorders)
+            if (laborerDrawMode == LaborerDrawMode.FilledWithBorders)
             {
                 DrawFace(face.CopyWithColor(borderColor));
             }
@@ -63,23 +64,23 @@ namespace GraphicsLabor.Scripts.Core.Laborers
         /// Draws a Cube on screen
         /// </summary>
         /// <param name="cube"></param>
-        /// <param name="drawMode">FilledWithBorders mode is not perfect for Method DrawCube</param>
+        /// <param name="laborerDrawMode">FilledWithBorders mode is not perfect for Method DrawCube</param>
         /// <param name="borderColor"></param>
         /// <exception cref="NotImplementedException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static void DrawCube(Cube cube, DrawMode drawMode = DrawMode.Wired, Color borderColor = default)
+        public static void DrawCube(Cube cube, LaborerDrawMode laborerDrawMode = LaborerDrawMode.Wired, Color borderColor = default)
         {
-            switch (drawMode)
+            switch (laborerDrawMode)
             {
-                case DrawMode.Filled:
+                case LaborerDrawMode.Filled:
                     if (cube.Faces.Count == 0) cube.CreateFaces();
                     foreach (Face cubeFace in cube.Faces)
                     {
-                        DrawFace(cubeFace, DrawMode.Filled);
+                        DrawFace(cubeFace, LaborerDrawMode.Filled);
                     }
                     break;
                 
-                case DrawMode.Wired:
+                case LaborerDrawMode.Wired:
                     if (cube.Faces.Count == 0) cube.CreateFaces();
                     foreach (Face cubeFace in cube.Faces)
                     {
@@ -87,20 +88,20 @@ namespace GraphicsLabor.Scripts.Core.Laborers
                     }
                     break;
                 
-                case DrawMode.FilledWithBorders:
+                case LaborerDrawMode.FilledWithBorders:
                     // Debug.Log("DrawMode FilledWithBorders is not perfect for Method DrawCube");
                     if (cube.Faces.Count == 0) cube.CreateFaces();
                     if (borderColor == default) borderColor = BaseBorderColor;
                     foreach (Face cubeFace in cube.Faces)
                     {
-                        DrawFace(cubeFace, DrawMode.FilledWithBorders, borderColor);
+                        DrawFace(cubeFace, LaborerDrawMode.FilledWithBorders, borderColor);
                     }
                     break;
 
-                case DrawMode.InternalWired:
+                case LaborerDrawMode.InternalWired:
                     throw new NotImplementedException("InternalWiredMode is not supported for Method DrawCube");
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(drawMode), drawMode, null);
+                    throw new ArgumentOutOfRangeException(nameof(laborerDrawMode), laborerDrawMode, null);
             }
         }
 
