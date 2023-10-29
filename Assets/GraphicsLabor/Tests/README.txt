@@ -1,0 +1,1 @@
+To test out the package just drop the prefab onto your scene
