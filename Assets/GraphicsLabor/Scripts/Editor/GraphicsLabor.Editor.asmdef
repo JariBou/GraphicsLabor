@@ -1,3 +1,4 @@
 {
-	"name": "GraphicsLabor.Editor"
+	"name": "GraphicsLabor.Editor",
+	"references":[ "GUID:e90fb5411ff5e7241858daa04f921028" ]
 }
