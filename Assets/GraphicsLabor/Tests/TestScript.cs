@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
 using GraphicsLabor.Scripts.Core;
 using GraphicsLabor.Scripts.Core.Laborers;
 using GraphicsLabor.Scripts.Core.Shapes;
 using UnityEngine;
 
-namespace ProjectAres.GraphicsLabor.Tests
+namespace GraphicsLabor.Tests
 {
     public class TestScript : MonoBehaviour
     {
@@ -74,12 +75,13 @@ namespace ProjectAres.GraphicsLabor.Tests
                 Laborer3D.DrawCube(_cube, _cubeDrawMode, _cubeBorderColor); 
             }
         }
-
+        
         private void OnValidate()
         {
             GatherPolygonPoints();
         }
 
+        [Button]
         private void GatherPolygonPoints()
         {
             _polygon.ResetPoints(_polygonPoints.Count);

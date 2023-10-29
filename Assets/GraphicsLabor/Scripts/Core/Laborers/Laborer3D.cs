@@ -88,7 +88,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
                     break;
                 
                 case DrawMode.FilledWithBorders:
-                    Debug.Log("DrawMode FilledWithBorders is not perfect for Method DrawCube");
+                    // Debug.Log("DrawMode FilledWithBorders is not perfect for Method DrawCube");
                     if (cube.Faces.Count == 0) cube.CreateFaces();
                     if (borderColor == default) borderColor = BaseBorderColor;
                     foreach (Face cubeFace in cube.Faces)

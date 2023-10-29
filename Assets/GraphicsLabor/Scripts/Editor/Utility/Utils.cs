@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Editor
+namespace GraphicsLabor.Scripts.Editor.Utility
 {
     public class Utils
     {
