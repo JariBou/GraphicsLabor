@@ -3,7 +3,6 @@ using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
 using GraphicsLabor.Scripts.Core;
 using GraphicsLabor.Scripts.Core.Laborers;
 using GraphicsLabor.Scripts.Core.Shapes;
-using UnityEditor;
 using UnityEngine;
 
 namespace GraphicsLabor.Tests
@@ -41,7 +40,6 @@ namespace GraphicsLabor.Tests
         public Polygon _polygon;
         public Color _polygonBorderColor;
         public DrawMode _polygonDrawMode;
-        [Space, ShowMessage("Hello this is really fun maybe it works idk \nlets see aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", MessageType.Info)] public float _test;
         
         void OnEnable()
         {

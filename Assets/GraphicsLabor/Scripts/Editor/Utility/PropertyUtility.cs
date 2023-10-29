@@ -86,34 +86,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             return conditionValues;
         }
         
-        internal static bool GetConditionsFlag(List<bool> conditionValues, ConditionOperator conditionOperator, bool invert)
-        {
-            bool flag;
-            if (conditionOperator == ConditionOperator.And)
-            {
-                flag = true;
-                foreach (var value in conditionValues)
-                {
-                    flag = flag && value;
-                }
-            }
-            else
-            {
-                flag = false;
-                foreach (var value in conditionValues)
-                {
-                    flag = flag || value;
-                }
-            }
-
-            if (invert)
-            {
-                flag = !flag;
-            }
-
-            return flag;
-        }
-
         public static Type GetPropertyType(SerializedProperty property)
         {
             object obj = GetTargetObjectOfProperty(property);
