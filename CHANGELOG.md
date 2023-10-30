@@ -19,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ShowProperty Attribute
 - Scene Attribute
 - Drawers for Expandable, Scene and BasePropertyDrawer
-- TestScene For Testing
 - A TestScriptableObject to test Attributes
 - Documentation on certain Functions, more will be made on future patches
 
