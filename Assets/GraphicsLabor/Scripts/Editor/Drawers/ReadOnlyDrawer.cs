@@ -11,10 +11,14 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
     
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            GUI.enabled = false;
+            if (attribute is not ReadOnly readOnlyAttribute)
+            {
+                return;
+            }
 
-            if ((attribute as ReadOnly)?._overrideName != null) label.text = (attribute as ReadOnly)?._overrideName;
+            if (readOnlyAttribute.OverrideName != null) label.text = readOnlyAttribute.OverrideName;
         
+            GUI.enabled = false;
             switch (property.propertyType)
             {
                 case SerializedPropertyType.Boolean:

@@ -15,7 +15,10 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
         
         public override void OnGUI(Rect rect)
         {
-            ShowMessage info = attribute as ShowMessage;
+            if (attribute is not ShowMessage showMessageAttribute)
+            {
+                return;
+            }
 
             float indent = LaborerEditorGUI.GetIndentLength(rect);
             Rect infoBoxRect = new Rect(
@@ -24,14 +27,14 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                 rect.width - indent,
                 GetHelpBoxHeight());
             
-            EditorGUI.HelpBox(infoBoxRect  , info?.Message, info?.MessageType ?? MessageType.None);
+            EditorGUI.HelpBox(infoBoxRect  , showMessageAttribute.message, showMessageAttribute.messageType);
         }
         
         private float GetHelpBoxHeight()
         {
-            ShowMessage infoMessageAttribute = (ShowMessage)attribute;
+            ShowMessage showMessageAttribute = (ShowMessage)attribute;
             float minHeight = EditorGUIUtility.singleLineHeight * 2.0f;
-            float desiredHeight = GUI.skin.box.CalcHeight(new GUIContent(infoMessageAttribute.Message), EditorGUIUtility.currentViewWidth);
+            float desiredHeight = GUI.skin.box.CalcHeight(new GUIContent(showMessageAttribute.message), EditorGUIUtility.currentViewWidth);
             float height = Mathf.Max(minHeight, desiredHeight);
 
             return height;

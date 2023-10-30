@@ -10,11 +10,11 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
     public class ReadOnly : PropertyAttribute, ILaborerAttribute
     {
 
-        public readonly string _overrideName;
+        public readonly string OverrideName;
 
         public ReadOnly(string overrideName = null)
         {
-            _overrideName = overrideName;
+            OverrideName = overrideName;
         }
     }
     
