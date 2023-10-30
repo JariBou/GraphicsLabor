@@ -35,7 +35,7 @@ namespace GraphicsLabor.Scripts.Editor.CustomInspector
             {
                 DrawSerializedProperties();
             }
-
+            // TODO: Draw Properties maybe with a Custom ShowProperty Attribute?
             DrawButtons();
         }
 
@@ -68,7 +68,7 @@ namespace GraphicsLabor.Scripts.Editor.CustomInspector
                         EditorGUILayout.PropertyField(property);
                     } continue;
                 }
-                EditorGUILayout.PropertyField(property);
+                LaborerEditorGUI.PropertyField(property);
             }
             
             serializedObject.ApplyModifiedProperties();

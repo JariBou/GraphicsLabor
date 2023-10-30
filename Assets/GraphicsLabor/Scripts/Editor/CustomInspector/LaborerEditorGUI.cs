@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -73,6 +74,17 @@ namespace GraphicsLabor.Scripts.Editor.CustomInspector
             {
                 const string warning = nameof(ButtonAttribute) + " works only on methods with no parameters";
                 EditorGUILayout.HelpBox(warning, MessageType.Warning);
+            }
+        }
+
+        public static void PropertyField(SerializedProperty property)
+        {
+            if (PropertyUtility.IsVisible(property))
+            {
+                using (new EditorGUI.DisabledScope(disabled: false))
+                {
+                    EditorGUILayout.PropertyField(property, PropertyUtility.GetLabel(property), true);
+                }
             }
         }
         
