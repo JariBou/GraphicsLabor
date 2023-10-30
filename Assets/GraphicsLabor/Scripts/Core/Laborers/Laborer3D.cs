@@ -99,7 +99,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
                     break;
 
                 case LaborerDrawMode.InternalWired:
-                    throw new NotImplementedException("InternalWiredMode is not supported for Method DrawCube");
+                    throw new ArgumentException("InternalWiredMode is not supported for Method DrawCube");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(laborerDrawMode), laborerDrawMode, null);
             }

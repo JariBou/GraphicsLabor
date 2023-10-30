@@ -13,6 +13,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - ShowIf Attribute
 - HideIf Attribute
+- Expandable Attribute for ScriptableObjects
+- HorizontalSeparator Decoration Attribute
+- ColorExtension for HorizontalSeparator 
+- ShowProperty Attribute
+- Scene Attribute
+- Drawers for Expandable, Scene and BasePropertyDrawer
+- TestScene For Testing
+- A TestScriptableObject to test Attributes
+
+
+### Changed
+
+- ReadOnly Attribute now is usable with other attributes and handled by the GraphicsLaborInspector
+- TestScrip to show usage of Attributes
+
+
+### Removed
+
+- ReadOnlyDrawer (not necessary anymore)
+- CHANGELOG and README meta files
 
 
 

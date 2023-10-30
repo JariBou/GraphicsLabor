@@ -28,6 +28,14 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 
             return (T[])fieldInfo.GetCustomAttributes(typeof(T), true);
         }
+        
+        public static bool IsEnabled(SerializedProperty property)
+        {
+            ReadOnlyAttribute readOnlyAttribute = GetAttribute<ReadOnlyAttribute>(property);
+            // TODO: Add EnableIf Attribute
+            
+            return readOnlyAttribute == null;
+        }
 
         public static bool IsVisible(SerializedProperty property)
         {
@@ -182,8 +190,15 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         
         public static GUIContent GetLabel(SerializedProperty property)
         {
-            //TODO: Label Attribute maybe?
-            GUIContent label = new(property.displayName);
+            LabelAttribute labelAttribute = GetAttribute<LabelAttribute>(property);
+            GUIContent label;
+            if (labelAttribute != null)
+            {
+                label = new GUIContent(labelAttribute.Label);
+                return label;                
+            }
+            
+            label = new GUIContent(property.displayName);
             return label;
         }
 
