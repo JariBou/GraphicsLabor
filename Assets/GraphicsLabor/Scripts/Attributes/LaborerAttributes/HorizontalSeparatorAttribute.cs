@@ -15,8 +15,8 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
 
         public HorizontalSeparatorAttribute(float height = DefaultHeight, LaborColor color = DefaultColor)
         {
-            this.Height = height;
-            this.Color = color;
+            Height = height;
+            Color = color;
         }
     }
 }

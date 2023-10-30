@@ -20,7 +20,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
             }
             
             ScriptableObject scriptableObject = property.objectReferenceValue as ScriptableObject;
-            if (scriptableObject == null) return GetPropertyHeight(property);
+            if (!scriptableObject) return GetPropertyHeight(property);
 
             if (!property.isExpanded) return GetPropertyHeight(property);
             
@@ -64,7 +64,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                 if (typeof(ScriptableObject).IsAssignableFrom(propertyType))
                 {
                     ScriptableObject scriptableObject = property.objectReferenceValue as ScriptableObject;
-                    if (scriptableObject == null)
+                    if (!scriptableObject)
                     {
                         EditorGUI.PropertyField(rect, property, label, false);
                     } else
@@ -112,7 +112,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
         private void DrawChildProperties(Rect rect, SerializedProperty property)
         {
             ScriptableObject scriptableObject = property.objectReferenceValue as ScriptableObject;
-            if (scriptableObject == null) return;
+            if (!scriptableObject) return;
 
             Rect boxRect = new()
             {

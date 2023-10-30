@@ -16,8 +16,8 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
 
         public ShowMessageAttribute(string message, MessageType messageType = MessageType.None)
         {
-            this.Message = message;
-            this.MessageType = messageType;
+            Message = message;
+            MessageType = messageType;
         }
     }
     
