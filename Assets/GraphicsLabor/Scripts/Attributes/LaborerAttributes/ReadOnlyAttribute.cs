@@ -7,15 +7,8 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
     /// Allows to display an attribute as ReadOnly
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public class ReadOnly : PropertyAttribute, ILaborerAttribute
+    public class ReadOnlyAttribute : PropertyAttribute, ILaborerAttribute
     {
-
-        public readonly string _overrideName;
-
-        public ReadOnly(string overrideName = null)
-        {
-            _overrideName = overrideName;
-        }
     }
     
  

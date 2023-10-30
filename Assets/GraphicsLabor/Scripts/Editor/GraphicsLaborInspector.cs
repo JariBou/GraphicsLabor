@@ -7,17 +7,21 @@ using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Editor.CustomInspector
+namespace GraphicsLabor.Scripts.Editor
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(Object), true)]
-    public class GraphicsLaborInspector : UnityEditor.Editor
+    public sealed class GraphicsLaborInspector : UnityEditor.Editor
     {
         private List<SerializedProperty> _serializedProperties = new();
+        private IEnumerable<PropertyInfo> _properties;
         private IEnumerable<MethodInfo> _methods;
 
-        protected virtual void OnEnable()
+        private void OnEnable()
         {
+            _properties = ReflectionUtility.GetAllProperties(
+                target, p => p.GetCustomAttributes(typeof(ShowPropertyAttribute), true).Length > 0);
+            
             _methods = ReflectionUtility.GetAllMethods(
                 target, m => m.GetCustomAttributes(typeof(ButtonAttribute), true).Length > 0);
         }
@@ -35,11 +39,11 @@ namespace GraphicsLabor.Scripts.Editor.CustomInspector
             {
                 DrawSerializedProperties();
             }
-
+            DrawProperties();
             DrawButtons();
         }
 
-        protected void GetSerializedProperties(ref List<SerializedProperty> outSerializedProperties)
+        private void GetSerializedProperties(ref List<SerializedProperty> outSerializedProperties)
         {
             outSerializedProperties.Clear();
             using (SerializedProperty iterator = serializedObject.GetIterator())
@@ -55,7 +59,7 @@ namespace GraphicsLabor.Scripts.Editor.CustomInspector
             }
         }
 
-        protected void DrawSerializedProperties()
+        private void DrawSerializedProperties()
         {
             serializedObject.Update();
             
@@ -68,10 +72,20 @@ namespace GraphicsLabor.Scripts.Editor.CustomInspector
                         EditorGUILayout.PropertyField(property);
                     } continue;
                 }
-                EditorGUILayout.PropertyField(property);
+                LaborerEditorGUI.LayoutField(property);
             }
             
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DrawProperties()
+        {
+            if (!_properties.Any()) return;
+            
+            foreach (var property in _properties)
+            {
+                LaborerEditorGUI.LayoutProperty(serializedObject.targetObject, property);
+            }
         }
 
         private void DrawButtons(bool drawHeader = false)

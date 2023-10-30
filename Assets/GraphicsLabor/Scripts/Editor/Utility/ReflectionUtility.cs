@@ -8,7 +8,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 {
     public static class ReflectionUtility
     {
-        public static IEnumerable<FieldInfo> GetAllFields(object target, Func<FieldInfo, bool> predicate)
+        private static IEnumerable<FieldInfo> GetAllFields(object target, Func<FieldInfo, bool> predicate)
         {
             if (target == null)
             {
@@ -98,7 +98,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        private static List<Type> GetSelfAndBaseTypes(object target)
+        private static List<Type> GetSelfAndBaseTypes(object target) // Returns object Type along with all parents
         {
             List<Type> types = new List<Type>()
             {

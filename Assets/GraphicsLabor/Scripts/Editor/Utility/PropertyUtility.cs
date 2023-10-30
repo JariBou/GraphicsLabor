@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Attributes.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,7 +18,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             return (attributes.Length > 0) ? attributes[0] : null;
         }
 
-        public static T[] GetAttributes<T>(SerializedProperty property) where T : class
+        private static T[] GetAttributes<T>(SerializedProperty property) where T : class
         {
             FieldInfo fieldInfo = ReflectionUtility.GetField(GetTargetObjectWithProperty(property), property.name);
             if (fieldInfo == null)
@@ -25,14 +28,61 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 
             return (T[])fieldInfo.GetCustomAttributes(typeof(T), true);
         }
+        
+        public static bool IsEnabled(SerializedProperty property)
+        {
+            ReadOnlyAttribute readOnlyAttribute = GetAttribute<ReadOnlyAttribute>(property);
+            // TODO: Add EnableIf Attribute
+            
+            return readOnlyAttribute == null;
+        }
 
-        /// <summary>
-        ///		Gets an enum value from reflection.
-        /// </summary>
-        /// <param name="target">The target object.</param>
-        /// <param name="enumName">Name of a field, property, or method that returns an enum.</param>
-        /// <returns>Null if can't find an enum value.</returns>
-        internal static Enum GetEnumValue(object target, string enumName)
+        public static bool IsVisible(SerializedProperty property)
+        {
+            ShowIfAttributeBase showIfAttributeBase = GetAttribute<ShowIfAttributeBase>(property);
+            // There is no ShowIfAttributeBase Attribute so it is visible
+            if (showIfAttributeBase == null) return true;
+
+            // We get the object where the property is go be able to get fields' values to check for conditions
+            object target = GetTargetObjectWithProperty(property);
+
+            if (showIfAttributeBase.EnumValue != null) // First check if it is via enum
+            {
+                Enum value = GetEnumValue(target, showIfAttributeBase.Conditions[0]);
+                if (value != null)
+                {
+                    bool isRightEnum = showIfAttributeBase.EnumValue.Equals(value);
+
+                    return showIfAttributeBase.Inverted ? !isRightEnum : isRightEnum;
+                }
+            }
+            
+            // now we can check for "regular" conditions
+            List<bool> conditionValues = GetConditionValues(target, showIfAttributeBase.Conditions);
+            if (conditionValues.Count > 0)
+            {
+                bool isVisible = ParseConditions(conditionValues, showIfAttributeBase.ConditionOperator,
+                    showIfAttributeBase.Inverted);
+                
+
+                return isVisible;
+            }
+            
+            // If we go here there is a problem
+            Debug.Log($"{showIfAttributeBase.GetType().Name} needs valid boolean or enum fields", property.serializedObject.targetObject);
+            return false;
+        }
+
+        private static bool ParseConditions(IEnumerable<bool> conditionValues, ConditionOperator conditionOperator, bool invert)
+        {
+            var tempCondition = conditionOperator == ConditionOperator.And ? 
+                conditionValues.Aggregate(true, (current, value) => current && value) :  // And Operator
+                conditionValues.Aggregate(false, (current, value) => current || value);  // OR Operator
+
+            return invert ? !tempCondition : tempCondition;
+        }
+
+        private static Enum GetEnumValue(object target, string enumName)
         {
             FieldInfo enumField = ReflectionUtility.GetField(target, enumName);
             if (enumField != null && enumField.FieldType.IsSubclassOf(typeof(Enum)))
@@ -55,7 +105,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             return null;
         }
 
-        internal static List<bool> GetConditionValues(object target, string[] conditions)
+        private static List<bool> GetConditionValues(object target, IEnumerable<string> conditions)
         {
             List<bool> conditionValues = new List<bool>();
             foreach (var condition in conditions)
@@ -77,7 +127,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 MethodInfo conditionMethod = ReflectionUtility.GetMethod(target, condition);
                 if (conditionMethod != null &&
                     conditionMethod.ReturnType == typeof(bool) &&
-                    conditionMethod.GetParameters().Length == 0)
+                    conditionMethod.GetParameters().Length == 0) // Cant take parameters, same problem as Button
                 {
                     conditionValues.Add((bool)conditionMethod.Invoke(target, null));
                 }
@@ -94,74 +144,67 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             return objType;
         }
 
-        /// <summary>
-        /// Gets the object the property represents.
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public static object GetTargetObjectOfProperty(SerializedProperty property)
+        private static object GetTargetObjectOfProperty(SerializedProperty property)
         {
-            if (property == null)
-            {
-                return null;
-            }
-
-            string path = property.propertyPath.Replace(".Array.data[", "[");
-            object obj = property.serializedObject.targetObject;
-            string[] elements = path.Split('.');
-
-            foreach (var element in elements)
-            {
-                if (element.Contains("["))
-                {
-                    string elementName = element.Substring(0, element.IndexOf("["));
-                    int index = Convert.ToInt32(element.Substring(element.IndexOf("[")).Replace("[", "").Replace("]", ""));
-                    obj = GetValue_Imp(obj, elementName, index);
-                }
-                else
-                {
-                    obj = GetValue_Imp(obj, element);
-                }
-            }
-
-            return obj;
+            return GetTargetObject(property, 0);
         }
 
+        private static object GetTargetObjectWithProperty(SerializedProperty property)
+        {
+            return GetTargetObject(property, 1);
+        }
+ 
         /// <summary>
-        /// Gets the object that the property is a member of
+        /// Returns the object situated at depth back in the properties path
         /// </summary>
         /// <param name="property"></param>
+        /// <param name="depth">Depth represents how many objects we go back on the Path.
+        /// 0 represents the property's object, 1 the parent and so on</param>
         /// <returns></returns>
-        public static object GetTargetObjectWithProperty(SerializedProperty property)
+        private static object GetTargetObject(SerializedProperty property, int depth)
         {
+            if (property == null) return null;
+            
             string path = property.propertyPath.Replace(".Array.data[", "[");
             object obj = property.serializedObject.targetObject;
             string[] elements = path.Split('.');
+            if (depth > elements.Length) return null;
 
-            for (int i = 0; i < elements.Length - 1; i++)
+            for (int i = 0; i < elements.Length - depth; i++)
             {
                 string element = elements[i];
                 if (element.Contains("["))
                 {
-                    string elementName = element.Substring(0, element.IndexOf("["));
-                    int index = Convert.ToInt32(element.Substring(element.IndexOf("[")).Replace("[", "").Replace("]", ""));
-                    obj = GetValue_Imp(obj, elementName, index);
+                    string elementName = element[..element.IndexOf("[", StringComparison.Ordinal)];
+                    int index = Convert.ToInt32(element[element.IndexOf("[", StringComparison.Ordinal)..].Replace("[", "").Replace("]", ""));
+                    obj = GetValue(obj, elementName, index);
                 }
                 else
                 {
-                    obj = GetValue_Imp(obj, element);
+                    obj = GetValue(obj, element);
                 }
             }
 
             return obj;
         }
-
-        private static object GetValue_Imp(object source, string name)
+        
+        public static GUIContent GetLabel(SerializedProperty property)
         {
-            if (source == null)
+            LabelAttribute labelAttribute = GetAttribute<LabelAttribute>(property);
+            GUIContent label;
+            if (labelAttribute != null)
             {
-                return null;
+                label = new GUIContent(labelAttribute._label);
+                return label;                
             }
+            
+            label = new GUIContent(property.displayName);
+            return label;
+        }
+
+        private static object GetValue(object source, string name)
+        {
+            if (source == null) return null;
 
             Type type = source.GetType();
 
@@ -185,13 +228,9 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             return null;
         }
 
-        private static object GetValue_Imp(object source, string name, int index)
+        private static object GetValue(object source, string name, int index)
         {
-            IEnumerable enumerable = GetValue_Imp(source, name) as IEnumerable;
-            if (enumerable == null)
-            {
-                return null;
-            }
+            if (GetValue(source, name) is not IEnumerable enumerable) return null;
 
             IEnumerator enumerator = enumerable.GetEnumerator();
             for (int i = 0; i <= index; i++)

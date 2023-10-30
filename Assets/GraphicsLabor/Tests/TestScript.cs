@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Attributes.Utility;
 using GraphicsLabor.Scripts.Core;
 using GraphicsLabor.Scripts.Core.Laborers;
 using GraphicsLabor.Scripts.Core.Laborers.Utils;
@@ -37,11 +38,16 @@ namespace GraphicsLabor.Tests
 
         [Space, Header("Polygon")]
         public bool _drawPolygon;
-
         public List<Transform> _polygonPoints;
         public Polygon _polygon;
         public Color _polygonBorderColor;
         [FormerlySerializedAs("_polygonDrawMode")] public LaborerDrawMode _polygonLaborerDrawMode;
+        [HideIf(ConditionOperator.Or, "_drawPolygon", "_drawCircle")] public int Hello;
+        public bool _showSO;
+        [ShowIf("_showSO"), Expandable]public TestScriptableObject _testScriptableObject;
+        [Scene] public string _scene;
+        
+        // public static int test;
         
         void OnEnable()
         {
