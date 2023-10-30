@@ -10,13 +10,13 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
         private const float DefaultHeight = 2.0f;
         private const LaborColor DefaultColor = LaborColor.Gray;
 
-        public float height { get; private set; }
-        public LaborColor color { get; private set; }
+        public float Height { get; private set; }
+        public LaborColor Color { get; private set; }
 
         public HorizontalSeparatorAttribute(float height = DefaultHeight, LaborColor color = DefaultColor)
         {
-            this.height = height;
-            this.color = color;
+            this.Height = height;
+            this.Color = color;
         }
     }
 }

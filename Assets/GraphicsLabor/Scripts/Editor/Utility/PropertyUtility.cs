@@ -46,23 +46,23 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             // We get the object where the property is go be able to get fields' values to check for conditions
             object target = GetTargetObjectWithProperty(property);
 
-            if (showIfAttributeBase.enumValue != null) // First check if it is via enum
+            if (showIfAttributeBase.EnumValue != null) // First check if it is via enum
             {
-                Enum value = GetEnumValue(target, showIfAttributeBase.conditions[0]);
+                Enum value = GetEnumValue(target, showIfAttributeBase.Conditions[0]);
                 if (value != null)
                 {
-                    bool isRightEnum = showIfAttributeBase.enumValue.Equals(value);
+                    bool isRightEnum = showIfAttributeBase.EnumValue.Equals(value);
 
-                    return showIfAttributeBase.inverted ? !isRightEnum : isRightEnum;
+                    return showIfAttributeBase.Inverted ? !isRightEnum : isRightEnum;
                 }
             }
             
             // now we can check for "regular" conditions
-            List<bool> conditionValues = GetConditionValues(target, showIfAttributeBase.conditions);
+            List<bool> conditionValues = GetConditionValues(target, showIfAttributeBase.Conditions);
             if (conditionValues.Count > 0)
             {
-                bool isVisible = ParseConditions(conditionValues, showIfAttributeBase.conditionOperator,
-                    showIfAttributeBase.inverted);
+                bool isVisible = ParseConditions(conditionValues, showIfAttributeBase.ConditionOperator,
+                    showIfAttributeBase.Inverted);
                 
 
                 return isVisible;
@@ -194,7 +194,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             GUIContent label;
             if (labelAttribute != null)
             {
-                label = new GUIContent(labelAttribute.Label);
+                label = new GUIContent(labelAttribute._label);
                 return label;                
             }
             

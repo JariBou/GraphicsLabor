@@ -11,13 +11,13 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
     public class ShowMessageAttribute : PropertyAttribute, ILaborerAttribute
     {
 
-        public string message { get; private set; }
-        public MessageType messageType { get; private set; }
+        public string Message { get; private set; }
+        public MessageType MessageType { get; private set; }
 
         public ShowMessageAttribute(string message, MessageType messageType = MessageType.None)
         {
-            this.message = message;
-            this.messageType = messageType;
+            this.Message = message;
+            this.MessageType = messageType;
         }
     }
     

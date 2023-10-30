@@ -9,26 +9,26 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
         public ShowIfAttribute(string condition)
             : base(condition)
         {
-            inverted = false;
+            Inverted = false;
         }
 
         public ShowIfAttribute(ConditionOperator conditionOperator, params string[] conditions)
             : base(conditionOperator, conditions)
         {
-            inverted = false;
+            Inverted = false;
         }
         
         // override of ShowIfAttributeBase to allow for just passing conditions and defaulting to And operator
         public ShowIfAttribute(params string[] conditions) 
             : base(ConditionOperator.And, conditions)
         {
-            inverted = false;
+            Inverted = false;
         }
 
         public ShowIfAttribute(string enumName, object enumValue)
             : base(enumName, enumValue as Enum)
         {
-            inverted = false;
+            Inverted = false;
         }
     }
 }

@@ -21,14 +21,14 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                 rect.width - indent,
                 GetHelpBoxHeight());
             
-            EditorGUI.HelpBox(infoBoxRect  , showMessageAttribute.message, showMessageAttribute.messageType);
+            EditorGUI.HelpBox(infoBoxRect  , showMessageAttribute.Message, showMessageAttribute.MessageType);
         }
         
         private float GetHelpBoxHeight()
         {
             ShowMessageAttribute showMessageAttributeAttribute = (ShowMessageAttribute)attribute;
             float minHeight = EditorGUIUtility.singleLineHeight * 2.0f;
-            float desiredHeight = GUI.skin.box.CalcHeight(new GUIContent(showMessageAttributeAttribute.message), EditorGUIUtility.currentViewWidth);
+            float desiredHeight = GUI.skin.box.CalcHeight(new GUIContent(showMessageAttributeAttribute.Message), EditorGUIUtility.currentViewWidth);
             float height = Mathf.Max(minHeight, desiredHeight);
 
             return height;

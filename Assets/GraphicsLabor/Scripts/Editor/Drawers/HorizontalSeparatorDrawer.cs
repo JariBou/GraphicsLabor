@@ -12,7 +12,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
         public override float GetHeight()
         {
             HorizontalSeparatorAttribute lineAttr = (HorizontalSeparatorAttribute)attribute;
-            return EditorGUIUtility.singleLineHeight + lineAttr.height;
+            return EditorGUIUtility.singleLineHeight + lineAttr.Height;
         }
 
         public override void OnGUI(Rect position)
@@ -20,7 +20,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
             Rect rect = EditorGUI.IndentedRect(position);
             rect.y += EditorGUIUtility.singleLineHeight / 3.0f;
             HorizontalSeparatorAttribute lineAttr = (HorizontalSeparatorAttribute)attribute;
-            LaborerEditorGUI.HorizontalLine(rect, lineAttr.height, lineAttr.color.GetColor());
+            LaborerEditorGUI.HorizontalLine(rect, lineAttr.Height, lineAttr.Color.GetColor());
         }
     }
 }

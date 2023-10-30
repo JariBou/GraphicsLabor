@@ -8,26 +8,26 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
         public HideIfAttribute(string condition)
             : base(condition)
         {
-            inverted = true; // This means that we are hiding instead of showing
+            Inverted = true; // This means that we are hiding instead of showing
         }
 
         public HideIfAttribute(ConditionOperator conditionOperator, params string[] conditions)
             : base(conditionOperator, conditions)
         {
-            inverted = true;
+            Inverted = true;
         }
         
         // override of ShowIfAttributeBase to allow for just passing conditions and defaulting to And operator
         public HideIfAttribute(params string[] conditions) 
             : base(ConditionOperator.And, conditions)
         {
-            inverted = true;
+            Inverted = true;
         }
 
         public HideIfAttribute(string enumName, object enumValue)
             : base(enumName, enumValue as Enum)
         {
-            inverted = true;
+            Inverted = true;
         }
     }
 }

@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-## [1.2.0] - 2023-10-29
+## [2.0.0] - 2023-10-29
 
 ### Added
 
@@ -21,11 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Drawers for Expandable, Scene and BasePropertyDrawer
 - TestScene For Testing
 - A TestScriptableObject to test Attributes
+- Documentation on certain Functions, more will be made on future patches
 
 
 ### Changed
 
 - ReadOnly Attribute now is usable with other attributes and handled by the GraphicsLaborInspector
+- ReadOnly Attribute can no longer change the display name of the field
 - TestScrip to show usage of Attributes
 
 
