@@ -33,3 +33,4 @@ MonoBehaviour:
       testFloat: 0
       testInt2: 0
       testListInt: 
+  testSo: {fileID: 11400000, guid: cd2595304ee1533479f355f8f7638f64, type: 2}

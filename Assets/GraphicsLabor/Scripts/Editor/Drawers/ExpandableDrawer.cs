@@ -129,7 +129,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                 SerializedObject serializedObject = new(scriptableObject);
                 serializedObject.Update();
 
-                using (var iterator = serializedObject.GetIterator())
+                using (SerializedProperty iterator = serializedObject.GetIterator())
                 {
                     float yOffset = EditorGUIUtility.singleLineHeight;
 

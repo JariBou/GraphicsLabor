@@ -309,7 +309,7 @@ MonoBehaviour:
     _pointC: {x: 1, y: -1}
     _pointD: {x: -1, y: -1}
   _quadBorderColor: {r: 0.6415094, g: 0, b: 0, a: 1}
-  _quadDrawMode: 0
+  _quadLaborerDrawMode: 0
   _drawCube: 1
   _cube:
     _color: {r: 0.2924528, g: 0, b: 0.29030246, a: 1}
@@ -323,7 +323,7 @@ MonoBehaviour:
     _pointH: {x: -1, y: 1, z: -1}
     _faces: []
   _cubeBorderColor: {r: 0.1552063, g: 0.9716981, b: 0, a: 1}
-  _cubeDrawMode: 0
+  _cubeLaborerDrawMode: 0
   _drawCircle: 0
   _circle:
     _color: {r: 0.7264151, g: 0.6040372, b: 0.0034264945, a: 1}
@@ -331,7 +331,7 @@ MonoBehaviour:
     _radius: 2
     _precision: 1
   _circleBorderColor: {r: 0.11527586, g: 0.7169812, b: 0, a: 1}
-  _circleDrawMode: 0
+  _circleLaborerDrawMode: 0
   _drawTriangle: 0
   _triangle:
     _color: {r: 0, g: 0.4339623, b: 0.4339623, a: 1}
@@ -339,7 +339,7 @@ MonoBehaviour:
     _pointB: {x: -1, y: -1}
     _pointC: {x: 1, y: -1}
   _triangleBorderColor: {r: 0, g: 0.7735849, b: 0.6143866, a: 1}
-  _triangleDrawMode: 0
+  _triangleLaborerDrawMode: 0
   _drawPolygon: 0
   _polygonPoints:
   - {fileID: 1934975923999184962}
@@ -362,7 +362,11 @@ MonoBehaviour:
     - {x: -4.7906046, y: 0.91954124}
     - {x: -3.6606045, y: 1.4295412}
   _polygonBorderColor: {r: 0, g: 0.044265814, b: 0.735849, a: 1}
-  _polygonDrawMode: 0
+  _polygonLaborerDrawMode: 0
+  Hello: 0
+  _showSO: 0
+  _testScriptableObject: {fileID: 0}
+  _scene: SampleScene
 --- !u!114 &6748720235759730752
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,7 +15,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 Debug.LogError("The target object is null. Check for missing scripts.");
                 yield break;
             }
-
+            
             List<Type> types = GetSelfAndBaseTypes(target);
 
             for (int i = types.Count - 1; i >= 0; i--)
@@ -76,6 +76,30 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 }
             }
         }
+        
+        public static IEnumerable<CustomAttributeData> GetAllAttributesOfObject(object target, Func<CustomAttributeData, bool> predicate, bool inherit = false)
+        {
+            if (target == null)
+            {
+                Debug.LogError("The target object is null. Check for missing scripts.");
+                yield break;
+            }
+            
+            List<Type> types = GetSelfAndBaseTypes(target);
+
+            for (int i = inherit ? types.Count - 1 : 0; i >= 0; i--)
+            {
+                IEnumerable<CustomAttributeData> fieldInfos = types[i].CustomAttributes;
+
+                foreach (CustomAttributeData customAttributeData in fieldInfos)
+                {
+                    if (predicate.Invoke(customAttributeData))
+                    {
+                        yield return customAttributeData;
+                    }
+                }
+            }
+        }
 
         public static FieldInfo GetField(object target, string fieldName)
         {
@@ -98,7 +122,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        private static List<Type> GetSelfAndBaseTypes(object target) // Returns object Type along with all parents
+        public static List<Type> GetSelfAndBaseTypes(object target) // Returns object Type along with all parents
         {
             List<Type> types = new List<Type>()
             {

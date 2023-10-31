@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Windows.Utility
+namespace GraphicsLabor.Scripts.Editor.Windows.Utility
 {
     public static class LaborerWindowGUI
     {
@@ -16,7 +16,7 @@ namespace GraphicsLabor.Scripts.Windows.Utility
                 SerializedObject serializedObject = new(scriptableObject);
                 serializedObject.Update();
 
-                using (var iterator = serializedObject.GetIterator())
+                using (SerializedProperty iterator = serializedObject.GetIterator())
                 {
                     if (iterator.NextVisible(true))
                     {

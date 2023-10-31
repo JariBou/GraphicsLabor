@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Editor.Windows;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -76,6 +77,19 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 const string warning = nameof(ButtonAttribute) + " works only on methods with no parameters";
                 EditorGUILayout.HelpBox(warning, MessageType.Warning);
             }
+        }
+        
+        public static void EditableSoButton(Object target, string buttonText)
+        {
+
+            EditorGUI.BeginDisabledGroup(false);
+
+            if (GUILayout.Button(buttonText, ButtonStyle))
+            {
+                TestWindow.ShowWindow(target);
+            }
+
+            EditorGUI.EndDisabledGroup();
         }
         
         public static void PropertyField(Rect rect, SerializedProperty property, bool includeChildren)

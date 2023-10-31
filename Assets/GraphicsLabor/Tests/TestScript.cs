@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
@@ -48,7 +49,7 @@ namespace GraphicsLabor.Tests
         [Scene] public string _scene;
         
         // public static int test;
-        
+
         void OnEnable()
         {
             GraphicLaborer.DrawCallback += OnDraw;

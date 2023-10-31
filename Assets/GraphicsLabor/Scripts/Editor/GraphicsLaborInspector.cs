@@ -5,6 +5,7 @@ using GraphicsLabor.Scripts.Attributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
+using UnityEditor.Profiling;
 using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Editor
@@ -16,6 +17,7 @@ namespace GraphicsLabor.Scripts.Editor
         private List<SerializedProperty> _serializedProperties = new();
         private IEnumerable<PropertyInfo> _properties;
         private IEnumerable<MethodInfo> _methods;
+        private bool _isEditableScriptableObject;
 
         private void OnEnable()
         {
@@ -24,6 +26,9 @@ namespace GraphicsLabor.Scripts.Editor
             
             _methods = ReflectionUtility.GetAllMethods(
                 target, m => m.GetCustomAttributes(typeof(ButtonAttribute), true).Length > 0);
+
+            _isEditableScriptableObject = ReflectionUtility
+                .GetAllAttributesOfObject(target, c => c.AttributeType == typeof(EditableAttribute), true).Any();
         }
 
         public override void OnInspectorGUI()
@@ -41,6 +46,11 @@ namespace GraphicsLabor.Scripts.Editor
             }
             DrawProperties();
             DrawButtons();
+            if (_isEditableScriptableObject)
+            {
+                Debug.Log("_isEditableScriptableObject");
+                LaborerEditorGUI.EditableSoButton(serializedObject.targetObject, "Show Editor");
+            }
         }
 
         private void GetSerializedProperties(ref List<SerializedProperty> outSerializedProperties)
