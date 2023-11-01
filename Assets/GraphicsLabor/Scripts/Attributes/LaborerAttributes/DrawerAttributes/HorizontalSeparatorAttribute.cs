@@ -1,11 +1,10 @@
 ﻿using System;
 using GraphicsLabor.Scripts.Attributes.Utility;
-using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
+namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = true)]
-    public class HorizontalSeparatorAttribute : PropertyAttribute, ILaborerAttribute
+    public class HorizontalSeparatorAttribute : DrawerAttribute
     {
         private const float DefaultHeight = 2.0f;
         private const LaborColor DefaultColor = LaborColor.Gray;

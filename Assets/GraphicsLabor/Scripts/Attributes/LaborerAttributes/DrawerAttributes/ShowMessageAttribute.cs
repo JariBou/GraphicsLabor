@@ -1,14 +1,13 @@
 ﻿using System;
 using UnityEditor;
-using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
+namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes
 {
     /// <summary>
     /// Allows to display a box above the field to give a warning or info
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = true)]
-    public class ShowMessageAttribute : PropertyAttribute, ILaborerAttribute
+    public class ShowMessageAttribute : DrawerAttribute
     {
 
         public string Message { get; private set; }

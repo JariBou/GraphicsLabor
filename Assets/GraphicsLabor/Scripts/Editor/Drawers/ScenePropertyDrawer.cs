@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using UnityEditor;
 using UnityEngine;
 

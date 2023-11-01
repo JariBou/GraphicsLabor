@@ -1,9 +1,9 @@
 ﻿using System;
 using GraphicsLabor.Scripts.Attributes.Utility;
 
-namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
+namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
 {
-    public class ShowIfAttributeBase : Attribute, ILaborerAttribute
+    public class ShowIfAttributeBase : InspectedAttribute
     {
         public string[] Conditions { get; private set; }
         public ConditionOperator ConditionOperator { get; private set; }

@@ -1,4 +1,5 @@
 ﻿using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;

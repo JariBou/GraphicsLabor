@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
 using UnityEditor;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         public static T GetAttribute<T>(SerializedProperty property) where T : class
         {
             T[] attributes = GetAttributes<T>(property);
-            return (attributes.Length > 0) ? attributes[0] : null;
+            return attributes.Length > 0 ? attributes[0] : null;
         }
 
         private static T[] GetAttributes<T>(SerializedProperty property) where T : class

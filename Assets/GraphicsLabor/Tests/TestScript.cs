@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
 using GraphicsLabor.Scripts.Core;
 using GraphicsLabor.Scripts.Core.Laborers;
@@ -45,7 +47,7 @@ namespace GraphicsLabor.Tests
         [FormerlySerializedAs("_polygonDrawMode")] public LaborerDrawMode _polygonLaborerDrawMode;
         [HideIf(ConditionOperator.Or, "_drawPolygon", "_drawCircle")] public int Hello;
         public bool _showSO;
-        [ShowIf("_showSO"), Expandable]public TestScriptableObject _testScriptableObject;
+        [FormerlySerializedAs("_testScriptableObjectEditor")] [FormerlySerializedAs("_testScriptableObject")] [ShowIf("_showSO"), Expandable]public TestEditableScriptableObject _testEditableScriptableObject;
         [Scene] public string _scene;
         
         // public static int test;

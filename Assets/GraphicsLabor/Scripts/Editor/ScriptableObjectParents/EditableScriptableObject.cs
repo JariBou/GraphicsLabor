@@ -1,9 +1,8 @@
 ﻿using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
-using UnityEditor;
-using UnityEditor.Callbacks;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Editor.Windows
+namespace GraphicsLabor.Scripts.Editor.ScriptableObjectParents
 {
     [Editable]
     public class EditableScriptableObject : ScriptableObject

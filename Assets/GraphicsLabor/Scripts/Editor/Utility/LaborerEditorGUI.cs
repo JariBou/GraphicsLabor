@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Editor.Windows;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -86,7 +87,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 
             if (GUILayout.Button(buttonText, ButtonStyle))
             {
-                TestWindow.ShowWindow(target);
+                ScriptableObjectEditorWindow.ShowWindow(target);
             }
 
             EditorGUI.EndDisabledGroup();
@@ -105,7 +106,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             }
         }
 
-        public static void LayoutField(SerializedProperty property)
+        public static void LayoutPropertyField(SerializedProperty property)
         {
             if (!PropertyUtility.IsVisible(property)) return;
             

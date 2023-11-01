@@ -3,6 +3,8 @@ using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEditor.Profiling;
@@ -82,7 +84,7 @@ namespace GraphicsLabor.Scripts.Editor
                         EditorGUILayout.PropertyField(property);
                     } continue;
                 }
-                LaborerEditorGUI.LayoutField(property);
+                LaborerEditorGUI.LayoutPropertyField(property);
             }
             
             serializedObject.ApplyModifiedProperties();
