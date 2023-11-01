@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
-using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Editor.Windows.Utility
+namespace GraphicsLabor.Scripts.Editor.Utility
 {
     public static class LaborerWindowGUI
     {
@@ -45,6 +43,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows.Utility
                 serializedObject.ApplyModifiedProperties();
             }
         }
+        
         
         public static void DrawEditableScriptableObject(ScriptableObject scriptableObject, ref string selectedTab)
         {
@@ -89,12 +88,16 @@ namespace GraphicsLabor.Scripts.Editor.Windows.Utility
                 
                 if (tabbedProperties.TryGetValue(selectedTab, out var tabbedProperty))
                 {
-                    EditorGUILayout.BeginVertical("box");
-                    foreach (SerializedProperty property in tabbedProperty)
+                    using (new EditorGUI.IndentLevelScope())
                     {
-                        LaborerWindowGUI.DrawField(property);
+                        EditorGUILayout.BeginVertical("box");
+                        foreach (SerializedProperty property in tabbedProperty)
+                        {
+                            DrawField(property);
+                        }
+
+                        EditorGUILayout.EndVertical();
                     }
-                    EditorGUILayout.EndVertical();
                 }
                 EditorGUILayout.EndVertical();
                 
@@ -104,12 +107,12 @@ namespace GraphicsLabor.Scripts.Editor.Windows.Utility
         }
 
         #endregion
-        
-        public static void DrawField(SerializedProperty serializedProperty, ref Dictionary<string, List<SerializedProperty>> tabbedProperties, bool checkForTab = false)
+
+        private static void DrawField(SerializedProperty serializedProperty, ref Dictionary<string, List<SerializedProperty>> tabbedProperties, bool checkForTab = false)
         {
             if (serializedProperty == null) return;
             if (!PropertyUtility.IsVisible(serializedProperty)) return;
-            if (serializedProperty.name.Equals("m_Script", System.StringComparison.Ordinal)) return;
+            if (serializedProperty.name.Equals("m_Script", StringComparison.Ordinal)) return;
             
             if (checkForTab && PropertyUtility.GetAttribute<TabPropertyAttribute>(serializedProperty) is { } tabPropertyAttribute)
             {
@@ -124,15 +127,14 @@ namespace GraphicsLabor.Scripts.Editor.Windows.Utility
                         tabbedProperties.Add(tabName, new List<SerializedProperty> {serializedProperty});
                     }
                 }
-                
             }
             else
             {
                 DrawField(serializedProperty);
             }
-            
         }
-        public static void DrawField(SerializedProperty serializedProperty)
+
+        private static void DrawField(SerializedProperty serializedProperty)
         {
             if (serializedProperty == null) return;
             if (!PropertyUtility.IsVisible(serializedProperty)) return;
@@ -144,7 +146,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows.Utility
         {
             if (serializedProperty == null) return false;
             if (!PropertyUtility.IsVisible(serializedProperty)) return false;
-            if (serializedProperty.name.Equals("m_Script", System.StringComparison.Ordinal)) return false;
+            if (serializedProperty.name.Equals("m_Script", StringComparison.Ordinal)) return false;
             
             if (checkForTab && PropertyUtility.GetAttribute<TabPropertyAttribute>(serializedProperty) is { } tabPropertyAttribute)
             {
@@ -163,7 +165,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows.Utility
                 return false;
             }
 
-            DrawProperty(rect, serializedProperty);
+            LaborerEditorGUI.PropertyField(rect, serializedProperty, true);
             return true;
 
         }
@@ -182,9 +184,9 @@ namespace GraphicsLabor.Scripts.Editor.Windows.Utility
             return EditorGUI.GetPropertyHeight(property, includeChildren: true);
         }
 
-        public static float GetPropertiesHeight(IEnumerable<SerializedProperty> properties)
+        public static float GetPropertiesHeight(IEnumerable<SerializedProperty> properties, float spacing = 0f)
         {
-            return properties.Sum(GetPropertyHeight);
+            return spacing + properties.Sum(property => GetPropertyHeight(property) + spacing);
         }
         
     }

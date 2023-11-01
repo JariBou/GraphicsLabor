@@ -19,7 +19,7 @@ namespace GraphicsLabor.Tests
         [TabProperty("FirstOne")]public float testFloat = 56.2f;
         [TabProperty("AnotherOne")]public GameObject testGameObject;
         [TabProperty("AnotherOne")]public SerializableTestClass SerializableTestClass2;
-        [Expandable, TabProperty("AnotherOne")] public AnotherEditableScriptableObject testSo;
+        [Expandable, TabProperty("AnotherOne")] public AnotherEditableScriptableObject Te;
     }
 
     [Serializable]

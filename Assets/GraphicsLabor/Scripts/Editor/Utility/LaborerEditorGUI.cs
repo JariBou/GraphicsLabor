@@ -39,7 +39,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 {
                     buttonEnabled &= Application.isPlaying;
                 }
-
                 EditorGUI.BeginDisabledGroup(!buttonEnabled);
 
                 if (GUILayout.Button(buttonText, ButtonStyle))
@@ -54,16 +53,9 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                         EditorUtility.SetDirty(target);
 
                         PrefabStage stage = PrefabStageUtility.GetCurrentPrefabStage();
-                        if (stage != null)
-                        {
-                            // Prefab mode
-                            EditorSceneManager.MarkSceneDirty(stage.scene);
-                        }
-                        else
-                        {
-                            // Normal scene
-                            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-                        }
+                        // Normal scene
+                        // Prefab mode
+                        EditorSceneManager.MarkSceneDirty(stage ? stage.scene : SceneManager.GetActiveScene());
                     }
                     else if (methodResult != null && target is MonoBehaviour behaviour)
                     {
@@ -134,8 +126,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 EditorGUILayout.HelpBox(warning, MessageType.Warning);
             }
         }
-        
-        public static bool DrawField(object value, string label)
+
+        private static bool DrawField(object value, string label)
         {
             using (new EditorGUI.DisabledScope(disabled: true))
             {
@@ -245,7 +237,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             EditorGUI.DrawRect(rect, color);
         }
         
-        public static void HelpBox(Rect rect, string message, MessageType type, UnityEngine.Object context = null, bool logToConsole = false)
+        public static void HelpBox(Rect rect, string message, MessageType type, Object context = null, bool logToConsole = false)
         {
             EditorGUI.HelpBox(rect, message, type);
 

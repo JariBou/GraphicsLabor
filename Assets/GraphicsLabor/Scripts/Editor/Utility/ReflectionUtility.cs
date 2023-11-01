@@ -16,7 +16,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 yield break;
             }
             
-            List<Type> types = GetSelfAndBaseTypes(target);
+            List<Type> types = target.GetTypes();
 
             for (int i = types.Count - 1; i >= 0; i--)
             {
@@ -39,7 +39,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 yield break;
             }
 
-            List<Type> types = GetSelfAndBaseTypes(target);
+            List<Type> types = target.GetTypes();
 
             for (int i = types.Count - 1; i >= 0; i--)
             {
@@ -62,7 +62,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 yield break;
             }
 
-            List<Type> types = GetSelfAndBaseTypes(target);
+            List<Type> types = target.GetTypes();
 
             for (int i = types.Count - 1; i >= 0; i--)
             {
@@ -85,7 +85,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 yield break;
             }
             
-            List<Type> types = GetSelfAndBaseTypes(target);
+            List<Type> types = target.GetTypes();
 
             for (int i = inherit ? types.Count - 1 : 0; i >= 0; i--)
             {
@@ -93,8 +93,10 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 
                 foreach (CustomAttributeData customAttributeData in fieldInfos)
                 {
+                    //Debug.Log($"Invoking with type: {customAttributeData.AttributeType}");
                     if (predicate.Invoke(customAttributeData))
                     {
+                        //Debug.Log($"Yielded attributeDataType: {customAttributeData.AttributeType}");
                         yield return customAttributeData;
                     }
                 }
@@ -122,6 +124,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
+        [Obsolete("Use object.GetTypes() instead")]
         public static List<Type> GetSelfAndBaseTypes(object target) // Returns object Type along with all parents
         {
             List<Type> types = new List<Type>()

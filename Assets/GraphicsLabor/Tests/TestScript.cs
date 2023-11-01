@@ -8,6 +8,7 @@ using GraphicsLabor.Scripts.Core;
 using GraphicsLabor.Scripts.Core.Laborers;
 using GraphicsLabor.Scripts.Core.Laborers.Utils;
 using GraphicsLabor.Scripts.Core.Shapes;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -39,15 +40,16 @@ namespace GraphicsLabor.Tests
         public Color _triangleBorderColor;
         [FormerlySerializedAs("_triangleDrawMode")] public LaborerDrawMode _triangleLaborerDrawMode;
 
-        [Space, Header("Polygon")]
+        [Space, Header("Polygon"), ShowMessage("Helloooo", MessageType.Info)]
         public bool _drawPolygon;
         public List<Transform> _polygonPoints;
         public Polygon _polygon;
-        public Color _polygonBorderColor;
+        [TabProperty] public Color _polygonBorderColor;
         [FormerlySerializedAs("_polygonDrawMode")] public LaborerDrawMode _polygonLaborerDrawMode;
         [HideIf(ConditionOperator.Or, "_drawPolygon", "_drawCircle")] public int Hello;
         public bool _showSO;
-        [FormerlySerializedAs("_testScriptableObjectEditor")] [FormerlySerializedAs("_testScriptableObject")] [ShowIf("_showSO"), Expandable]public TestEditableScriptableObject _testEditableScriptableObject;
+        [ShowProperty] public int Testooo => Hello;
+        [ShowIf("_showSO"), Expandable] public TestEditableScriptableObject _testEditableScriptableObject;
         [Scene] public string _scene;
         
         // public static int test;

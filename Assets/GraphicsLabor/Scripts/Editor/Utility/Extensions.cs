@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace GraphicsLabor.Scripts.Editor.Utility
 {
@@ -10,16 +13,36 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         /// </summary>
         /// <param name="self">The object the method is called on</param>
         /// <param name="parentType">The type to test against</param>
-        /// <param name="includeSelfType">If set to false and parentType==self.GetType() return false</param>
+        /// <param name="excludeSelfType">If set to true will ignore the object's type when testing</param>
         /// <returns></returns>
-        public static bool InheritsFrom(this object self, Type parentType, bool includeSelfType = true)
+        public static bool InheritsFrom(this object self, Type parentType, bool excludeSelfType = false)
         {
-            if (!includeSelfType && self.GetType() == parentType) return false;
-            
-            return ReflectionUtility.GetSelfAndBaseTypes(self).Contains(parentType);
+            if (self == null) throw new NullReferenceException("Using InheritsFrom on null object");
+            Debug.Log($"Testing for {self.GetType()} inheriting {parentType}");
+            return self.GetTypes(excludeSelfType).Contains(parentType);
+        }
+
+        ///  <summary>
+        /// 		Get type and all base types of target, sorted as following:
+        /// 		<para />[self's type, base type, base's base type, ...]
+        ///  </summary>
+        ///  <param name="self">The object the method is called on</param>
+        ///  <param name="excludeSelfType">If set to true will not return this object's type</param>
+        ///  <returns></returns>
+        public static List<Type> GetTypes(this object self, bool excludeSelfType = false) // Returns object Type along with all parents
+        {
+            if (self == null) throw new NullReferenceException("Using GetTypes on null object");
+            List<Type> types = new List<Type> { excludeSelfType ? self.GetType().BaseType : self.GetType() };
+
+            while (types.Last().BaseType != null)
+            {
+                types.Add(types.Last().BaseType);
+            }
+
+            return types;
         }
     }
-
+    
     public static class QuaternionExtensions
     {
         /// <summary>
