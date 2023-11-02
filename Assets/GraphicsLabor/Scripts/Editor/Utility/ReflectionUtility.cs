@@ -15,8 +15,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 Debug.LogError("The target object is null. Check for missing scripts.");
                 yield break;
             }
-
-            List<Type> types = GetSelfAndBaseTypes(target);
+            
+            List<Type> types = target.GetTypes();
 
             for (int i = types.Count - 1; i >= 0; i--)
             {
@@ -39,7 +39,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 yield break;
             }
 
-            List<Type> types = GetSelfAndBaseTypes(target);
+            List<Type> types = target.GetTypes();
 
             for (int i = types.Count - 1; i >= 0; i--)
             {
@@ -62,7 +62,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 yield break;
             }
 
-            List<Type> types = GetSelfAndBaseTypes(target);
+            List<Type> types = target.GetTypes();
 
             for (int i = types.Count - 1; i >= 0; i--)
             {
@@ -73,6 +73,32 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 foreach (MethodInfo methodInfo in methodInfos)
                 {
                     yield return methodInfo;
+                }
+            }
+        }
+        
+        public static IEnumerable<CustomAttributeData> GetAllAttributesOfObject(object target, Func<CustomAttributeData, bool> predicate, bool inherit = false)
+        {
+            if (target == null)
+            {
+                Debug.LogError("The target object is null. Check for missing scripts.");
+                yield break;
+            }
+            
+            List<Type> types = target.GetTypes();
+
+            for (int i = inherit ? types.Count - 1 : 0; i >= 0; i--)
+            {
+                IEnumerable<CustomAttributeData> fieldInfos = types[i].CustomAttributes;
+
+                foreach (CustomAttributeData customAttributeData in fieldInfos)
+                {
+                    //Debug.Log($"Invoking with type: {customAttributeData.AttributeType}");
+                    if (predicate.Invoke(customAttributeData))
+                    {
+                        //Debug.Log($"Yielded attributeDataType: {customAttributeData.AttributeType}");
+                        yield return customAttributeData;
+                    }
                 }
             }
         }
@@ -98,7 +124,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        private static List<Type> GetSelfAndBaseTypes(object target) // Returns object Type along with all parents
+        [Obsolete("Use object.GetTypes() instead")]
+        public static List<Type> GetSelfAndBaseTypes(object target) // Returns object Type along with all parents
         {
             List<Type> types = new List<Type>()
             {

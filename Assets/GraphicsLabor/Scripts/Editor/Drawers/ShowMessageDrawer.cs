@@ -1,4 +1,4 @@
-﻿using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+﻿using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
@@ -21,14 +21,14 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                 rect.width - indent,
                 GetHelpBoxHeight());
             
-            EditorGUI.HelpBox(infoBoxRect  , showMessageAttribute.Message, showMessageAttribute.MessageType);
+            EditorGUI.HelpBox(infoBoxRect, showMessageAttribute.Message, showMessageAttribute.MessageType);
         }
         
         private float GetHelpBoxHeight()
         {
             ShowMessageAttribute showMessageAttributeAttribute = (ShowMessageAttribute)attribute;
-            float minHeight = EditorGUIUtility.singleLineHeight * 2.0f;
-            float desiredHeight = GUI.skin.box.CalcHeight(new GUIContent(showMessageAttributeAttribute.Message), EditorGUIUtility.currentViewWidth);
+            float minHeight = LaborerGUIUtility.MinHelpBoxHeight;
+            float desiredHeight = GUI.skin.box.CalcHeight(new GUIContent(showMessageAttributeAttribute.Message), LaborerGUIUtility.CurrentViewWidth);
             float height = Mathf.Max(minHeight, desiredHeight);
 
             return height;

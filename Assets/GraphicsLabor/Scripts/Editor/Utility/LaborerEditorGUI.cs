@@ -3,6 +3,8 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
+using GraphicsLabor.Scripts.Editor.Windows;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -37,7 +39,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 {
                     buttonEnabled &= Application.isPlaying;
                 }
-
                 EditorGUI.BeginDisabledGroup(!buttonEnabled);
 
                 if (GUILayout.Button(buttonText, ButtonStyle))
@@ -52,16 +53,9 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                         EditorUtility.SetDirty(target);
 
                         PrefabStage stage = PrefabStageUtility.GetCurrentPrefabStage();
-                        if (stage != null)
-                        {
-                            // Prefab mode
-                            EditorSceneManager.MarkSceneDirty(stage.scene);
-                        }
-                        else
-                        {
-                            // Normal scene
-                            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-                        }
+                        // Normal scene
+                        // Prefab mode
+                        EditorSceneManager.MarkSceneDirty(stage ? stage.scene : SceneManager.GetActiveScene());
                     }
                     else if (methodResult != null && target is MonoBehaviour behaviour)
                     {
@@ -78,6 +72,19 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             }
         }
         
+        public static void EditableSoButton(Object target, string buttonText)
+        {
+
+            EditorGUI.BeginDisabledGroup(false);
+
+            if (GUILayout.Button(buttonText, ButtonStyle))
+            {
+                ScriptableObjectEditorWindow.ShowWindow(target);
+            }
+
+            EditorGUI.EndDisabledGroup();
+        }
+        
         public static void PropertyField(Rect rect, SerializedProperty property, bool includeChildren)
         {
             // Check if visible
@@ -91,7 +98,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             }
         }
 
-        public static void LayoutField(SerializedProperty property)
+        public static void LayoutPropertyField(SerializedProperty property)
         {
             if (!PropertyUtility.IsVisible(property)) return;
             
@@ -119,8 +126,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 EditorGUILayout.HelpBox(warning, MessageType.Warning);
             }
         }
-        
-        public static bool DrawField(object value, string label)
+
+        private static bool DrawField(object value, string label)
         {
             using (new EditorGUI.DisabledScope(disabled: true))
             {
@@ -230,7 +237,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             EditorGUI.DrawRect(rect, color);
         }
         
-        public static void HelpBox(Rect rect, string message, MessageType type, UnityEngine.Object context = null, bool logToConsole = false)
+        public static void HelpBox(Rect rect, string message, MessageType type, Object context = null, bool logToConsole = false)
         {
             EditorGUI.HelpBox(rect, message, type);
 

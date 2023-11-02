@@ -1,7 +1,7 @@
 ﻿using System;
 using GraphicsLabor.Scripts.Attributes.Utility;
 
-namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
+namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class ShowIfAttribute : ShowIfAttributeBase

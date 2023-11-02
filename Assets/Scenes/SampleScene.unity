@@ -350,6 +350,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 161255912634011959, guid: ea46416f9a4ac9246a9df8a28b4bf977, type: 3}
+      propertyPath: _showSO
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 161255912634011959, guid: ea46416f9a4ac9246a9df8a28b4bf977, type: 3}
+      propertyPath: _polygonPoints.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 161255912634011959, guid: ea46416f9a4ac9246a9df8a28b4bf977, type: 3}
+      propertyPath: _polygon._points.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 161255912634011959, guid: ea46416f9a4ac9246a9df8a28b4bf977, type: 3}
+      propertyPath: _testEditableScriptableObject
+      value: 
+      objectReference: {fileID: 11400000, guid: 5fdb40ce931b1ab479e421e53f0d935e, type: 2}
     - target: {fileID: 7199568453533115445, guid: ea46416f9a4ac9246a9df8a28b4bf977, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.1506046

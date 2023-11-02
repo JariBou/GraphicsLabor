@@ -1,4 +1,4 @@
-﻿using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+﻿using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
@@ -20,7 +20,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
             }
             
             ScriptableObject scriptableObject = property.objectReferenceValue as ScriptableObject;
-            if (scriptableObject == null) return GetPropertyHeight(property);
+            if (!scriptableObject) return GetPropertyHeight(property);
 
             if (!property.isExpanded) return GetPropertyHeight(property);
             
@@ -64,7 +64,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                 if (typeof(ScriptableObject).IsAssignableFrom(propertyType))
                 {
                     ScriptableObject scriptableObject = property.objectReferenceValue as ScriptableObject;
-                    if (scriptableObject == null)
+                    if (!scriptableObject)
                     {
                         EditorGUI.PropertyField(rect, property, label, false);
                     } else
@@ -74,8 +74,8 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                         {
                             x = rect.x,
                             y = rect.y,
-                            width = EditorGUIUtility.labelWidth,
-                            height = EditorGUIUtility.singleLineHeight
+                            width = LaborerGUIUtility.LabelWidth,
+                            height = LaborerGUIUtility.SingleLineHeight
                         };
 
                         property.isExpanded = EditorGUI.Foldout(foldoutRect, property.isExpanded, label, toggleOnLabelClick: true);
@@ -86,7 +86,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                             x = rect.x,
                             y = rect.y,
                             width = rect.width,
-                            height = EditorGUIUtility.singleLineHeight
+                            height = LaborerGUIUtility.SingleLineHeight
                         };
 
                         EditorGUI.PropertyField(propertyRect, property, label, false);
@@ -112,14 +112,14 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
         private void DrawChildProperties(Rect rect, SerializedProperty property)
         {
             ScriptableObject scriptableObject = property.objectReferenceValue as ScriptableObject;
-            if (scriptableObject == null) return;
+            if (!scriptableObject) return;
 
             Rect boxRect = new()
             {
                 x = 0.0f,
-                y = rect.y + EditorGUIUtility.singleLineHeight,
+                y = rect.y + LaborerGUIUtility.SingleLineHeight,
                 width = rect.width * 2.0f,
-                height = rect.height - EditorGUIUtility.singleLineHeight
+                height = rect.height - LaborerGUIUtility.SingleLineHeight
             };
 
             GUI.Box(boxRect, GUIContent.none);
@@ -129,9 +129,9 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                 SerializedObject serializedObject = new(scriptableObject);
                 serializedObject.Update();
 
-                using (var iterator = serializedObject.GetIterator())
+                using (SerializedProperty iterator = serializedObject.GetIterator())
                 {
-                    float yOffset = EditorGUIUtility.singleLineHeight;
+                    float yOffset = LaborerGUIUtility.SingleLineHeight;
 
                     if (iterator.NextVisible(true))
                     {

@@ -6,6 +6,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.0.0] - 2023-10-29
+
+### Added
+
+- Editable Attribute for SO
+- TabProperty Attribute for SO fields that have the Editable Attribute
+- Manager Attribute for SO
+- ObjectExtension, extension for UnityEngine.Object to test for Inheritance of Types and GetInheritedTypes
+- LaborerGUIUtility, a class to hold needed constants for Drawing GUIs
+- AssetHandler, handles double clicking on supported assets
+- EditorWindowBase, Base class for custom EditorWindows, implements functionality such as opening various windows with the same type
+
+
+### Changed
+
+- Code Refactoring, mainly changes in method scopes
+- ExpandableDrawer now uses LaborerGUIUtility for spacing
+- HorizontalSeparatorDrawer now uses LaborerGUIUtility for spacing
+
+
+### Deprecated
+
+- GetSelfAndBaseTypes is replaced by Object.GetTypes()
+
+
 
 ## [2.0.0] - 2023-10-29
 

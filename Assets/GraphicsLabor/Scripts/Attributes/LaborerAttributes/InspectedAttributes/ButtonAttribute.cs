@@ -1,6 +1,6 @@
 using System;
 
-namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
+namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
 {
     public enum EButtonEnableMode
     {
@@ -10,7 +10,7 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class ButtonAttribute : Attribute, ILaborerAttribute
+    public class ButtonAttribute : InspectedAttribute
 
     {
     public string Text { get; private set; }

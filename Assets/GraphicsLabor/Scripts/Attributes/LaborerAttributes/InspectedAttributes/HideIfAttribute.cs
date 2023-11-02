@@ -1,7 +1,7 @@
 ﻿using System;
 using GraphicsLabor.Scripts.Attributes.Utility;
 
-namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes
+namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
 {
     public class HideIfAttribute : ShowIfAttributeBase
     {
