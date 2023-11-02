@@ -39,9 +39,9 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
             return EditorGUI.GetPropertyHeight(property, includeChildren: true);
         }
 
-        protected float GetHelpBoxHeight()
+        protected virtual float GetHelpBoxHeight()
         {
-            return EditorGUIUtility.singleLineHeight * 2.0f;
+            return LaborerGUIUtility.SingleLineHeight * 2.0f;
         }
 
         protected void DrawDefaultPropertyAndHelpBox(Rect rect, SerializedProperty property, string message, MessageType messageType)

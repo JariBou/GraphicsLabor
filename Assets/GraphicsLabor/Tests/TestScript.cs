@@ -1,10 +1,11 @@
 using System.Collections.Generic;
-using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
-using GraphicsLabor.Scripts.Core;
 using GraphicsLabor.Scripts.Core.Laborers;
 using GraphicsLabor.Scripts.Core.Laborers.Utils;
 using GraphicsLabor.Scripts.Core.Shapes;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -36,7 +37,7 @@ namespace GraphicsLabor.Tests
         public Color _triangleBorderColor;
         [FormerlySerializedAs("_triangleDrawMode")] public LaborerDrawMode _triangleLaborerDrawMode;
 
-        [Space, Header("Polygon")]
+        [Space, Header("Polygon"), ShowMessage("Helloooo", MessageType.Info)]
         public bool _drawPolygon;
         public List<Transform> _polygonPoints;
         public Polygon _polygon;
@@ -44,11 +45,12 @@ namespace GraphicsLabor.Tests
         [FormerlySerializedAs("_polygonDrawMode")] public LaborerDrawMode _polygonLaborerDrawMode;
         [HideIf(ConditionOperator.Or, "_drawPolygon", "_drawCircle")] public int Hello;
         public bool _showSO;
-        [ShowIf("_showSO"), Expandable]public TestScriptableObject _testScriptableObject;
+        [ShowProperty] public int Testooo => Hello;
+        [ShowIf("_showSO"), Expandable] public TestEditableScriptableObject _testEditableScriptableObject;
         [Scene] public string _scene;
         
         // public static int test;
-        
+
         void OnEnable()
         {
             GraphicLaborer.DrawCallback += OnDraw;

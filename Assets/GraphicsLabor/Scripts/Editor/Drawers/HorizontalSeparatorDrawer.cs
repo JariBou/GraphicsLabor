@@ -1,4 +1,4 @@
-﻿using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
+﻿using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
@@ -12,13 +12,13 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
         public override float GetHeight()
         {
             HorizontalSeparatorAttribute lineAttr = (HorizontalSeparatorAttribute)attribute;
-            return EditorGUIUtility.singleLineHeight + lineAttr.Height;
+            return LaborerGUIUtility.SingleLineHeight + lineAttr.Height;
         }
 
         public override void OnGUI(Rect position)
         {
             Rect rect = EditorGUI.IndentedRect(position);
-            rect.y += EditorGUIUtility.singleLineHeight / 3.0f;
+            rect.y += LaborerGUIUtility.LineSeparatorSpacing;
             HorizontalSeparatorAttribute lineAttr = (HorizontalSeparatorAttribute)attribute;
             LaborerEditorGUI.HorizontalLine(rect, lineAttr.Height, lineAttr.Color.GetColor());
         }
