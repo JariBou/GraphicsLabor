@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Reflection;
-using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Editor.Windows;
 using UnityEditor;

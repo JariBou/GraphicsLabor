@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using GraphicsLabor.Scripts.Editor.Utility;
