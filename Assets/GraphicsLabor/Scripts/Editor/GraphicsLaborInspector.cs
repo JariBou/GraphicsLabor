@@ -48,7 +48,6 @@ namespace GraphicsLabor.Scripts.Editor
             DrawButtons();
             if (_isEditableScriptableObject)
             {
-                Debug.Log("_isEditableScriptableObject");
                 LaborerEditorGUI.EditableSoButton(serializedObject.targetObject, "Show Editor");
             }
         }

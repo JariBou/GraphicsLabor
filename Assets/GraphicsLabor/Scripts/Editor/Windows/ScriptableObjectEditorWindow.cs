@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
@@ -131,49 +134,21 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
             GUI.Box(boxRect, GUIContent.none);
             
-            Dictionary<string, List<SerializedProperty>> tabbedProperties = new Dictionary<string, List<SerializedProperty>>();
+            Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties = new Dictionary<string, List<SerializedProperty>>();
+            Dictionary<string, List<PropertyInfo>> tabbedProperties = new Dictionary<string, List<PropertyInfo>>();
 
             using (new EditorGUI.IndentLevelScope())
             {
                 SerializedObject serializedObject = new(scriptableObject);
                 serializedObject.Update();
-                float yOffset = 0;
+                float yOffset = LaborerGUIUtility.PropertyHeightSpacing;
+
+                yOffset += DrawScriptableObjectNormalSerializedFields(startRect, yOffset, serializedObject, ref tabbedSerializedProperties);
+                yOffset += DrawScriptableObjectNormalProperties(startRect, yOffset, serializedObject, ref tabbedProperties);
                 
-                using (SerializedProperty iterator = serializedObject.GetIterator())
-                {
-                    if (iterator.NextVisible(true))
-                    {
-                        do
-                        {
-                            SerializedProperty serializedProperty = serializedObject.FindProperty(iterator.name);
-                            
-                            if (serializedProperty.name.Equals("m_Script", StringComparison.Ordinal)) continue;
-
-                            bool visible = PropertyUtility.IsVisible(serializedProperty) && PropertyUtility.IsEnabled(serializedProperty);
-                            if (!visible) continue;
-                            
-                            float childHeight = LaborerWindowGUI.GetPropertyHeight(serializedProperty);
-                            Rect childRect = new()
-                            {
-                                x = startRect.x,
-                                y = startRect.y + yOffset,
-                                width = startRect.width,
-                                height = childHeight
-                            };
-                            if (LaborerWindowGUI.DrawProperty(childRect, serializedProperty, ref tabbedProperties, true))
-                            {
-                                yOffset += childHeight + LaborerGUIUtility.PropertyHeightSpacing;
-                            }
-
-                            //LaborerEditorGUI.PropertyField(childRect, childProperty, true);
-
-                        } while (iterator.NextVisible(false));
-                    }
-                }
-
-                float buttonWidth = startRect.width / tabbedProperties.Count;
+                float buttonWidth = startRect.width / tabbedSerializedProperties.Count;
                 int i = 0;
-                foreach (KeyValuePair<string,List<SerializedProperty>> keyValuePair in tabbedProperties)
+                foreach (KeyValuePair<string,List<SerializedProperty>> keyValuePair in tabbedSerializedProperties)
                 {
                     Rect buttonRect = new()
                     {
@@ -186,46 +161,159 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                     {
                         _selectedTab = keyValuePair.Key == _selectedTab ? "" : keyValuePair.Key;
                     }
-
+                    
                     i++;
                 }
                 yOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing*2;
                 
 
-                if (tabbedProperties.TryGetValue(_selectedTab, out var properties))
+                if (tabbedSerializedProperties.TryGetValue(_selectedTab, out var serializedProperties))
                 {
-                    using (new EditorGUI.IndentLevelScope())
-                    {
-                        Rect bgRect = new()
-                        {
-                            x = 0.0f,
-                            y = startRect.y + yOffset - LaborerGUIUtility.PropertyHeightSpacing,
-                            width = startRect.width,
-                            height = LaborerWindowGUI.GetPropertiesHeight(properties, LaborerGUIUtility.PropertyHeightSpacing)
-                        };
-                        GUI.Box(bgRect, GUIContent.none);
-
-                        foreach (SerializedProperty property in properties)
-                        {
-                            float childHeight = LaborerWindowGUI.GetPropertyHeight(property);
-                            Rect childRect = new()
-                            {
-                                x = startRect.x,
-                                y = startRect.y + yOffset,
-                                width = startRect.width,
-                                height = childHeight
-                            };
-                            if (LaborerWindowGUI.DrawProperty(childRect, property, ref tabbedProperties, false))
-                            {
-                                yOffset += childHeight + LaborerGUIUtility.PropertyHeightSpacing;
-                            }
-                        }
-                    }
+                    yOffset += DrawScriptableObjectTabbedSerializedFields(startRect, yOffset, serializedProperties);
+                }
+                if (tabbedProperties.TryGetValue(_selectedTab, out var normalProperties))
+                {
+                    yOffset += DrawScriptableObjectTabbedProperties(startRect, yOffset, serializedObject, normalProperties);
                 }
                 
                 serializedObject.ApplyModifiedProperties();
                 return yOffset;
             }
+        }
+
+        private float DrawScriptableObjectNormalSerializedFields(Rect startRect, float yOffset, SerializedObject serializedObject, ref Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties)
+        {
+            float localOffset = 0;
+            using SerializedProperty iterator = serializedObject.GetIterator();
+            if (!iterator.NextVisible(true)) return localOffset;
+            
+            do
+            {
+                SerializedProperty serializedProperty = serializedObject.FindProperty(iterator.name);
+                            
+                if (serializedProperty.name.Equals("m_Script", StringComparison.Ordinal)) continue;
+
+                bool visible = PropertyUtility.IsVisible(serializedProperty) && PropertyUtility.IsEnabled(serializedProperty);
+                if (!visible) continue;
+                            
+                float childHeight = LaborerWindowGUI.GetPropertyHeight(serializedProperty);
+                Rect childRect = new()
+                {
+                    x = startRect.x,
+                    y = startRect.y + yOffset + localOffset,
+                    width = startRect.width,
+                    height = childHeight
+                };
+                if (LaborerWindowGUI.DrawSerializedProperty(childRect, serializedProperty, ref tabbedSerializedProperties, true))
+                {
+                    localOffset += childHeight + LaborerGUIUtility.PropertyHeightSpacing;
+                }
+
+                //LaborerEditorGUI.PropertyField(childRect, childProperty, true);
+
+            } while (iterator.NextVisible(false));
+
+            return localOffset;
+        }
+        
+        private float DrawScriptableObjectTabbedSerializedFields(Rect startRect, float yOffset, List<SerializedProperty> properties)
+        {
+            float localOffset = 0;
+            
+            using (new EditorGUI.IndentLevelScope())
+            {
+                Rect bgRect = new()
+                {
+                    x = 0.0f,
+                    y = startRect.y + yOffset + localOffset - LaborerGUIUtility.PropertyHeightSpacing,
+                    width = startRect.width,
+                    height = LaborerWindowGUI.GetPropertiesHeight(properties, LaborerGUIUtility.PropertyHeightSpacing)
+                };
+                GUI.Box(bgRect, GUIContent.none);
+
+                foreach (SerializedProperty property in properties)
+                {
+                    float childHeight = LaborerWindowGUI.GetPropertyHeight(property);
+                    Rect childRect = new()
+                    {
+                        x = startRect.x,
+                        y = startRect.y + yOffset + localOffset,
+                        width = startRect.width,
+                        height = childHeight
+                    };
+                    LaborerEditorGUI.PropertyField(childRect, property, true);
+                    
+                    localOffset += childHeight + LaborerGUIUtility.PropertyHeightSpacing;
+                }
+            }
+            
+            return localOffset;
+        }
+
+        private float DrawScriptableObjectNormalProperties(Rect startRect, float yOffset, SerializedObject serializedObject, ref Dictionary<string, List<PropertyInfo>> tabbedProperties)
+        {
+            float localOffset = 0;
+            IEnumerable<PropertyInfo> properties = ReflectionUtility.GetAllProperties(serializedObject.targetObject, p => p.GetCustomAttributes(typeof(ShowPropertyAttribute), true).Length > 0);
+
+            IEnumerable<PropertyInfo> propertyInfos = properties as PropertyInfo[] ?? properties.ToArray();
+            if (!propertyInfos.Any())
+            {
+                Debug.Log("No properties");
+                return localOffset;
+            }
+
+            foreach (PropertyInfo propertyInfo in propertyInfos)
+            {
+                Rect newRect = new()
+                {
+                    x = startRect.x,
+                    y = startRect.y + yOffset + localOffset,
+                    width = startRect.width,
+                    height = LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing
+                };
+                if (LaborerWindowGUI.DrawProperty(newRect, propertyInfo, serializedObject.targetObject, ref tabbedProperties, true))
+                {
+                    Debug.Log($"Drawing Property {propertyInfo.Name}");
+                    localOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
+                }
+            }
+
+            return localOffset;
+
+        }
+        
+        private float DrawScriptableObjectTabbedProperties(Rect startRect, float yOffset, SerializedObject serializedObject, List<PropertyInfo> properties)
+        {
+            float localOffset = 0;
+            
+            using (new EditorGUI.IndentLevelScope())
+            {
+                Rect bgRect = new()
+                {
+                    x = 0.0f,
+                    y = startRect.y + yOffset + localOffset - LaborerGUIUtility.PropertyHeightSpacing,
+                    width = startRect.width,
+                    height = (LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing) * properties.Count
+                };
+                GUI.Box(bgRect, GUIContent.none);
+
+                foreach (PropertyInfo property in properties)
+                {
+                    float childHeight = LaborerGUIUtility.SingleLineHeight;
+                    Rect childRect = new()
+                    {
+                        x = startRect.x,
+                        y = startRect.y + yOffset + localOffset,
+                        width = startRect.width,
+                        height = childHeight
+                    };
+                    LaborerWindowGUI.DrawProperty(childRect, property, serializedObject.targetObject);
+                    
+                    localOffset += childHeight + LaborerGUIUtility.PropertyHeightSpacing;
+                }
+            }
+            
+            return localOffset;
         }
     }
 }

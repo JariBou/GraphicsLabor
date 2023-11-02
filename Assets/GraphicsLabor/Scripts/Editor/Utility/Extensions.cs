@@ -15,10 +15,10 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         /// <param name="parentType">The type to test against</param>
         /// <param name="excludeSelfType">If set to true will ignore the object's type when testing</param>
         /// <returns></returns>
-        public static bool InheritsFrom(this object self, Type parentType, bool excludeSelfType = false)
+        public static bool InheritsFrom(this object self, Type parentType, bool excludeSelfType = false, bool toConsole = false)
         {
             if (self == null) throw new NullReferenceException("Using InheritsFrom on null object");
-            Debug.Log($"Testing for {self.GetType()} inheriting {parentType}");
+            if (toConsole) Debug.Log($"Testing for {self.GetType()} inheriting {parentType}");
             return self.GetTypes(excludeSelfType).Contains(parentType);
         }
 

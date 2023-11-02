@@ -44,7 +44,7 @@ namespace GraphicsLabor.Tests
         public bool _drawPolygon;
         public List<Transform> _polygonPoints;
         public Polygon _polygon;
-        [TabProperty] public Color _polygonBorderColor;
+        public Color _polygonBorderColor;
         [FormerlySerializedAs("_polygonDrawMode")] public LaborerDrawMode _polygonLaborerDrawMode;
         [HideIf(ConditionOperator.Or, "_drawPolygon", "_drawCircle")] public int Hello;
         public bool _showSO;

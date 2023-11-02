@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 619c8340c245aa649852cc468de51163, type: 3}
   m_Name: TestScriptableObject
   m_EditorClassIdentifier: 
-  testString: test
+  testString: x
   testInt: 20
   SerializableTestClass:
     testInt: 0

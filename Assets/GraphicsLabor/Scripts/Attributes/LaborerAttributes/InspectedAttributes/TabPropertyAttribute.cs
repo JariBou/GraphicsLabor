@@ -3,7 +3,7 @@
 namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
 {
 
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class TabPropertyAttribute : DrawerAttribute
     {
         // TODO: adapt to regularInspector maybe?

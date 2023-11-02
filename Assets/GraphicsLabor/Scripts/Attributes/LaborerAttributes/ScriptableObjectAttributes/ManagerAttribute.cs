@@ -5,6 +5,6 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAtt
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class ManagerAttribute : ScriptableObjectAttribute
     {
-        
+        // Not implemented
     }
 }

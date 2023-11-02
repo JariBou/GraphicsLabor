@@ -26,7 +26,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             
             // Editable takes priority over Manager
 
-            Debug.Log(obj.InheritsFrom(typeof(ScriptableObject)) ? "It should be fine" : "Problem");
 
             IEnumerable<CustomAttributeData> objectCustomAttributes = ReflectionUtility.GetAllAttributesOfObject(obj,
                 data => data.AttributeType.IsSubclassOf(typeof(ScriptableObjectAttribute)), true).ToList();

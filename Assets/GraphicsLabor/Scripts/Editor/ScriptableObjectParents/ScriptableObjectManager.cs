@@ -1,4 +1,5 @@
-﻿using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
+﻿using System;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Editor.ScriptableObjectParents

@@ -14,8 +14,8 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
     {
         protected override void OnSelfGUI(Rect rect, SerializedProperty property, GUIContent label)
         {
-            //EditorGUI.BeginProperty(rect, label, property);
-
+            EditorGUI.BeginProperty(rect, label, property);
+            
             Object obj = property.serializedObject.targetObject;
             
             if (!obj.GetTypes().Contains(typeof(ScriptableObject)) || !ReflectionUtility.GetAllAttributesOfObject(obj, data => data.AttributeType == typeof(EditableAttribute), true).Any())
@@ -28,7 +28,16 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                 LaborerEditorGUI.PropertyField(rect, property, true);
             }
             
-            //EditorGUI.EndProperty();
+            EditorGUI.EndProperty();
+        }
+
+        protected override float GetHelpBoxHeight()
+        {
+            float minHeight = LaborerGUIUtility.MinHelpBoxHeight;
+            float desiredHeight = GUI.skin.box.CalcHeight(new GUIContent("TabProperty Attribute only works on ScriptableObjects with the Attribute Editable"), LaborerGUIUtility.CurrentViewWidth);
+            float height = Mathf.Max(minHeight, desiredHeight);
+
+            return height;
         }
     }
 }

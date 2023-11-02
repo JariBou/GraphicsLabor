@@ -18,6 +18,11 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             T[] attributes = GetAttributes<T>(property);
             return attributes.Length > 0 ? attributes[0] : null;
         }
+        
+        public static T GetAttribute<T>(PropertyInfo property) where T : Attribute
+        {
+            return property.GetCustomAttributes<T>().FirstOrDefault(data => data.GetType() == typeof(T));
+        }
 
         private static T[] GetAttributes<T>(SerializedProperty property) where T : class
         {
