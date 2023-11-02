@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
-using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
-using GraphicsLabor.Scripts.Core;
 using GraphicsLabor.Scripts.Core.Laborers;
 using GraphicsLabor.Scripts.Core.Laborers.Utils;
 using GraphicsLabor.Scripts.Core.Shapes;

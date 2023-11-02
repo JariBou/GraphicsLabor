@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using GraphicsLabor.Scripts.Attributes.LaborerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Editor.ScriptableObjectParents;
-using GraphicsLabor.Scripts.Editor.Windows;
 using UnityEngine;
 
 namespace GraphicsLabor.Tests

@@ -4,10 +4,8 @@ using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
-using GraphicsLabor.Scripts.Editor.ScriptableObjectParents;
 using GraphicsLabor.Scripts.Editor.Windows;
 using UnityEditor;
-using UnityEngine;
 using UnityEditor.Callbacks;
 using Object = UnityEngine.Object;
 
@@ -42,9 +40,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             {
                 ScriptableObjectEditorWindow.ShowWindow(obj);
                 return true;
-            } else if (attributeTypes.Contains(typeof(ScriptableObjectManager)))
-            {
-                // Coming soon...        
             }
 
             // Not handled by GraphicsLabor
