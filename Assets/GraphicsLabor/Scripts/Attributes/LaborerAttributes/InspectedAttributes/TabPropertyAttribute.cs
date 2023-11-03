@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
 {
@@ -7,16 +8,13 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
     public class TabPropertyAttribute : DrawerAttribute
     {
         // TODO: adapt to regularInspector maybe?
-        public readonly string[] _tabNames;
-
-        public TabPropertyAttribute(string tabName)
-        {
-            _tabNames = new[] { tabName };
-        }
+        public readonly string[] TabNames;
         
-        public TabPropertyAttribute(params string[] tabNames)
+        public TabPropertyAttribute(string tabName, params string[] tabNames)
         {
-            _tabNames = tabNames;
+            List<string> tempList = new List<string> { tabName };
+            tempList.AddRange(tabNames);
+            TabNames = tempList.ToArray();
         }
     }
     

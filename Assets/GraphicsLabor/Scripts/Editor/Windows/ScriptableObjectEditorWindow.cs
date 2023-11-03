@@ -19,6 +19,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         private bool _foldoutState;
         private string _path;
         private string _selectedTab = "";
+        private Color _baseBgColor;
         
         [MenuItem("Window/GraphicLabor/Test Window")]
         public static void ShowWindow()
@@ -57,6 +58,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
         private void DrawWithRect()
         {
+            GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
+
             Rect currentRect = EditorGUILayout.GetControlRect();
             
             EditorGUI.LabelField(currentRect,"Hello!");
@@ -118,21 +121,34 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 _path = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
             }
         }
+
+        private IEnumerable<string> ConcatenateLists(IEnumerable<string> listA, IEnumerable<string> listB,
+            bool allowDuplicates = false)
+        {
+            List<string> concatenatedList = new List<string>();
+            concatenatedList.AddRange(listA);
+
+            if (allowDuplicates)
+            {
+                concatenatedList.AddRange(listB);
+            }
+            else
+            {
+                foreach (string s in listB)
+                {
+                    if (concatenatedList.Contains(s)) continue;
+                    
+                    concatenatedList.Add(s);
+                }
+            }
+
+            return concatenatedList;
+        }
         
         // Does not fix [Expandable] ScriptableObject drawing problem
         private float DrawScriptableObjectWithRect(Rect startRect, ScriptableObject scriptableObject)
         {
             if (!scriptableObject) return 0f;
-
-            Rect boxRect = new()
-            {
-                x = 0.0f,
-                y = startRect.y + LaborerGUIUtility.SingleLineHeight,
-                width = startRect.width * 2.0f,
-                height = startRect.height - LaborerGUIUtility.SingleLineHeight
-            };
-
-            GUI.Box(boxRect, GUIContent.none);
             
             Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties = new Dictionary<string, List<SerializedProperty>>();
             Dictionary<string, List<PropertyInfo>> tabbedProperties = new Dictionary<string, List<PropertyInfo>>();
@@ -145,10 +161,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
                 yOffset += DrawScriptableObjectNormalSerializedFields(startRect, yOffset, serializedObject, ref tabbedSerializedProperties);
                 yOffset += DrawScriptableObjectNormalProperties(startRect, yOffset, serializedObject, ref tabbedProperties);
-                
-                float buttonWidth = startRect.width / tabbedSerializedProperties.Count;
+
+                IEnumerable<string> tabs = ConcatenateLists(tabbedSerializedProperties.Keys, tabbedProperties.Keys).ToArray();
+                float buttonWidth = startRect.width / tabs.Count();
                 int i = 0;
-                foreach (KeyValuePair<string,List<SerializedProperty>> keyValuePair in tabbedSerializedProperties)
+                foreach (string key in tabs)
                 {
                     Rect buttonRect = new()
                     {
@@ -157,10 +174,16 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                         width = buttonWidth,
                         height = LaborerGUIUtility.SingleLineHeight
                     };
-                    if (GUI.Button(buttonRect, keyValuePair.Key, EditorStyles.toolbarButton))
+                    if (key == _selectedTab)
                     {
-                        _selectedTab = keyValuePair.Key == _selectedTab ? "" : keyValuePair.Key;
+                        GUI.backgroundColor = LaborerGUIUtility.SelectedTabColor;
+                    } 
+                    if (GUI.Button(buttonRect, key, EditorStyles.toolbarButton))
+                    {
+                        _selectedTab = key == _selectedTab ? "" : key;
                     }
+
+                    GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
                     
                     i++;
                 }
@@ -175,7 +198,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 {
                     yOffset += DrawScriptableObjectTabbedProperties(startRect, yOffset, serializedObject, normalProperties);
                 }
-                
+
+                yOffset += LaborerGUIUtility.PropertyHeightSpacing;
                 serializedObject.ApplyModifiedProperties();
                 return yOffset;
             }
@@ -226,9 +250,10 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 {
                     x = 0.0f,
                     y = startRect.y + yOffset + localOffset - LaborerGUIUtility.PropertyHeightSpacing,
-                    width = startRect.width,
+                    width = startRect.width * 2.0f,
                     height = LaborerWindowGUI.GetPropertiesHeight(properties, LaborerGUIUtility.PropertyHeightSpacing)
                 };
+                
                 GUI.Box(bgRect, GUIContent.none);
 
                 foreach (SerializedProperty property in properties)
@@ -247,7 +272,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 }
             }
             
-            return localOffset;
+            return localOffset + LaborerGUIUtility.PropertyHeightSpacing;
         }
 
         private float DrawScriptableObjectNormalProperties(Rect startRect, float yOffset, SerializedObject serializedObject, ref Dictionary<string, List<PropertyInfo>> tabbedProperties)
@@ -292,9 +317,10 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 {
                     x = 0.0f,
                     y = startRect.y + yOffset + localOffset - LaborerGUIUtility.PropertyHeightSpacing,
-                    width = startRect.width,
-                    height = (LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing) * properties.Count
+                    width = startRect.width * 2.0f,
+                    height = (LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing) * properties.Count + LaborerGUIUtility.PropertyHeightSpacing
                 };
+
                 GUI.Box(bgRect, GUIContent.none);
 
                 foreach (PropertyInfo property in properties)
@@ -313,7 +339,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 }
             }
             
-            return localOffset;
+            return localOffset + LaborerGUIUtility.PropertyHeightSpacing;
         }
     }
 }
