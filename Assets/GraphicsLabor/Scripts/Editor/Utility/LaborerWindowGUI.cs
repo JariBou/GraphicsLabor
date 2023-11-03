@@ -118,7 +118,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             
             if (checkForTab && PropertyUtility.GetAttribute<TabPropertyAttribute>(serializedProperty) is { } tabPropertyAttribute)
             {
-                foreach (string tabName in tabPropertyAttribute._tabNames)
+                foreach (string tabName in tabPropertyAttribute.TabNames)
                 {
                     if (tabbedProperties.ContainsKey(tabName))
                     {
@@ -152,7 +152,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             
             if (checkForTab && PropertyUtility.GetAttribute<TabPropertyAttribute>(serializedProperty) is { } tabPropertyAttribute)
             {
-                foreach (string tabName in tabPropertyAttribute._tabNames)
+                foreach (string tabName in tabPropertyAttribute.TabNames)
                 {
                     if (tabbedSerializedProperties.ContainsKey(tabName))
                     {
@@ -186,7 +186,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             
             if (checkForTab && PropertyUtility.GetAttribute<TabPropertyAttribute>(property) is { } tabPropertyAttribute)
             {
-                foreach (string tabName in tabPropertyAttribute._tabNames)
+                foreach (string tabName in tabPropertyAttribute.TabNames)
                 {
                     if (tabbedProperties.ContainsKey(tabName))
                     {

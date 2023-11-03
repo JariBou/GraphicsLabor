@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Editor.Utility
 {
@@ -11,5 +12,10 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         public static float LabelWidth => EditorGUIUtility.labelWidth;
         public static float MinHelpBoxHeight => SingleLineHeight * 2f;
         public static float CurrentViewWidth => EditorGUIUtility.currentViewWidth;
+
+        #region Window Colors
+            public static Color SelectedTabColor => Color.gray;
+            public static Color BaseBackgroundColor => new(0.9f, 0.9f, 0.9f);
+        #endregion
     }
 }
