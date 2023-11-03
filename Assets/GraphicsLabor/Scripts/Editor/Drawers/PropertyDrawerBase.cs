@@ -6,6 +6,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
 {
     public abstract class PropertyDrawerBase : PropertyDrawer
     {
+        // TODO: Resizeable text area
         public sealed override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
         {
             bool visible = PropertyUtility.IsVisible(property);

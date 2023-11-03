@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.0.1] - 2023-11-03
+
+### Added
+
+- SelectedTab button now has a darker background to indicate it is selected
+
+
+### Changed
+
+- TabProperty now properly works on Properties when no field is part of that Tab
+- TabProperty now requires at least 1 tab name to function
+
+
+
 ## [3.0.0] - 2023-11-02
 
 ### Added
