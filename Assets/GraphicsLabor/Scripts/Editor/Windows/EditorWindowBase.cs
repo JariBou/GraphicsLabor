@@ -1,6 +1,8 @@
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using GraphicsLabor.Scripts.Core.Utility;
+using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -10,11 +12,13 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 {
     public abstract class EditorWindowBase : EditorWindow
     {
-        private static readonly List<EditorWindowBase> OpenedCustomEditors = new();
         protected string WindowName { get; set; }
         private Type SelfType { get; set; }
+        private int InstanceId { get; set; }
+
+        private static WindowSettings _settings;
         
-        public abstract void OnGUI();
+        protected abstract void OnGUI();
         protected abstract void PassInspectedObject(Object obj);
         
         private void OnInspectorUpdate()
@@ -22,19 +26,32 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             Repaint();
         }
 
+        // TODO: fix opening and closing of windows
         private void OnDestroy()
         {
-            OpenedCustomEditors.Remove(OpenedCustomEditors.Find(editor => editor.WindowName == WindowName && editor.SelfType == SelfType ));
+            GetWindowsSetting().OpenedCustomEditors.Remove(GetWindowsSetting().OpenedCustomEditors.Find(StrictComparisonPredicate));
+        }
+
+        private bool StrictComparisonPredicate(EditorWindowBase editor)
+        {
+            bool isSame = true;
+            isSame &= editor.WindowName == (WindowName ?? "null");
+            isSame &= editor.SelfType == SelfType;
+            // isSame &= editor.InstanceId == InstanceId;
+            return isSame;
         }
 
         protected static T CreateNewEditorWindow<T>(Object obj, string displayName = "EditorWindowBase") where T : EditorWindowBase
         {
             EditorWindowBase window = null;
-
+            WindowSettings settings = GetWindowsSetting();
+            
             bool found = false;
-            if (OpenedCustomEditors.Count != 0)
+            if (settings.OpenedCustomEditors.Count != 0)
             {
-                foreach (EditorWindowBase customEditor in OpenedCustomEditors.Where(customEditor => customEditor.WindowName == obj.name && customEditor.SelfType == typeof(T)))
+                GLogger.Log(settings.OpenedCustomEditors.Count.ToString());
+                foreach (EditorWindowBase customEditor in settings.OpenedCustomEditors
+                             .Where(customEditor => customEditor.WindowName == (obj != null ? obj.name : "null") && customEditor.SelfType == typeof(T)))
                 {
                     window = customEditor;
                     found = true;
@@ -55,11 +72,27 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         {
             EditorWindowBase window = CreateWindow<T>(desiredDockNextTo);
             window.titleContent = new GUIContent(displayName);
-            window.WindowName = obj.name;
             window.SelfType = typeof(T);
+            window.InstanceId = window.GetInstanceID();
             window.PassInspectedObject(obj);
-            OpenedCustomEditors.Add(window);
+            GetWindowsSetting().OpenedCustomEditors.Add(window);
             return (T)window;
+        }
+
+        private static WindowSettings GetWindowsSetting()
+        {
+            if (_settings != null) return _settings;
+            
+            WindowSettings settings = AssetDatabase.LoadAssetAtPath<WindowSettings>("Assets/GraphicsLabor/Settings/WindowSettingsSo.asset");
+            if (settings == null)
+            {
+                settings = CreateInstance<WindowSettings>();
+                AssetDatabase.CreateAsset(settings, "Assets/GraphicsLabor/Settings/WindowSettingsSo.asset");
+                AssetDatabase.SaveAssets();
+            }
+
+            _settings = settings;
+            return settings;
         }
     }
 }

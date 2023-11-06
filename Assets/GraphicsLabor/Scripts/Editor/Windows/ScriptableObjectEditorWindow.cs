@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
+using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
@@ -24,36 +25,41 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         [MenuItem("Window/GraphicLabor/Test Window")]
         public static void ShowWindow()
         {
-            _window = GetWindow<ScriptableObjectEditorWindow>();
-            _window.titleContent = new GUIContent("ScriptableObjectEditor");
-            _window._selectedScriptableObject = null;
-            _window.WindowName = "ScriptableObjectEditor";
+            // _window = GetWindow<ScriptableObjectEditorWindow>();
+            // _window.titleContent = new GUIContent("ScriptableObjectEditor");
+            // _window._selectedScriptableObject = null;
+            // _window.WindowName = "ScriptableObjectEditor";
+            _window = CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "ScriptableObjectEditor");
         }
         
         public static void ShowWindow(Object obj)
         {
             if (obj == null || !obj.InheritsFrom(typeof(ScriptableObject)))
             {
-                throw new ArgumentException($"Object of type {obj.GetType()} is not assignable to ScriptableObject");
+                _window = CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "ScriptableObjectEditor");
+                GLogger.LogWarning($"Object of type {obj.GetType()} is not assignable to ScriptableObject");
+            }
+            else
+            {
+                _window = CreateNewEditorWindow<ScriptableObjectEditorWindow>(obj, "ScriptableObjectEditor");
             }
             
             // _window = GetWindow<ScriptableObjectEditorWindow>();
             // _window.titleContent = new GUIContent("ScriptableObjectEditor");
             // _window._selectedScriptableObject = (ScriptableObject)obj;
             // _window.WindowName = obj.name;
-            
-            _window = CreateNewEditorWindow<ScriptableObjectEditorWindow>(obj, "ScriptableObjectEditor");
-            
         }
 
-        public override void OnGUI()
+        protected override void OnGUI()
         {
             DrawWithRect();
         }
 
         protected override void PassInspectedObject(Object obj)
         {
+            if (_window == null) _window = this;
             _selectedScriptableObject = (ScriptableObject)obj;
+            _window.WindowName = obj != null ? obj.name : "null";
         }
 
         private void DrawWithRect()
@@ -69,8 +75,13 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             // For now dont allow change of SO if set
             using (new EditorGUI.DisabledScope(disabled: _selectedScriptableObject))
             {
+                EditorGUI.BeginChangeCheck();
                 _selectedScriptableObject = (ScriptableObject)EditorGUI.ObjectField(currentRect, "ScriptableObjectField",
                     _selectedScriptableObject, typeof(ScriptableObject), false);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    PassInspectedObject(_selectedScriptableObject);
+                }
                 currentRect.y += LaborerGUIUtility.SingleLineHeight;
             }
 
@@ -298,7 +309,6 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 };
                 if (LaborerWindowGUI.DrawProperty(newRect, propertyInfo, serializedObject.targetObject, ref tabbedProperties, true))
                 {
-                    Debug.Log($"Drawing Property {propertyInfo.Name}");
                     localOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
                 }
             }
