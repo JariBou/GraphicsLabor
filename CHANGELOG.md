@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.2] - 2023-11-07
+
+### Added
+
+- Settigns SO to hold GraphicsLabor custom editor windows related settings
+
+### Changed
+
+- Custom Editor Windows now are remembered when compiling scripts
+
+
 
 ## [3.0.1] - 2023-11-03
 
@@ -17,7 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - TabProperty now properly works on Properties when no field is part of that Tab
 - TabProperty now requires at least 1 tab name to function
-- Fixed Custom Editor Windows sometimes opening multiple instances
 
 
 
