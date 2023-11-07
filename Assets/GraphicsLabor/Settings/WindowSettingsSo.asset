@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87521f138986467f89feda79950e1d68, type: 3}
   m_Name: WindowSettingsSo
   m_EditorClassIdentifier: 
-  OpenedCustomEditors:
-  - {fileID: 0}
-  - {fileID: 0}
+  OpenedCustomEditors: []

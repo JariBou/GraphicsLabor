@@ -70,6 +70,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
         private static T CreateAndInitWindow<T>(Object obj, string displayName, params Type[] desiredDockNextTo) where T : EditorWindowBase
         {
+            GLogger.Log("Initing new window");
             EditorWindowBase window = CreateWindow<T>(desiredDockNextTo);
             window.titleContent = new GUIContent(displayName);
             window.SelfType = typeof(T);

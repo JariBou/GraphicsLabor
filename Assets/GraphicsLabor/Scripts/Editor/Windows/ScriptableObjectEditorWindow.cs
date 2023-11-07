@@ -57,9 +57,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
         protected override void PassInspectedObject(Object obj)
         {
-            if (_window == null) _window = this;
             _selectedScriptableObject = (ScriptableObject)obj;
-            _window.WindowName = obj != null ? obj.name : "null";
+            WindowName = obj != null ? obj.name : "null";
         }
 
         private void DrawWithRect()
