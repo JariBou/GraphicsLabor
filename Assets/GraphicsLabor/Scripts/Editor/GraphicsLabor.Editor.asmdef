@@ -1,4 +1,17 @@
 {
-	"name": "GraphicsLabor.Editor",
-	"references":[ "GUID:e90fb5411ff5e7241858daa04f921028" ]
+    "name": "GraphicsLabor.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e90fb5411ff5e7241858daa04f921028",
+        "GUID:e15dac9a765228e4da58a5d97fe78213"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
