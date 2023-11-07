@@ -53,6 +53,18 @@ namespace GraphicsLabor.Scripts.Core.Laborers
         {
             return new Vector3(a.x * mask.x, a.y * mask.y, a.z * mask.z);
         }
+
+        public static Vector2 GetValueAsX(float val)
+        {
+            return new Vector2(val, 0);
+        }
+        
+        public static Vector2 GetValueAsY(float val)
+        {
+            return new Vector2(0, val);
+        }
+
+       
         
         #region Unity Setup
 

@@ -15,6 +15,7 @@ namespace GraphicsLabor.Tests
     {
         [Space, Header("Quad")] 
         public bool _drawQuad;
+        public float _angle;
         public Quad _quad;
         public Color _quadBorderColor;
         [FormerlySerializedAs("_quadDrawMode")] public LaborerDrawMode _quadLaborerDrawMode;
@@ -65,6 +66,8 @@ namespace GraphicsLabor.Tests
         {
             if (_drawQuad)
             {
+                _quad.SetCenterAndSize();
+                _quad.CalculatePointsWithAngle(_angle);
                 Laborer2D.DrawQuad(_quad, _quadLaborerDrawMode, _quadBorderColor);
             }
             if (_drawCircle)

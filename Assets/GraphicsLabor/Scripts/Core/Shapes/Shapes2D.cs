@@ -13,6 +13,9 @@ namespace GraphicsLabor.Scripts.Core.Shapes
         [SerializeField] private Vector2 _pointB;
         [SerializeField] private Vector2 _pointC;
         [SerializeField] private Vector2 _pointD;
+        private float _angle;
+        private Vector2 _center;
+        private Vector2 _size;
         
         public Vector2 PointA => _pointA;
         public Vector2 PointB => _pointB;
@@ -29,12 +32,19 @@ namespace GraphicsLabor.Scripts.Core.Shapes
             _color = color;
         }
         
-        public Quad(Vector2 center, Vector2 size, Color color)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="center"></param>
+        /// <param name="size"></param>
+        /// <param name="angle">The angle of the Quad in Radians</param>
+        /// <param name="color"></param>
+        public Quad(Vector2 center, Vector2 size, Color color, float angle = 0)
         {
-            _pointA = center - GraphicLaborer.MaskVector2(size, GraphicLaborer.XMask) / 2 + GraphicLaborer.MaskVector2(size, GraphicLaborer.YMask) / 2; // Top left
-            _pointB = center + GraphicLaborer.MaskVector2(size, GraphicLaborer.XMask) / 2 + GraphicLaborer.MaskVector2(size, GraphicLaborer.YMask) / 2; // Top Right
-            _pointC = center + GraphicLaborer.MaskVector2(size, GraphicLaborer.XMask) / 2 - GraphicLaborer.MaskVector2(size, GraphicLaborer.YMask) / 2; // Bottom Right
-            _pointD = center - GraphicLaborer.MaskVector2(size, GraphicLaborer.XMask) / 2 - GraphicLaborer.MaskVector2(size, GraphicLaborer.YMask) / 2; // Bottom Left
+            _center = center;
+            _size = size;
+            
+            CalculatePointsWithAngle(angle);
             
             _color = color;
         }
@@ -62,6 +72,43 @@ namespace GraphicsLabor.Scripts.Core.Shapes
         public Quad CopyWithColor(Color color)
         {
             return new Quad(this, color);
+        }
+
+        public void SetCenterAndSize()
+        {
+            _size = new Vector2(_pointB.x - _pointA.x, _pointA.y - _pointD.y);
+            _center = new Vector2(_pointA.x + _size.x / 2, _pointA.y + _size.y / 2);
+        }
+
+        /// <summary>
+        /// Can only be used on Quads that have a center and a size
+        /// </summary>
+        /// <param name="angle"></param>
+        public void CalculatePointsWithAngle(float angle)
+        {
+            _pointA = _center - GraphicLaborer.MaskVector2(_size, GraphicLaborer.XMask) * Mathf.Cos(angle) / 2 
+                      + GraphicLaborer.GetValueAsX((GraphicLaborer.MaskVector2(_size, GraphicLaborer.YMask) * Mathf.Sin(angle) / 2).y)
+                
+                      + GraphicLaborer.MaskVector2(_size, GraphicLaborer.YMask) * Mathf.Cos(angle) / 2
+                      - GraphicLaborer.GetValueAsY((GraphicLaborer.MaskVector2(_size, GraphicLaborer.XMask) * Mathf.Sin(angle) / 2).y); // Top left
+            
+            _pointB = _center + GraphicLaborer.MaskVector2(_size, GraphicLaborer.XMask) * Mathf.Cos(angle) / 2 
+                      + GraphicLaborer.GetValueAsX((GraphicLaborer.MaskVector2(_size, GraphicLaborer.YMask) * Mathf.Sin(angle) / 2).y)
+                
+                      + GraphicLaborer.MaskVector2(_size, GraphicLaborer.YMask) * Mathf.Cos(angle) / 2
+                      + GraphicLaborer.GetValueAsY((GraphicLaborer.MaskVector2(_size, GraphicLaborer.XMask) * Mathf.Sin(angle) / 2).y); // Top Right
+            _pointC = _center + GraphicLaborer.MaskVector2(_size, GraphicLaborer.XMask) * Mathf.Cos(angle) / 2 
+                      + GraphicLaborer.GetValueAsX((GraphicLaborer.MaskVector2(_size, GraphicLaborer.YMask) * Mathf.Sin(angle) / 2).y)
+                
+                      - GraphicLaborer.MaskVector2(_size, GraphicLaborer.YMask) * Mathf.Cos(angle) / 2
+                      + GraphicLaborer.GetValueAsY((GraphicLaborer.MaskVector2(_size, GraphicLaborer.XMask) * Mathf.Sin(angle) / 2).y); // Bottom Right
+            _pointD = _center - GraphicLaborer.MaskVector2(_size, GraphicLaborer.XMask) * Mathf.Cos(angle) / 2 
+                      + GraphicLaborer.GetValueAsX((GraphicLaborer.MaskVector2(_size, GraphicLaborer.YMask) * Mathf.Sin(angle) / 2).y)
+                
+                      - GraphicLaborer.MaskVector2(_size, GraphicLaborer.YMask) * Mathf.Cos(angle) / 2
+                      - GraphicLaborer.GetValueAsY((GraphicLaborer.MaskVector2(_size, GraphicLaborer.XMask) * Mathf.Sin(angle) / 2).y); // Bottom Left
+            
+            _angle = angle;
         }
     }
     
