@@ -15,6 +15,7 @@ namespace GraphicsLabor.Tests
         public SerializableTestClass SerializableTestClass;
         [TabProperty("FirstOne", "AnotherOne")]public int testInt2 = 25;
         [TabProperty("FirstOne")]public float testFloat = 56.2f;
+        public List<string> testList;
         [TabProperty("Trarasse", "FirstOne"), ShowProperty] public float testProp => testFloat;
         [TabProperty("AnotherOne")]public GameObject testGameObject;
         [TabProperty("AnotherOne")]public SerializableTestClass SerializableTestClass2;

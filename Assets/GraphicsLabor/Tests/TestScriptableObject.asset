@@ -15,7 +15,7 @@ MonoBehaviour:
   testString: tttttt
   testInt: 20
   SerializableTestClass:
-    testInt: 0
+    testInt: 5
     SerializableTestClassButDifferent:
       testInt: 0
       testString: 
@@ -24,6 +24,9 @@ MonoBehaviour:
       testListInt: 
   testInt2: 25
   testFloat: 56.2
+  testList:
+  - 
+  - 
   testGameObject: {fileID: 0}
   SerializableTestClass2:
     testInt: 0

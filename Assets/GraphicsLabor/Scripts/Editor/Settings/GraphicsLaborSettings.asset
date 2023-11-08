@@ -9,8 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef1cb85ef6b06fb4f8c92821feba1e0d, type: 3}
-  m_Name: New Another Scriptable Object
+  m_Script: {fileID: 11500000, guid: 94912ccb36da45428287f20c20fc2803, type: 3}
+  m_Name: GraphicsLaborSettings
   m_EditorClassIdentifier: 
-  test: 160
-  test2: 56
+  Tags:
+  - dzqd
+  - 
+  - 
+  - 

@@ -126,7 +126,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             }
         }
 
-        private static bool DrawField(object value, string label)
+        public static bool DrawField(object value, string label)
         {
             using (new EditorGUI.DisabledScope(disabled: true))
             {

@@ -5,56 +5,27 @@ using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace GraphicsLabor.Scripts.Editor.Windows
 {
-    public sealed class ScriptableObjectEditorWindow : EditorWindowBase
+    public class GraphicsLaborSettingsWindow : EditorWindowBase
     {
-        // Try to put it in a non static thing maybe, be cool not to have to open a new one every time
-        private ScriptableObject _selectedScriptableObject;
-        private string _path;
-        private string _selectedTab = "";
-        
-        [MenuItem("Window/GraphicLabor/Test Window")]
-        public static void ShowWindow()
-        {
-            // _window = GetWindow<ScriptableObjectEditorWindow>();
-            // _window.titleContent = new GUIContent("ScriptableObjectEditor");
-            // _window._selectedScriptableObject = null;
-            // _window.WindowName = "ScriptableObjectEditor";
-            CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "ScriptableObjectEditor");
-        }
-        
+        private string _selectedTab;
 
-        
-        public static void ShowWindow(Object obj)
+        // [MenuItem("Window/GraphicLabor/Settings")]
+        // public static void ShowWindow()
+        // {
+        //     WindowBase.CreateAndInitWindow<GraphicsLaborSettingsWindow>("GL Settings");
+        // }
+        [MenuItem("Window/GraphicLabor/Settings")]
+        public static void ShowSettings()
         {
-            if (obj == null || !obj.InheritsFrom(typeof(ScriptableObject)))
-            {
-                CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "ScriptableObjectEditor");
-                GLogger.LogWarning($"Object of type {obj.GetType()} is not assignable to ScriptableObject");
-            }
-            else
-            {
-                CreateNewEditorWindow<ScriptableObjectEditorWindow>(obj, "ScriptableObjectEditor");
-            }
-            
-            // _window = GetWindow<ScriptableObjectEditorWindow>();
-            // _window.titleContent = new GUIContent("ScriptableObjectEditor");
-            // _window._selectedScriptableObject = (ScriptableObject)obj;
-            // _window.WindowName = obj.name;
-        }
+            CreateNewEditorWindow<GraphicsLaborSettingsWindow>(GetSettings(), "GL Settings");
 
+        }
         protected override void OnGUI()
         {
             DrawWithRect();
-        }
-
-        protected override void PassInspectedObject(Object obj)
-        {
-            _selectedScriptableObject = (ScriptableObject)obj;
-            WindowName = obj != null ? obj.name : "null";
         }
 
         private void DrawWithRect()
@@ -68,41 +39,24 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
 
             // For now dont allow change of SO if set
-            using (new EditorGUI.DisabledScope(disabled: _selectedScriptableObject))
+            using (new EditorGUI.DisabledScope(disabled: true))
             {
-                EditorGUI.BeginChangeCheck();
-                _selectedScriptableObject = (ScriptableObject)EditorGUI.ObjectField(currentRect, "ScriptableObjectField",
-                    _selectedScriptableObject, typeof(ScriptableObject), false);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    PassInspectedObject(_selectedScriptableObject);
-                }
+                EditorGUI.ObjectField(currentRect, "ScriptableObjectField", GetSettings(), typeof(ScriptableObject), false);
                 currentRect.y += LaborerGUIUtility.SingleLineHeight;
             }
 
-            if (_selectedScriptableObject)
-            {
-                currentRect.y += DrawScriptableObjectWithRect(currentRect ,_selectedScriptableObject);
-            }
-            
-            //TODO: Create SO Creator
-            
-            using (new EditorGUI.DisabledScope(disabled: true))
-            {
-                _path = EditorGUI.TextField(currentRect,"Path", _path);
-                currentRect.y += LaborerGUIUtility.SingleLineHeight;
-            }
-            if (GUI.Button(currentRect, "GetPath"))
-            {
-                _path = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
-            }
-            currentRect.y += LaborerGUIUtility.SingleLineHeight;
+            // foreach (FieldInfo field in ReflectionUtility.GetAllFields(GetSettings(), info => true))
+            // {
+            //     LaborerEditorGUI.DrawField(field.GetValue(GetSettings()), field.Name);
+            // }
+            currentRect.y += DrawScriptableObjectWithRect(currentRect ,GetSettings());
         }
         
         // Does not fix [Expandable] ScriptableObject drawing problem
         private float DrawScriptableObjectWithRect(Rect startRect, ScriptableObject scriptableObject)
         {
             if (!scriptableObject) return 0f;
+            
             Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties = new Dictionary<string, List<SerializedProperty>>();
             Dictionary<string, List<PropertyInfo>> tabbedProperties = new Dictionary<string, List<PropertyInfo>>();
 
@@ -156,6 +110,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 serializedObject.ApplyModifiedProperties();
                 return yOffset;
             }
+        }
+
+        protected override void PassInspectedObject(Object obj)
+        {
+            WindowName = obj != null ? obj.name : "null";
         }
     }
 }

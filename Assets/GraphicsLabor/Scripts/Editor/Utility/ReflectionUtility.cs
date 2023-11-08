@@ -8,7 +8,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 {
     public static class ReflectionUtility
     {
-        private static IEnumerable<FieldInfo> GetAllFields(object target, Func<FieldInfo, bool> predicate)
+        public static IEnumerable<FieldInfo> GetAllFields(object target, Func<FieldInfo, bool> predicate)
         {
             if (target == null)
             {
