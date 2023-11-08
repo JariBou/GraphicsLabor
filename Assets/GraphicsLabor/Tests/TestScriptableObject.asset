@@ -15,25 +15,27 @@ MonoBehaviour:
   testString: tttttt
   testInt: 20
   SerializableTestClass:
-    testInt: 5
+    testInt: 999
     SerializableTestClassButDifferent:
       testInt: 0
-      testString: 
-      testFloat: 0
+      testString: zdzds
+      testFloat: 89
       testInt2: 0
-      testListInt: 
-  testInt2: 25
+      testListInt: 00000000
+  testInt2: 60
   testFloat: 56.2
   testList:
-  - 
-  - 
+  - 566
+  - dqzdq
+  - dqzdq
+  - zr
   testGameObject: {fileID: 0}
   SerializableTestClass2:
-    testInt: 0
+    testInt: 1
     SerializableTestClassButDifferent:
-      testInt: 0
-      testString: 
-      testFloat: 0
-      testInt2: 0
-      testListInt: 
+      testInt: 6
+      testString: zdqdqsd
+      testFloat: 7
+      testInt2: 89
+      testListInt: 00000000
   Te: {fileID: 11400000, guid: cd2595304ee1533479f355f8f7638f64, type: 2}

@@ -142,17 +142,20 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 }
                 yOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing*2;
                 
+                EditorGUI.BeginChangeCheck();
 
                 if (tabbedSerializedProperties.TryGetValue(_selectedTab, out var serializedProperties))
                 {
+                    // TODO: When changing values inside of serialized classes it refolds and sometimes doesn't register
+                    // Ok so what happens is that when repainting it puts the foldouts in the same state as the SO
                     yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedSerializedFields(startRect, yOffset, serializedProperties);
                 }
                 if (tabbedProperties.TryGetValue(_selectedTab, out var normalProperties))
                 {
                     yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedProperties(startRect, yOffset, serializedObject, normalProperties);
                 }
-
                 yOffset += LaborerGUIUtility.PropertyHeightSpacing;
+                
                 serializedObject.ApplyModifiedProperties();
                 return yOffset;
             }

@@ -10,7 +10,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 {
     public class GraphicsLaborSettingsWindow : EditorWindowBase
     {
-        private string _selectedTab;
+        private string _selectedTab = "";
 
         // [MenuItem("Window/GraphicLabor/Settings")]
         // public static void ShowWindow()

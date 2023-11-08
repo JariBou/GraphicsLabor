@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef1cb85ef6b06fb4f8c92821feba1e0d, type: 3}
   m_Name: New Another Scriptable Object
   m_EditorClassIdentifier: 
-  test: 160
-  test2: 56
+  test: 70
+  test2: 998988
+  testList:
+  - fsef
+  - sefse

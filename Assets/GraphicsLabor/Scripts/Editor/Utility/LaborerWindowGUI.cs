@@ -44,10 +44,9 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 //LaborerEditorGUI.PropertyField(childRect, childProperty, true);
 
             } while (iterator.NextVisible(false));
-
             return localOffset;
         }
-        
+
         public static float DrawScriptableObjectNormalProperties(Rect startRect, float yOffset, SerializedObject serializedObject, ref Dictionary<string, List<PropertyInfo>> tabbedProperties)
         {
             float localOffset = 0;
@@ -74,7 +73,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                     localOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
                 }
             }
-
             return localOffset;
         }
         

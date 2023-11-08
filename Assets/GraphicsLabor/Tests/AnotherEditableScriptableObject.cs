@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Editor.ScriptableObjectParents;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace GraphicsLabor.Tests
     {
         public string test;
         public int test2 = 1;
+        public List<string> testList;
         [ShowProperty] public int TestProp => test2;
     }
 }

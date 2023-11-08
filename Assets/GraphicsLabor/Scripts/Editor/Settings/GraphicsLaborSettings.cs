@@ -7,6 +7,7 @@ namespace GraphicsLabor.Scripts.Editor.Settings
     [Editable]
     public class GraphicsLaborSettings : ScriptableObject
     {
+        public string testString;
         [Tooltip("Can contain up to 32 custom tags")] public List<string> Tags;
 
         // private void OnValidate()

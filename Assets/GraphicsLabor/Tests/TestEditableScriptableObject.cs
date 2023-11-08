@@ -15,8 +15,9 @@ namespace GraphicsLabor.Tests
         public SerializableTestClass SerializableTestClass;
         [TabProperty("FirstOne", "AnotherOne")]public int testInt2 = 25;
         [TabProperty("FirstOne")]public float testFloat = 56.2f;
+        [ShowProperty] public float testProp2 => testFloat;
         public List<string> testList;
-        [TabProperty("Trarasse", "FirstOne"), ShowProperty] public float testProp => testFloat;
+        [TabProperty("Terasse", "FirstOne"), ShowProperty] public float testProp => testFloat;
         [TabProperty("AnotherOne")]public GameObject testGameObject;
         [TabProperty("AnotherOne")]public SerializableTestClass SerializableTestClass2;
         [Expandable, TabProperty("AnotherOne")] public AnotherEditableScriptableObject Te;
