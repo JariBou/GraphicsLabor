@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
+using GraphicsLabor.Scripts.Core.Utility;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -11,105 +13,144 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 {
     public static class LaborerWindowGUI
     {
-        
-        #region Old
+        #region ScriptableObject Drawer
 
-        public static void DrawChildProperties(ScriptableObject scriptableObject)
+        public static float DrawScriptableObjectNormalSerializedFields(Rect startRect, float yOffset, SerializedObject serializedObject, ref Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties)
         {
-            if (!scriptableObject) return;
-
-            using (new EditorGUI.IndentLevelScope())
+            float localOffset = 0;
+            using SerializedProperty iterator = serializedObject.GetIterator();
+            if (!iterator.NextVisible(true)) return localOffset;
+            
+            do
             {
-                SerializedObject serializedObject = new(scriptableObject);
-                serializedObject.Update();
-
-                using (SerializedProperty iterator = serializedObject.GetIterator())
-                {
-                    if (iterator.NextVisible(true))
-                    {
-                        do
-                        {
-                            SerializedProperty childProperty = serializedObject.FindProperty(iterator.name);
+                SerializedProperty serializedProperty = serializedObject.FindProperty(iterator.name);
                             
-                            if (childProperty.name.Equals("m_Script", StringComparison.Ordinal)) continue;
+                if (serializedProperty.name.Equals("m_Script", StringComparison.Ordinal)) continue;
 
-                            bool visible = PropertyUtility.IsVisible(childProperty);
-                            if (!visible) continue;
-
-                            LaborerEditorGUI.LayoutPropertyField(childProperty);
-
-                        } while (iterator.NextVisible(false));
-                    }
+                bool visible = PropertyUtility.IsVisible(serializedProperty) && PropertyUtility.IsEnabled(serializedProperty);
+                if (!visible) continue;
+                            
+                float childHeight = GetPropertyHeight(serializedProperty);
+                Rect childRect = new()
+                {
+                    x = startRect.x,
+                    y = startRect.y + yOffset + localOffset,
+                    width = startRect.width,
+                    height = childHeight
+                };
+                if (DrawSerializedProperty(childRect, serializedProperty, ref tabbedSerializedProperties, true))
+                {
+                    localOffset += childHeight + LaborerGUIUtility.PropertyHeightSpacing;
                 }
 
-                serializedObject.ApplyModifiedProperties();
+                //LaborerEditorGUI.PropertyField(childRect, childProperty, true);
+
+            } while (iterator.NextVisible(false));
+            return localOffset;
+        }
+
+        public static float DrawScriptableObjectNormalProperties(Rect startRect, float yOffset, SerializedObject serializedObject, ref Dictionary<string, List<PropertyInfo>> tabbedProperties)
+        {
+            float localOffset = 0;
+            IEnumerable<PropertyInfo> properties = ReflectionUtility.GetAllProperties(serializedObject.targetObject, p => p.GetCustomAttributes(typeof(ShowPropertyAttribute), true).Length > 0);
+
+            IEnumerable<PropertyInfo> propertyInfos = properties as PropertyInfo[] ?? properties.ToArray();
+            if (!propertyInfos.Any())
+            {
+                Debug.Log("No properties");
+                return localOffset;
             }
+
+            foreach (PropertyInfo propertyInfo in propertyInfos)
+            {
+                Rect newRect = new()
+                {
+                    x = startRect.x,
+                    y = startRect.y + yOffset + localOffset,
+                    width = startRect.width,
+                    height = LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing
+                };
+                if (DrawProperty(newRect, propertyInfo, serializedObject.targetObject, ref tabbedProperties, true))
+                {
+                    localOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
+                }
+            }
+            return localOffset;
         }
         
-        
-        public static void DrawEditableScriptableObject(ScriptableObject scriptableObject, ref string selectedTab)
+        public static float DrawScriptableObjectTabbedSerializedFields(Rect startRect, float yOffset, List<SerializedProperty> properties)
         {
-            if (!scriptableObject) return;
-
-            Dictionary<string, List<SerializedProperty>> tabbedProperties = new Dictionary<string, List<SerializedProperty>>();
-
+            float localOffset = 0;
+            
             using (new EditorGUI.IndentLevelScope())
             {
-                SerializedObject serializedObject = new(scriptableObject);
-                serializedObject.Update();
-
-                using (SerializedProperty iterator = serializedObject.GetIterator())
+                Rect bgRect = new()
                 {
-                    if (iterator.NextVisible(true))
-                    {
-                        do
-                        {
-                            SerializedProperty childProperty = serializedObject.FindProperty(iterator.name);
-                            
-                            if (childProperty.name.Equals("m_Script", StringComparison.Ordinal)) continue;
-                            
-                            DrawField(childProperty, ref tabbedProperties, true); 
-
-                            // LaborerEditorGUI.LayoutField(childProperty);
-
-                        } while (iterator.NextVisible(false));
-                    }
-                }
+                    x = 0.0f,
+                    y = startRect.y + yOffset + localOffset - LaborerGUIUtility.PropertyHeightSpacing,
+                    width = startRect.width * 2.0f,
+                    height = GetPropertiesHeight(properties, LaborerGUIUtility.PropertyHeightSpacing)
+                };
                 
-                EditorGUILayout.BeginVertical("box");
+                GUI.Box(bgRect, GUIContent.none);
 
-                EditorGUILayout.BeginHorizontal();
-                foreach (KeyValuePair<string,List<SerializedProperty>> keyValuePair in tabbedProperties)
+                foreach (SerializedProperty property in properties)
                 {
-                    if (GUILayout.Button(keyValuePair.Key, EditorStyles.toolbarButton))
+                    float childHeight = GetPropertyHeight(property);
+                    Rect childRect = new()
                     {
-                        selectedTab = keyValuePair.Key == selectedTab ? "" : keyValuePair.Key;
-                    }
+                        x = startRect.x,
+                        y = startRect.y + yOffset + localOffset,
+                        width = startRect.width,
+                        height = childHeight
+                    };
+                    PropertyField(childRect, property, true);
+                    
+                    localOffset += childHeight + LaborerGUIUtility.PropertyHeightSpacing;
                 }
-                EditorGUILayout.EndHorizontal();
-                
-                if (tabbedProperties.TryGetValue(selectedTab, out var tabbedProperty))
-                {
-                    using (new EditorGUI.IndentLevelScope())
-                    {
-                        EditorGUILayout.BeginVertical("box");
-                        foreach (SerializedProperty property in tabbedProperty)
-                        {
-                            DrawField(property);
-                        }
-
-                        EditorGUILayout.EndVertical();
-                    }
-                }
-                EditorGUILayout.EndVertical();
-                
-                
-                serializedObject.ApplyModifiedProperties();
             }
+            
+            return localOffset + LaborerGUIUtility.PropertyHeightSpacing;
+        }
+
+        
+        public static float DrawScriptableObjectTabbedProperties(Rect startRect, float yOffset, SerializedObject serializedObject, List<PropertyInfo> properties)
+        {
+            float localOffset = 0;
+            
+            using (new EditorGUI.IndentLevelScope())
+            {
+                Rect bgRect = new()
+                {
+                    x = 0.0f,
+                    y = startRect.y + yOffset + localOffset - LaborerGUIUtility.PropertyHeightSpacing,
+                    width = startRect.width * 2.0f,
+                    height = (LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing) * properties.Count + LaborerGUIUtility.PropertyHeightSpacing
+                };
+
+                GUI.Box(bgRect, GUIContent.none);
+
+                foreach (PropertyInfo property in properties)
+                {
+                    float childHeight = LaborerGUIUtility.SingleLineHeight;
+                    Rect childRect = new()
+                    {
+                        x = startRect.x,
+                        y = startRect.y + yOffset + localOffset,
+                        width = startRect.width,
+                        height = childHeight
+                    };
+                    DrawProperty(childRect, property, serializedObject.targetObject);
+                    
+                    localOffset += childHeight + LaborerGUIUtility.PropertyHeightSpacing;
+                }
+            }
+            
+            return localOffset + LaborerGUIUtility.PropertyHeightSpacing;
         }
 
         #endregion
-
+        
         private static void DrawField(SerializedProperty serializedProperty, ref Dictionary<string, List<SerializedProperty>> tabbedProperties, bool checkForTab = false)
         {
             if (serializedProperty == null) return;
@@ -143,8 +184,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 
             LaborerEditorGUI.LayoutPropertyField(serializedProperty);
         }
-        
-        public static bool DrawSerializedProperty(Rect rect, SerializedProperty serializedProperty, ref Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties, bool checkForTab = false)
+
+        private static bool DrawSerializedProperty(Rect rect, SerializedProperty serializedProperty, ref Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties, bool checkForTab = false)
         {
             if (serializedProperty == null) return false;
             if (!PropertyUtility.IsVisible(serializedProperty)) return false;
@@ -167,8 +208,29 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 return false;
             }
 
-            LaborerEditorGUI.PropertyField(rect, serializedProperty, true);
+            PropertyField(rect, serializedProperty, true);
             return true;
+        }
+        
+        public static void PropertyField(Rect rect, SerializedProperty property, bool includeChildren)
+        {
+            // Check if visible
+            if (!PropertyUtility.IsVisible(property)) return;
+            
+            bool enabled = PropertyUtility.IsEnabled(property);
+
+            GUIContent label = PropertyUtility.GetLabel(property);
+
+            
+            if (PropertyUtility.GetAttribute<ExpandableAttribute>(property) != null)
+            {
+                label = GUIContent.none;
+            }
+
+            using (new EditorGUI.DisabledScope(disabled: !enabled))
+            {
+                EditorGUI.PropertyField(rect, property, label, includeChildren);
+            }
         }
 
         private static void DrawSerializedProperty(Rect rect,SerializedProperty serializedProperty)
@@ -178,8 +240,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 
             LaborerEditorGUI.PropertyField(rect, serializedProperty, true);
         }
-        
-        public static bool DrawProperty(Rect rect, PropertyInfo property, Object target, ref Dictionary<string, List<PropertyInfo>> tabbedProperties, bool checkForTab = false)
+
+        private static bool DrawProperty(Rect rect, PropertyInfo property, Object target, ref Dictionary<string, List<PropertyInfo>> tabbedProperties, bool checkForTab = false)
         {
             if (property == null) return false;
             // if (!PropertyUtility.IsVisible(property)) return false;
@@ -202,22 +264,22 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             DrawField(rect, property.GetValue(target, null), property.Name);
             return true;
         }
-        
-        public static void DrawProperty(Rect rect, PropertyInfo property, Object target)
+
+        private static void DrawProperty(Rect rect, PropertyInfo property, Object target)
         {
             if (property == null) return;
             // if (!PropertyUtility.IsVisible(property)) return false;
             
             DrawField(rect, property.GetValue(target, null), property.Name);
         }
-        
-        
-        public static float GetPropertyHeight(SerializedProperty property)
+
+
+        private static float GetPropertyHeight(SerializedProperty property)
         {
             return EditorGUI.GetPropertyHeight(property, includeChildren: true);
         }
 
-        public static float GetPropertiesHeight(IEnumerable<SerializedProperty> properties, float spacing = 0f)
+        private static float GetPropertiesHeight(IEnumerable<SerializedProperty> properties, float spacing = 0f)
         {
             return spacing + properties.Sum(property => GetPropertyHeight(property) + spacing);
         }
@@ -324,6 +386,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 }
                 else if (typeof(Object).IsAssignableFrom(valueType))
                 {
+                    GLogger.LogWarning(label);
                     EditorGUI.ObjectField(position, label, (Object)value, valueType, true);
                 }
                 else if (valueType.BaseType == typeof(Enum))

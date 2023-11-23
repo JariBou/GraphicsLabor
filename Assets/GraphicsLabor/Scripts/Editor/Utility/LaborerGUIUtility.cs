@@ -5,6 +5,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 {
     public static class LaborerGUIUtility
     {
+        public static float ScrollBarWidth => 16;
         public static float SingleLineHeight => EditorGUIUtility.singleLineHeight;
         public static float PropertyHeightSpacing => SingleLineHeight * 0.1f;
 

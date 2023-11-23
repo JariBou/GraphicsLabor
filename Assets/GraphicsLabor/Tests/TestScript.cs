@@ -4,7 +4,9 @@ using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
 using GraphicsLabor.Scripts.Core.Laborers;
 using GraphicsLabor.Scripts.Core.Laborers.Utils;
+using GraphicsLabor.Scripts.Core.LaborerTags;
 using GraphicsLabor.Scripts.Core.Shapes;
+using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -48,12 +50,19 @@ namespace GraphicsLabor.Tests
         [ShowProperty] public int Testooo => Hello;
         [ShowIf("_showSO"), Expandable] public TestEditableScriptableObject _testEditableScriptableObject;
         [Scene] public string _scene;
+        public LaborTags customTags;
         
         // public static int test;
 
         void OnEnable()
         {
             GraphicLaborer.DrawCallback += OnDraw;
+        }
+
+        [Button]
+        void CreateEnumFile()
+        {
+            EnumGenerator.CreateTagEnumFile();
         }
 
         void OnDisable()

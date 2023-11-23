@@ -3,7 +3,7 @@ using GraphicsLabor.Scripts.Attributes.Utility;
 
 namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
 {
-    public class ShowIfAttributeBase : InspectedAttribute
+    public abstract class ShowIfAttributeBase : InspectedAttribute
     {
         public string[] Conditions { get; private set; }
         public ConditionOperator ConditionOperator { get; private set; }
