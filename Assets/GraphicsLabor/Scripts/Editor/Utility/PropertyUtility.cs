@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
 using UnityEditor;
@@ -202,6 +203,12 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 label = new GUIContent(labelAttribute._label);
                 return label;                
             }
+
+            // ExpandableAttribute expandableAttribute = GetAttribute<ExpandableAttribute>(property);
+            // if (expandableAttribute != null)
+            // {
+            //     return GUIContent.none;
+            // }
             
             label = new GUIContent(property.displayName);
             return label;

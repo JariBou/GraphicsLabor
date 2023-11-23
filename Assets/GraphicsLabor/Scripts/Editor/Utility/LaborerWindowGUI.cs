@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
+using GraphicsLabor.Scripts.Core.Utility;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -102,7 +104,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                         width = startRect.width,
                         height = childHeight
                     };
-                    LaborerEditorGUI.PropertyField(childRect, property, true);
+                    PropertyField(childRect, property, true);
                     
                     localOffset += childHeight + LaborerGUIUtility.PropertyHeightSpacing;
                 }
@@ -206,8 +208,29 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 return false;
             }
 
-            LaborerEditorGUI.PropertyField(rect, serializedProperty, true);
+            PropertyField(rect, serializedProperty, true);
             return true;
+        }
+        
+        public static void PropertyField(Rect rect, SerializedProperty property, bool includeChildren)
+        {
+            // Check if visible
+            if (!PropertyUtility.IsVisible(property)) return;
+            
+            bool enabled = PropertyUtility.IsEnabled(property);
+
+            GUIContent label = PropertyUtility.GetLabel(property);
+
+            
+            if (PropertyUtility.GetAttribute<ExpandableAttribute>(property) != null)
+            {
+                label = GUIContent.none;
+            }
+
+            using (new EditorGUI.DisabledScope(disabled: !enabled))
+            {
+                EditorGUI.PropertyField(rect, property, label, includeChildren);
+            }
         }
 
         private static void DrawSerializedProperty(Rect rect,SerializedProperty serializedProperty)
@@ -363,6 +386,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 }
                 else if (typeof(Object).IsAssignableFrom(valueType))
                 {
+                    GLogger.LogWarning(label);
                     EditorGUI.ObjectField(position, label, (Object)value, valueType, true);
                 }
                 else if (valueType.BaseType == typeof(Enum))

@@ -77,19 +77,25 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                             width = LaborerGUIUtility.LabelWidth,
                             height = LaborerGUIUtility.SingleLineHeight
                         };
+                        
+                        Vector2 v2 = EditorStyles.label.CalcSize(label);
 
+                        
+                        
                         property.isExpanded = EditorGUI.Foldout(foldoutRect, property.isExpanded, label, toggleOnLabelClick: true);
+
 
                         // Draw the scriptable object field
                         Rect propertyRect = new()
                         {
-                            x = rect.x,
+                            x = rect.x + LaborerGUIUtility.LabelWidth,
                             y = rect.y,
-                            width = rect.width,
+                            width = rect.width - LaborerGUIUtility.LabelWidth,
                             height = LaborerGUIUtility.SingleLineHeight
                         };
 
-                        EditorGUI.PropertyField(propertyRect, property, label, false);
+                        property.objectReferenceValue= EditorGUI.ObjectField(propertyRect, "", property.objectReferenceValue, typeof(ScriptableObject));
+                        //EditorGUI.PropertyField(propertyRect, property, GUIContent.none, false);
 
                         // Draw the child properties
                         if (property.isExpanded)

@@ -22,6 +22,7 @@ MonoBehaviour:
       testFloat: 89
       testInt2: 0
       testListInt: 00000000
+      testezrr: {fileID: 11400000, guid: cd2595304ee1533479f355f8f7638f64, type: 2}
   testInt2: 60
   testFloat: 56.2
   testList:
@@ -29,6 +30,7 @@ MonoBehaviour:
   - dqzdq
   - dqzdq
   - zr
+  TestSO: {fileID: 11400000, guid: cd2595304ee1533479f355f8f7638f64, type: 2}
   testGameObject: {fileID: 0}
   SerializableTestClass2:
     testInt: 1
@@ -38,4 +40,4 @@ MonoBehaviour:
       testFloat: 7
       testInt2: 89
       testListInt: 00000000
-  Te: {fileID: 11400000, guid: cd2595304ee1533479f355f8f7638f64, type: 2}
+      testezrr: {fileID: 0}

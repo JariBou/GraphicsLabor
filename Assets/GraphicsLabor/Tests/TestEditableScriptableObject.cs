@@ -17,10 +17,10 @@ namespace GraphicsLabor.Tests
         [TabProperty("FirstOne")]public float testFloat = 56.2f;
         [ShowProperty] public float testProp2 => testFloat;
         public List<string> testList;
+        [Expandable, TabProperty("AnotherOne")] public AnotherEditableScriptableObject TestSO;
         [TabProperty("Terasse", "FirstOne"), ShowProperty] public float testProp => testFloat;
         [TabProperty("AnotherOne")]public GameObject testGameObject;
         [TabProperty("AnotherOne")]public SerializableTestClass SerializableTestClass2;
-        [Expandable, TabProperty("AnotherOne")] public AnotherEditableScriptableObject Te;
     }
 
     [Serializable]
@@ -38,5 +38,7 @@ namespace GraphicsLabor.Tests
         public float testFloat;
         public int testInt2;
         public List<int> testListInt = new();
+        [Expandable]public AnotherEditableScriptableObject testezrr;
+
     }
 }

@@ -13,8 +13,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
     {
         // Try to put it in a non static thing maybe, be cool not to have to open a new one every time
         private ScriptableObject _selectedScriptableObject;
+        private SerializedObject _serializedObject;
         private string _path;
         private string _selectedTab = "";
+        private Vector2 _scrollPos;
+        private float _totalDrawnHeight = 20f;
         
         [MenuItem("Window/GraphicLabor/Test Window")]
         public static void ShowWindow()
@@ -25,8 +28,6 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             // _window.WindowName = "ScriptableObjectEditor";
             CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "ScriptableObjectEditor");
         }
-        
-
         
         public static void ShowWindow(Object obj)
         {
@@ -48,20 +49,31 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
         protected override void OnGUI()
         {
-            DrawWithRect();
+            Rect currentRect = EditorGUILayout.GetControlRect();
+            Rect rect2 = currentRect;
+            currentRect.width -= LaborerGUIUtility.ScrollBarWidth;
+            Rect rect = currentRect;
+            rect.height = _totalDrawnHeight;
+            rect2.height = position.height;
+
+
+            _scrollPos = GUI.BeginScrollView(rect2, _scrollPos, rect, alwaysShowVertical:true, alwaysShowHorizontal:false);
+            DrawWithRect(ref currentRect);
+            GUI.EndScrollView();
         }
 
         protected override void PassInspectedObject(Object obj)
         {
             _selectedScriptableObject = (ScriptableObject)obj;
             WindowName = obj != null ? obj.name : "null";
+            _serializedObject = new SerializedObject(_selectedScriptableObject);
         }
 
-        private void DrawWithRect()
+        private void DrawWithRect(ref Rect currentRect)
         {
             GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
 
-            Rect currentRect = EditorGUILayout.GetControlRect();
+            // Rect currentRect = EditorGUILayout.GetControlRect();
             
             EditorGUI.LabelField(currentRect,"Hello!");
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
@@ -97,6 +109,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 _path = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
             }
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
+
+            _totalDrawnHeight = currentRect.y;
         }
         
         // Does not fix [Expandable] ScriptableObject drawing problem
@@ -108,7 +122,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
             using (new EditorGUI.IndentLevelScope())
             {
-                SerializedObject serializedObject = new(scriptableObject);
+                SerializedObject serializedObject = _serializedObject;
                 serializedObject.Update();
                 float yOffset = LaborerGUIUtility.PropertyHeightSpacing;
 
@@ -141,8 +155,6 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                     i++;
                 }
                 yOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing*2;
-                
-                EditorGUI.BeginChangeCheck();
 
                 if (tabbedSerializedProperties.TryGetValue(_selectedTab, out var serializedProperties))
                 {
