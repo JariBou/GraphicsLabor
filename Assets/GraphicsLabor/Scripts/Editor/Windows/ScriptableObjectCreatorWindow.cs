@@ -9,36 +9,37 @@ using Object = UnityEngine.Object;
 
 namespace GraphicsLabor.Scripts.Editor.Windows
 {
-    public sealed class ScriptableObjectEditorWindow : EditorWindowBase
+    public sealed class ScriptableObjectCreatorWindow : EditorWindowBase
     {
         // Try to put it in a non static thing maybe, be cool not to have to open a new one every time
         private ScriptableObject _selectedScriptableObject;
         private SerializedObject _serializedObject;
         private string _path;
-        private string _selectedTab = "";
+        private string _selectedPropTab = "";
+        private string _selectedSoTab = "";
         private Vector2 _scrollPos;
         private float _totalDrawnHeight = 20f;
         
-        [MenuItem("Window/GraphicLabor/Test Window")]
+        [MenuItem("Window/GraphicLabor/Test Creator Window")]
         public static void ShowWindow()
         {
             // _window = GetWindow<ScriptableObjectEditorWindow>();
             // _window.titleContent = new GUIContent("ScriptableObjectEditor");
             // _window._selectedScriptableObject = null;
             // _window.WindowName = "ScriptableObjectEditor";
-            CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "ScriptableObjectEditor");
+            CreateNewEditorWindow<ScriptableObjectCreatorWindow>(null, "ScriptableObjectEditor");
         }
         
         public static void ShowWindow(Object obj)
         {
             if (obj == null || !obj.InheritsFrom(typeof(ScriptableObject)))
             {
-                CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "ScriptableObjectEditor");
+                CreateNewEditorWindow<ScriptableObjectCreatorWindow>(null, "ScriptableObjectEditor");
                 GLogger.LogWarning($"Object of type {obj.GetType()} is not assignable to ScriptableObject");
             }
             else
             {
-                CreateNewEditorWindow<ScriptableObjectEditorWindow>(obj, "ScriptableObjectEditor");
+                CreateNewEditorWindow<ScriptableObjectCreatorWindow>(obj, "ScriptableObjectEditor");
             }
             
             // _window = GetWindow<ScriptableObjectEditorWindow>();
@@ -50,15 +51,27 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         protected override void OnGUI()
         {
             Rect currentRect = EditorGUILayout.GetControlRect();
+
+            Rect selectionTabRect = currentRect;
+
+            int tabSelectionWidth = 150;
+            selectionTabRect.width = tabSelectionWidth;
+            
+            currentRect.x = tabSelectionWidth;
+            currentRect.width -= tabSelectionWidth;
+            
             Rect rect2 = currentRect;
             currentRect.width -= LaborerGUIUtility.ScrollBarWidth;
             Rect rect = currentRect;
             rect.height = _totalDrawnHeight;
             rect2.height = position.height;
+            
+            GUI.Box(selectionTabRect, GUIContent.none);
+            EditorGUI.LabelField(selectionTabRect, "surprise");
 
 
             _scrollPos = GUI.BeginScrollView(rect2, _scrollPos, rect, alwaysShowVertical:true, alwaysShowHorizontal:false);
-            DrawWithRect(ref currentRect);
+            DrawWithRect(currentRect);
             GUI.EndScrollView();
         }
 
@@ -69,7 +82,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             _serializedObject = new SerializedObject(_selectedScriptableObject);
         }
 
-        private void DrawWithRect(ref Rect currentRect)
+        private void DrawWithRect(Rect currentRect)
         {
             GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
 
@@ -141,13 +154,13 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                         width = buttonWidth,
                         height = LaborerGUIUtility.SingleLineHeight
                     };
-                    if (key == _selectedTab)
+                    if (key == _selectedPropTab)
                     {
                         GUI.backgroundColor = LaborerGUIUtility.SelectedTabColor;
                     } 
                     if (GUI.Button(buttonRect, key, EditorStyles.toolbarButton))
                     {
-                        _selectedTab = key == _selectedTab ? "" : key;
+                        _selectedPropTab = key == _selectedPropTab ? "" : key;
                     }
 
                     GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
@@ -156,13 +169,13 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 }
                 yOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing*2;
 
-                if (tabbedSerializedProperties.TryGetValue(_selectedTab, out var serializedProperties))
+                if (tabbedSerializedProperties.TryGetValue(_selectedPropTab, out var serializedProperties))
                 {
                     // TODO: When changing values inside of serialized classes it refolds and sometimes doesn't register
                     // Ok so what happens is that when repainting it puts the foldouts in the same state as the SO
                     yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedSerializedFields(startRect, yOffset, serializedProperties);
                 }
-                if (tabbedProperties.TryGetValue(_selectedTab, out var normalProperties))
+                if (tabbedProperties.TryGetValue(_selectedPropTab, out var normalProperties))
                 {
                     yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedProperties(startRect, yOffset, serializedObject, normalProperties);
                 }
