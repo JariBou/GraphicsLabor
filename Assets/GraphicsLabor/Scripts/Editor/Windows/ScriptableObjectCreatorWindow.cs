@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
@@ -19,6 +21,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         private string _selectedSoTab = "";
         private Vector2 _scrollPos;
         private float _totalDrawnHeight = 20f;
+
+        private List<ScriptableObject> _possibleSos;
         
         [MenuItem("Window/GraphicLabor/Test Creator Window")]
         public static void ShowWindow()
@@ -66,12 +70,15 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             rect.height = _totalDrawnHeight;
             rect2.height = position.height;
             
+            // SO type selector part
             GUI.Box(selectionTabRect, GUIContent.none);
             EditorGUI.LabelField(selectionTabRect, "surprise");
-
-
+            
             _scrollPos = GUI.BeginScrollView(rect2, _scrollPos, rect, alwaysShowVertical:true, alwaysShowHorizontal:false);
-            DrawWithRect(currentRect);
+            
+            _totalDrawnHeight = DrawWithRect(currentRect);
+            _totalDrawnHeight += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
+            
             GUI.EndScrollView();
         }
 
@@ -82,7 +89,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             _serializedObject = new SerializedObject(_selectedScriptableObject);
         }
 
-        private void DrawWithRect(Rect currentRect)
+        private float DrawWithRect(Rect currentRect)
         {
             GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
 
@@ -123,7 +130,13 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             }
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
 
-            _totalDrawnHeight = currentRect.y;
+            if (GUI.Button(currentRect, "Test"))
+            {
+                GetPossibleScriptableObjects();
+            }
+            currentRect.y += LaborerGUIUtility.SingleLineHeight;
+
+            return currentRect.y;
         }
         
         // Does not fix [Expandable] ScriptableObject drawing problem
@@ -185,5 +198,29 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 return yOffset;
             }
         }
+
+        private List<ScriptableObject> GetPossibleScriptableObjects()
+        {
+            if (_possibleSos != null) return _possibleSos;
+            IEnumerable<Type> assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assembly => !assembly.GetName().ToString().StartsWith("Unity"))
+                .SelectMany(a => a.GetTypes().Where(t => t.IsDefined(typeof(EditableAttribute)) && !t.IsAbstract));
+// TODO: actually put the assemblies in the LaborSettings
+//      hum ok so we cannot reference assembly c-sharp, need to find another way
+            var test = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assembly => !assembly.GetName().ToString().StartsWith("Unity") && !assembly.GetName().ToString().StartsWith("System")
+                && !assembly.GetName().ToString().StartsWith("JetBrains") && !assembly.GetName().ToString().StartsWith("unity")
+                && !assembly.GetName().ToString().StartsWith("Bee") && !assembly.GetName().ToString().StartsWith("Mono")
+                && !assembly.GetName().ToString().StartsWith("mscorlib") && !assembly.GetName().ToString().StartsWith("netstandard")
+                && !assembly.GetName().ToString().StartsWith("Psd") && !assembly.GetName().ToString().StartsWith("log4net")
+                && !assembly.GetName().ToString().StartsWith("ExCSS") && !assembly.GetName().ToString().StartsWith("PPv2")
+                && !assembly.GetName().ToString().StartsWith("nunit"));
+            foreach (Assembly type in test)
+            {
+                Debug.Log(type.ToString());
+            }
+            return new List<ScriptableObject>();
+        }
+        
     }
 }

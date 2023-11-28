@@ -58,7 +58,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
 
             _scrollPos = GUI.BeginScrollView(rect2, _scrollPos, rect, alwaysShowVertical:true, alwaysShowHorizontal:false);
-            DrawWithRect(ref currentRect);
+            _totalDrawnHeight = DrawWithRect(currentRect);
+            _totalDrawnHeight += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
             GUI.EndScrollView();
         }
 
@@ -69,7 +70,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             _serializedObject = new SerializedObject(_selectedScriptableObject);
         }
 
-        private void DrawWithRect(ref Rect currentRect)
+        private float DrawWithRect(Rect currentRect)
         {
             GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
 
@@ -110,7 +111,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             }
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
 
-            _totalDrawnHeight = currentRect.y;
+            return currentRect.y;
         }
         
         // Does not fix [Expandable] ScriptableObject drawing problem
