@@ -215,11 +215,29 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 && !assembly.GetName().ToString().StartsWith("Psd") && !assembly.GetName().ToString().StartsWith("log4net")
                 && !assembly.GetName().ToString().StartsWith("ExCSS") && !assembly.GetName().ToString().StartsWith("PPv2")
                 && !assembly.GetName().ToString().StartsWith("nunit"));
-            foreach (Assembly type in test)
+            
+            var test2 = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assembly => assembly.GetName().ToString().StartsWith("Assembly-CSharp"));
+            // foreach (Assembly type in test2)
+            // {
+            //     Debug.Log(type.ToString());
+            // }
+            var list = new List<ScriptableObject>();
+            foreach (Type type in assemblies)
             {
-                Debug.Log(type.ToString());
+                Object obj = ObjectFactory.CreateInstance(type);
+                    list.Add((ScriptableObject) obj);
+                if (obj.GetType() == typeof(ScriptableObject))
+                {
+                }
             }
-            return new List<ScriptableObject>();
+            
+            foreach (ScriptableObject type in list)
+            {
+                Debug.Log(type.name);
+            }
+
+            return list;
         }
         
     }

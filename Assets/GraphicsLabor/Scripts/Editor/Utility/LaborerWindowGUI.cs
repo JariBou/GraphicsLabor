@@ -57,7 +57,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             IEnumerable<PropertyInfo> propertyInfos = properties as PropertyInfo[] ?? properties.ToArray();
             if (!propertyInfos.Any())
             {
-                Debug.Log("No properties");
                 return localOffset;
             }
 
