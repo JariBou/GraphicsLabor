@@ -13,6 +13,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         public static float LabelWidth => EditorGUIUtility.labelWidth;
         public static float MinHelpBoxHeight => SingleLineHeight * 2f;
         public static float CurrentViewWidth => EditorGUIUtility.currentViewWidth;
+        public static float SoSelectionButtonHeight => SingleLineHeight + PropertyHeightSpacing*3;
 
         #region Window Colors
             public static Color SelectedTabColor => Color.gray;

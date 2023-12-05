@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
@@ -8,6 +9,7 @@ using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using String = System.String;
 
 namespace GraphicsLabor.Scripts.Editor.Windows
 {
@@ -21,6 +23,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         private string _selectedSoTab = "";
         private Vector2 _scrollPos;
         private float _totalDrawnHeight = 20f;
+        private Dictionary<String, ScriptableObject> SoNameAssetDic = new();
 
         private List<ScriptableObject> _possibleSos;
         
@@ -59,7 +62,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             Rect selectionTabRect = currentRect;
 
             int tabSelectionWidth = 150;
-            selectionTabRect.width = tabSelectionWidth;
+            selectionTabRect.width = tabSelectionWidth - 10;
             
             currentRect.x = tabSelectionWidth;
             currentRect.width -= tabSelectionWidth;
@@ -72,7 +75,23 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             
             // SO type selector part
             GUI.Box(selectionTabRect, GUIContent.none);
+            selectionTabRect.x += 3;
             EditorGUI.LabelField(selectionTabRect, "surprise");
+            
+            if (GUI.Button(selectionTabRect, "surprise", EditorStyles.toolbarButton))
+            {
+                _selectedSoTab = "";
+                _selectedScriptableObject = SoNameAssetDic[SoNameAssetDic.Keys.ToArray()[0]];
+                _serializedObject = new SerializedObject(SoNameAssetDic[SoNameAssetDic.Keys.ToArray()[0]]);
+            }
+
+            selectionTabRect.y += LaborerGUIUtility.SoSelectionButtonHeight;
+            if (GUI.Button(selectionTabRect, "another one", EditorStyles.toolbarButton))
+            {
+                _selectedSoTab = "";
+                _selectedScriptableObject = SoNameAssetDic[SoNameAssetDic.Keys.ToArray()[1]];
+                _serializedObject = new SerializedObject(SoNameAssetDic[SoNameAssetDic.Keys.ToArray()[1]]);
+            }
             
             _scrollPos = GUI.BeginScrollView(rect2, _scrollPos, rect, alwaysShowVertical:true, alwaysShowHorizontal:false);
             
@@ -86,7 +105,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         {
             _selectedScriptableObject = (ScriptableObject)obj;
             WindowName = obj != null ? obj.name : "null";
-            _serializedObject = new SerializedObject(_selectedScriptableObject);
+            //_serializedObject = new SerializedObject(_selectedScriptableObject);
         }
 
         private float DrawWithRect(Rect currentRect)
@@ -121,12 +140,16 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             
             using (new EditorGUI.DisabledScope(disabled: true))
             {
-                _path = EditorGUI.TextField(currentRect,"Path", _path);
+                EditorGUI.TextField(currentRect,"Path", GetSettings()._tempScriptableObjectsPath);
                 currentRect.y += LaborerGUIUtility.SingleLineHeight;
             }
             if (GUI.Button(currentRect, "GetPath"))
             {
-                _path = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
+                String tempPath = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
+                
+                if (tempPath.StartsWith(Application.dataPath)) {
+                    GetSettings()._tempScriptableObjectsPath = "Assets" + tempPath.Substring(Application.dataPath.Length);
+                }
             }
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
 
@@ -227,15 +250,16 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             {
                 if (type.IsSubclassOf(typeof(ScriptableObject)))
                 {
-                    ScriptableObject so = ScriptableObject.CreateInstance(type);
-
-                }
-                Object obj = ObjectFactory.CreateInstance(type);
-                    list.Add((ScriptableObject) obj);
-                if (obj.GetType() == typeof(ScriptableObject))
-                {
+                    ScriptableObject so = CreateInstance(type);
+                    so.name = so.GetType().Name;
+                    GetSettings();
+                    AssetHandler.CreateFolder(GetSettings()._tempScriptableObjectsPath);
+                    AssetDatabase.CreateAsset(so, $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset");
+                    list.Add(so);
+                    SoNameAssetDic.Add(so.name, so);
                 }
             }
+            AssetDatabase.SaveAssets();
             
             
             foreach (ScriptableObject type in list)

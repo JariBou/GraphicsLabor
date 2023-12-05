@@ -14,6 +14,7 @@ namespace GraphicsLabor.Scripts.Editor.Settings
     public class GraphicsLaborSettings : ScriptableObject
     {
         public string testString;
+        public string _tempScriptableObjectsPath = "Assets/Config/GraphicsLabor/ScriptableObjects";
         [Tooltip("Can contain up to 32 custom tags")] public List<string> Tags;
         public List<AssemblyDefinitionAsset> UserAssemblies;
 

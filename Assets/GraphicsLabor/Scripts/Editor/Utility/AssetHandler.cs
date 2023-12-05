@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes;
@@ -44,6 +45,29 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 
             // Not handled by GraphicsLabor
             return false;
+        }
+
+        /// <summary>
+        /// Path must start with "Assets/"
+        /// </summary>
+        public static void CreateFolder(string parentFolder, string newFolderName)
+        {
+            if (!AssetDatabase.IsValidFolder(Path.Combine(parentFolder, newFolderName)))
+            {
+                AssetDatabase.CreateFolder(parentFolder, newFolderName);
+                AssetDatabase.Refresh();
+            }
+        }
+        
+        public static void CreateFolder(string fullPath)
+        {
+            String[] pathParts = fullPath.Split("/");
+            String currParentPath = pathParts[0];
+            for (int i = 1; i < pathParts.Length; i++)
+            {
+                CreateFolder(currParentPath, pathParts[i]);
+                currParentPath += $"/{pathParts[i]}";
+            }
         }
     }
 }
