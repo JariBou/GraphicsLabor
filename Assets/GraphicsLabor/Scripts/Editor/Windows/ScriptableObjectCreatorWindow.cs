@@ -225,12 +225,18 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             var list = new List<ScriptableObject>();
             foreach (Type type in assemblies)
             {
+                if (type.IsSubclassOf(typeof(ScriptableObject)))
+                {
+                    ScriptableObject so = ScriptableObject.CreateInstance(type);
+
+                }
                 Object obj = ObjectFactory.CreateInstance(type);
                     list.Add((ScriptableObject) obj);
                 if (obj.GetType() == typeof(ScriptableObject))
                 {
                 }
             }
+            
             
             foreach (ScriptableObject type in list)
             {
