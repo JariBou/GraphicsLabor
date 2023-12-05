@@ -94,7 +94,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                             height = LaborerGUIUtility.SingleLineHeight
                         };
 
-                        property.objectReferenceValue= EditorGUI.ObjectField(propertyRect, "", property.objectReferenceValue, typeof(ScriptableObject));
+                        property.objectReferenceValue= EditorGUI.ObjectField(propertyRect, "", property.objectReferenceValue, typeof(ScriptableObject), false);
                         //EditorGUI.PropertyField(propertyRect, property, GUIContent.none, false);
 
                         // Draw the child properties
