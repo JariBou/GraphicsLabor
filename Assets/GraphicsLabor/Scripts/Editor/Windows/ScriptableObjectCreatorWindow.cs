@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
@@ -23,9 +22,9 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         private string _selectedSoTab = "";
         private Vector2 _scrollPos;
         private float _totalDrawnHeight = 20f;
-        private Dictionary<String, ScriptableObject> SoNameAssetDic = new();
+        private readonly Dictionary<String, ScriptableObject> _soNameAssetDic = new();
 
-        private List<ScriptableObject> _possibleSos;
+        private readonly List<ScriptableObject> _possibleSos = new();
         
         [MenuItem("Window/GraphicLabor/Test Creator Window")]
         public static void ShowWindow()
@@ -94,7 +93,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         {
             float yOffset = 0;
 
-            for (int i = 0; i < SoNameAssetDic.Keys.Count; i++)
+            for (int i = 0; i < _soNameAssetDic.Keys.Count; i++)
             {
                 Rect buttonRect = new()
                 {
@@ -104,7 +103,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                     height = LaborerGUIUtility.SingleLineHeight
                 };
                 
-                String soName = SoNameAssetDic.Keys.ToArray()[i];
+                String soName = _soNameAssetDic.Keys.ToArray()[i];
                 
                 if (GUI.Button(buttonRect, new GUIContent(GetTruncatedTempSoName(soName), GetTempSoName(soName)) , EditorStyles.toolbarButton))
                 {
@@ -120,8 +119,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         private void SelectSo(string soName)
         {
             _selectedSoTab = soName;
-            _selectedScriptableObject = SoNameAssetDic[soName];
-            _serializedObject = new SerializedObject(SoNameAssetDic[soName]);
+            _selectedScriptableObject = _soNameAssetDic[soName];
+            _serializedObject = new SerializedObject(_soNameAssetDic[soName]);
         }
         
         private String GetTruncatedTempSoName(String soName)
@@ -191,10 +190,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                     EditorUtility.SaveFilePanelInProject("Save Asset", GetTempSoName(_selectedSoTab), "asset", "Enter the new SO Name");
                 if (tempPath.StartsWith("Assets")) {
                     //GetSettings()._tempScriptableObjectsPath = tempPath;
-                    ScriptableObject obj = SoNameAssetDic[_selectedSoTab];
+                    ScriptableObject obj = _soNameAssetDic[_selectedSoTab];
                     string objName = tempPath.Split('/')[^1].Replace(".asset", "");
                     obj.name = objName;
                     AssetDatabase.CreateAsset(Instantiate(obj), tempPath);
+                    AssetDatabase.SaveAssets();   
                 }
             }
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
@@ -270,52 +270,32 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
         private List<ScriptableObject> GetPossibleScriptableObjects()
         {
-            if (_possibleSos != null) return _possibleSos;
+            if (_possibleSos != null && _possibleSos.Count != 0) return _possibleSos;
             IEnumerable<Type> assemblies = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(assembly => !assembly.GetName().ToString().StartsWith("Unity"))
                 .SelectMany(a => a.GetTypes().Where(t => t.IsDefined(typeof(EditableAttribute)) && !t.IsAbstract));
-// TODO: actually put the assemblies in the LaborSettings
-//      hum ok so we cannot reference assembly c-sharp, need to find another way
-            var test = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => !assembly.GetName().ToString().StartsWith("Unity") && !assembly.GetName().ToString().StartsWith("System")
-                && !assembly.GetName().ToString().StartsWith("JetBrains") && !assembly.GetName().ToString().StartsWith("unity")
-                && !assembly.GetName().ToString().StartsWith("Bee") && !assembly.GetName().ToString().StartsWith("Mono")
-                && !assembly.GetName().ToString().StartsWith("mscorlib") && !assembly.GetName().ToString().StartsWith("netstandard")
-                && !assembly.GetName().ToString().StartsWith("Psd") && !assembly.GetName().ToString().StartsWith("log4net")
-                && !assembly.GetName().ToString().StartsWith("ExCSS") && !assembly.GetName().ToString().StartsWith("PPv2")
-                && !assembly.GetName().ToString().StartsWith("nunit"));
-            
-            var test2 = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => assembly.GetName().ToString().StartsWith("Assembly-CSharp"));
-            // foreach (Assembly type in test2)
-            // {
-            //     Debug.Log(type.ToString());
-            // }
-            var list = new List<ScriptableObject>();
+
+            var typesList = new List<Type>();
             foreach (Type type in assemblies)
             {
-                if (type.IsSubclassOf(typeof(ScriptableObject)))
+                if (type.IsSubclassOf(typeof(ScriptableObject)) && !typesList.Contains(type))
                 {
                     ScriptableObject so = CreateInstance(type);
                     so.name = so.GetType().Name;
                     GetSettings();
                     AssetHandler.CreateFolder(GetSettings()._tempScriptableObjectsPath);
                     AssetDatabase.CreateAsset(so, $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset");
-                    list.Add(so);
-                    SoNameAssetDic.Add(so.name, so);
+                    _possibleSos.Add(so);
+                    typesList.Add(type);
+                    _soNameAssetDic.Add(so.name, so);
                 }
             }
             AssetDatabase.SaveAssets();
             
-            
-            foreach (ScriptableObject type in list)
-            {
-                Debug.Log(type.name);
-            }
-            
-            SelectSo(SoNameAssetDic.Keys.ToArray()[0]);
+            // Default select the first SO, should go somewhere else
+            SelectSo(_soNameAssetDic.Keys.ToArray()[0]);
 
-            return list;
+            return _possibleSos;
         }
         
     }

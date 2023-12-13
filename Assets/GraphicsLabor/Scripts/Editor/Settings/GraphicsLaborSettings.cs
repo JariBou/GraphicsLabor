@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
-using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace GraphicsLabor.Scripts.Editor.Settings
 {
