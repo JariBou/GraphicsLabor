@@ -34,19 +34,19 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             // _window.titleContent = new GUIContent("ScriptableObjectEditor");
             // _window._selectedScriptableObject = null;
             // _window.WindowName = "ScriptableObjectEditor";
-            CreateNewEditorWindow<ScriptableObjectCreatorWindow>(null, "ScriptableObjectEditor");
+            CreateNewEditorWindow<ScriptableObjectCreatorWindow>(null, "Scriptable Object Creator").GetPossibleScriptableObjects();
         }
         
         public static void ShowWindow(Object obj)
         {
             if (obj == null || !obj.InheritsFrom(typeof(ScriptableObject)))
             {
-                CreateNewEditorWindow<ScriptableObjectCreatorWindow>(null, "ScriptableObjectEditor");
+                CreateNewEditorWindow<ScriptableObjectCreatorWindow>(null, "Scriptable Object Creator").GetPossibleScriptableObjects();
                 GLogger.LogWarning($"Object of type {obj.GetType()} is not assignable to ScriptableObject");
             }
             else
             {
-                CreateNewEditorWindow<ScriptableObjectCreatorWindow>(obj, "ScriptableObjectEditor");
+                CreateNewEditorWindow<ScriptableObjectCreatorWindow>(obj, "Scriptable Object Creator").GetPossibleScriptableObjects();
             }
             
             // _window = GetWindow<ScriptableObjectEditorWindow>();
@@ -77,21 +77,10 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             GUI.Box(selectionTabRect, GUIContent.none);
             selectionTabRect.x += 3;
             EditorGUI.LabelField(selectionTabRect, "surprise");
-            
-            if (GUI.Button(selectionTabRect, "surprise", EditorStyles.toolbarButton))
-            {
-                _selectedSoTab = "";
-                _selectedScriptableObject = SoNameAssetDic[SoNameAssetDic.Keys.ToArray()[0]];
-                _serializedObject = new SerializedObject(SoNameAssetDic[SoNameAssetDic.Keys.ToArray()[0]]);
-            }
 
-            selectionTabRect.y += LaborerGUIUtility.SoSelectionButtonHeight;
-            if (GUI.Button(selectionTabRect, "another one", EditorStyles.toolbarButton))
-            {
-                _selectedSoTab = "";
-                _selectedScriptableObject = SoNameAssetDic[SoNameAssetDic.Keys.ToArray()[1]];
-                _serializedObject = new SerializedObject(SoNameAssetDic[SoNameAssetDic.Keys.ToArray()[1]]);
-            }
+            selectionTabRect.y += CreateSoSelectionButtons(selectionTabRect);
+            
+            // SO display
             
             _scrollPos = GUI.BeginScrollView(rect2, _scrollPos, rect, alwaysShowVertical:true, alwaysShowHorizontal:false);
             
@@ -99,6 +88,58 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             _totalDrawnHeight += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
             
             GUI.EndScrollView();
+        }
+
+        private float CreateSoSelectionButtons(Rect selectionTabRect)
+        {
+            float yOffset = 0;
+
+            for (int i = 0; i < SoNameAssetDic.Keys.Count; i++)
+            {
+                Rect buttonRect = new()
+                {
+                    x =selectionTabRect.x,
+                    y = selectionTabRect.y + yOffset,
+                    width = selectionTabRect.width,
+                    height = LaborerGUIUtility.SingleLineHeight
+                };
+                
+                String soName = SoNameAssetDic.Keys.ToArray()[i];
+                
+                if (GUI.Button(buttonRect, new GUIContent(GetTruncatedTempSoName(soName), GetTempSoName(soName)) , EditorStyles.toolbarButton))
+                {
+                    SelectSo(soName);
+                }
+                yOffset += LaborerGUIUtility.SoSelectionButtonHeight;
+            }
+            
+            
+            return yOffset;
+        }
+
+        private void SelectSo(string soName)
+        {
+            _selectedSoTab = soName;
+            _selectedScriptableObject = SoNameAssetDic[soName];
+            _serializedObject = new SerializedObject(SoNameAssetDic[soName]);
+        }
+        
+        private String GetTruncatedTempSoName(String soName)
+        {
+            String newSoName = GetTempSoName(soName);
+            if (newSoName.Length > 22)
+            {
+                return $"{newSoName.Substring(0, 20).Trim()}...";
+            }
+
+            return newSoName;
+        }
+
+        private String GetTempSoName(String soName)
+        {
+            String newSoName = ObjectNames.NicifyVariableName(soName);
+            newSoName = newSoName.Remove(newSoName.Length - "_temp".Length);
+            return newSoName;
         }
 
         protected override void PassInspectedObject(Object obj)
@@ -143,12 +184,21 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 EditorGUI.TextField(currentRect,"Path", GetSettings()._tempScriptableObjectsPath);
                 currentRect.y += LaborerGUIUtility.SingleLineHeight;
             }
-            if (GUI.Button(currentRect, "GetPath"))
+            if (GUI.Button(currentRect, "SaveAt"))
             {
-                String tempPath = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
-                
-                if (tempPath.StartsWith(Application.dataPath)) {
-                    GetSettings()._tempScriptableObjectsPath = "Assets" + tempPath.Substring(Application.dataPath.Length);
+                //String tempPath = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
+                String tempPath =
+                    EditorUtility.SaveFilePanelInProject("Save Asset", GetTempSoName(_selectedSoTab), "asset", "Enter the new SO Name");
+                Debug.LogWarning(tempPath);
+                Debug.LogWarning(tempPath == null); // False
+                Debug.LogWarning(tempPath == ""); // True
+                if (tempPath.StartsWith("Assets")) {
+                    Debug.Log("we in");
+                    GetSettings()._tempScriptableObjectsPath = tempPath;
+                    ScriptableObject obj = SoNameAssetDic[_selectedSoTab];
+                    string objName = tempPath.Split('/')[^1].Replace(".asset", "");
+                    obj.name = objName;
+                    AssetDatabase.CreateAsset(Instantiate(obj), tempPath);
                 }
             }
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
@@ -266,6 +316,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             {
                 Debug.Log(type.name);
             }
+            
+            SelectSo(SoNameAssetDic.Keys.ToArray()[0]);
 
             return list;
         }

@@ -26,19 +26,19 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             // _window.titleContent = new GUIContent("ScriptableObjectEditor");
             // _window._selectedScriptableObject = null;
             // _window.WindowName = "ScriptableObjectEditor";
-            CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "ScriptableObjectEditor");
+            CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "Scriptable Object Editor");
         }
         
         public static void ShowWindow(Object obj)
         {
             if (obj == null || !obj.InheritsFrom(typeof(ScriptableObject)))
             {
-                CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "ScriptableObjectEditor");
+                CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "Scriptable Object Editor");
                 GLogger.LogWarning($"Object of type {obj.GetType()} is not assignable to ScriptableObject");
             }
             else
             {
-                CreateNewEditorWindow<ScriptableObjectEditorWindow>(obj, "ScriptableObjectEditor");
+                CreateNewEditorWindow<ScriptableObjectEditorWindow>(obj, "Scriptable Object Editor");
             }
             
             // _window = GetWindow<ScriptableObjectEditorWindow>();
