@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: GraphicsLaborSettings
   m_EditorClassIdentifier: 
   testString: zdzd
+  _tempScriptableObjectsPath: Assets/Config/GraphicsLabor/ScriptableObjects
   Tags:
   - dzqd
   - 
   - 
   - 
+  UserAssemblies: []

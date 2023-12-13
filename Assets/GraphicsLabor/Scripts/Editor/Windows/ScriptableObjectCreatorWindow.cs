@@ -189,12 +189,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 //String tempPath = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
                 String tempPath =
                     EditorUtility.SaveFilePanelInProject("Save Asset", GetTempSoName(_selectedSoTab), "asset", "Enter the new SO Name");
-                Debug.LogWarning(tempPath);
-                Debug.LogWarning(tempPath == null); // False
-                Debug.LogWarning(tempPath == ""); // True
                 if (tempPath.StartsWith("Assets")) {
-                    Debug.Log("we in");
-                    GetSettings()._tempScriptableObjectsPath = tempPath;
+                    //GetSettings()._tempScriptableObjectsPath = tempPath;
                     ScriptableObject obj = SoNameAssetDic[_selectedSoTab];
                     string objName = tempPath.Split('/')[^1].Replace(".asset", "");
                     obj.name = objName;
