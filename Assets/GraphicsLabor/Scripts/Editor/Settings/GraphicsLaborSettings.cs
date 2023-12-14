@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Editor.Settings
 {
-    [Editable]
     public class GraphicsLaborSettings : ScriptableObject
     {
         public string testString;

@@ -151,25 +151,49 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         private float DrawWithRect(Rect currentRect)
         {
             GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
-
-            // Rect currentRect = EditorGUILayout.GetControlRect();
             
-            EditorGUI.LabelField(currentRect,"Hello!");
-            currentRect.y += LaborerGUIUtility.SingleLineHeight;
+            Rect selectedSoObj = new Rect()
+            {
+                x = currentRect.x,
+                y = currentRect.y,
+                width = currentRect.width *  3/4,
+                height = currentRect.height
+            };
+            
+            Rect resetButton = new Rect()
+            {
+                x = currentRect.x + currentRect.width *  3/4,
+                y = currentRect.y,
+                width = currentRect.width / 4,
+                height = currentRect.height
+            };
 
-
+            GUILayout.BeginHorizontal();
             // For now dont allow change of SO if set
             using (new EditorGUI.DisabledScope(disabled: _selectedScriptableObject))
             {
                 EditorGUI.BeginChangeCheck();
-                _selectedScriptableObject = (ScriptableObject)EditorGUI.ObjectField(currentRect, "ScriptableObjectField",
+                _selectedScriptableObject = (ScriptableObject)EditorGUI.ObjectField(selectedSoObj, "ScriptableObjectField",
                     _selectedScriptableObject, typeof(ScriptableObject), false);
                 if (EditorGUI.EndChangeCheck())
                 {
                     PassInspectedObject(_selectedScriptableObject);
                 }
-                currentRect.y += LaborerGUIUtility.SingleLineHeight;
             }
+            
+            if (GUI.Button(resetButton, "Reset Values"))
+            {
+                ScriptableObject obj = _soNameAssetDic[_selectedSoTab];
+                ScriptableObject so = CreateInstance(obj.GetType());
+                so.name = so.GetType().Name;
+                AssetHandler.CreateFolder(GetSettings()._tempScriptableObjectsPath);
+                AssetDatabase.CreateAsset(so, $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset");
+                _soNameAssetDic[so.name] = so;
+                SelectSo(so.name);
+            }
+            currentRect.y += LaborerGUIUtility.SingleLineHeight;
+            
+            GUILayout.EndHorizontal();
 
             if (_selectedScriptableObject)
             {
@@ -178,32 +202,23 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             
             //TODO: Create SO Creator
             
-            using (new EditorGUI.DisabledScope(disabled: true))
-            {
-                EditorGUI.TextField(currentRect,"Path", GetSettings()._tempScriptableObjectsPath);
-                currentRect.y += LaborerGUIUtility.SingleLineHeight;
-            }
-            if (GUI.Button(currentRect, "SaveAt"))
+            if (GUI.Button(currentRect, "Save As"))
             {
                 //String tempPath = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
                 String tempPath =
                     EditorUtility.SaveFilePanelInProject("Save Asset", GetTempSoName(_selectedSoTab), "asset", "Enter the new SO Name");
                 if (tempPath.StartsWith("Assets")) {
                     //GetSettings()._tempScriptableObjectsPath = tempPath;
-                    ScriptableObject obj = _soNameAssetDic[_selectedSoTab];
+                    ScriptableObject obj = Instantiate(_soNameAssetDic[_selectedSoTab]);
                     string objName = tempPath.Split('/')[^1].Replace(".asset", "");
                     obj.name = objName;
-                    AssetDatabase.CreateAsset(Instantiate(obj), tempPath);
+                    AssetDatabase.CreateAsset(obj, tempPath);
                     AssetDatabase.SaveAssets();   
                 }
             }
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
 
-            if (GUI.Button(currentRect, "Test"))
-            {
-                GetPossibleScriptableObjects();
-            }
-            currentRect.y += LaborerGUIUtility.SingleLineHeight;
+            
 
             return currentRect.y;
         }
