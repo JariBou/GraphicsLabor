@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using GraphicsLabor.Scripts.Editor.ScriptableObjectParents;
 using UnityEngine;
 
 namespace GraphicsLabor.Tests
 {
-    [CreateAssetMenu(menuName = "Tests/TestScriptableObject")]
+    [CreateAssetMenu(menuName = "Tests/TestScriptableObject"), Manageable]
     public class TestEditableScriptableObject : EditableScriptableObject
     {
         public string testString = "test";

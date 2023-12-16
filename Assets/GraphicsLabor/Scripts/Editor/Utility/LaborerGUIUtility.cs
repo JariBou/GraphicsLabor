@@ -11,7 +11,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 
         public static float LineSeparatorSpacing => SingleLineHeight / 3f;
         public static float LabelWidth => EditorGUIUtility.labelWidth;
-        public static float MinHelpBoxHeight => SingleLineHeight * 2f;
+        public static float MinHelpBoxHeight => SingleLineHeight;
         public static float CurrentViewWidth => EditorGUIUtility.currentViewWidth;
         public static float SoSelectionButtonHeight => SingleLineHeight + PropertyHeightSpacing*3;
 

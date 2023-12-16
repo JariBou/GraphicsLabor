@@ -288,7 +288,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             if (_possibleSos != null && _possibleSos.Count != 0) return _possibleSos;
             IEnumerable<Type> assemblies = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(assembly => !assembly.GetName().ToString().StartsWith("Unity"))
-                .SelectMany(a => a.GetTypes().Where(t => t.IsDefined(typeof(EditableAttribute)) && !t.IsAbstract));
+                .SelectMany(a => a.GetTypes().Where(t => t.IsDefined(typeof(ManageableAttribute)) && !t.IsAbstract));
 
             var typesList = new List<Type>();
             foreach (Type type in assemblies)

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace GraphicsLabor.Scripts.Editor.Windows
 {
@@ -33,10 +36,6 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
 
             Rect currentRect = EditorGUILayout.GetControlRect();
-            
-            EditorGUI.LabelField(currentRect,"Hello!");
-            currentRect.y += LaborerGUIUtility.SingleLineHeight;
-
 
             // For now dont allow change of SO if set
             using (new EditorGUI.DisabledScope(disabled: true))
@@ -50,6 +49,28 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             //     LaborerEditorGUI.DrawField(field.GetValue(GetSettings()), field.Name);
             // }
             currentRect.y += DrawScriptableObjectWithRect(currentRect ,GetSettings());
+            
+            if (GUI.Button(currentRect, "Save As"))
+            {
+                //String tempPath = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
+                String tempPath =
+                    EditorUtility.OpenFolderPanel("Select Path", "Assets", "");
+                if (tempPath != null)
+                {
+                    tempPath = Path.GetRelativePath(Application.dataPath, tempPath);
+                    Debug.LogWarning(tempPath);
+                    if (tempPath.StartsWith(".."))
+                    {
+                        // Needs to be in Assets Folder
+                    } else
+                    {
+                        tempPath = "Assets\\" + tempPath;
+                        GetSettings()._tempScriptableObjectsPath = tempPath;
+                    }
+                }
+                
+            }
+            currentRect.y += LaborerGUIUtility.SingleLineHeight;
         }
         
         // Does not fix [Expandable] ScriptableObject drawing problem
