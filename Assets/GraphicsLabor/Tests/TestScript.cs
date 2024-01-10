@@ -39,7 +39,7 @@ namespace GraphicsLabor.Tests
         public Color _triangleBorderColor;
         [FormerlySerializedAs("_triangleDrawMode")] public LaborerDrawMode _triangleLaborerDrawMode;
 
-        [Space, Header("Polygon"), ShowMessage("Helloooo", MessageType.Info)]
+        [Space, Header("Polygon"), ShowMessage("Helloooo", MessageLevel.Info)]
         public bool _drawPolygon;
         public List<Transform> _polygonPoints;
         public Polygon _polygon;
