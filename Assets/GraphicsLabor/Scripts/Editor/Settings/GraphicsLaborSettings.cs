@@ -8,7 +8,7 @@ namespace GraphicsLabor.Scripts.Editor.Settings
 {
     public class GraphicsLaborSettings : ScriptableObject
     {
-        [ShowMessage("Path where \"Buffer\" Manageable Scriptable objects will be created for the Scriptable Objects Creator", MessageType.Info)]
+        [ShowMessage("Path where \"Buffer\" Manageable Scriptable objects will be created for the Scriptable Objects Creator", MessageLevel.Info)]
         [Label("Buffer SO Path")]public string _tempScriptableObjectsPath = "Assets/Config/GraphicsLabor/ScriptableObjects";
         [Label("Tags Path")]public string _tagsPath = "Assets/Config/GraphicsLabor/LaborerTags";
         [Tooltip("Can contain up to 32 custom tags")] public List<string> _tags;
