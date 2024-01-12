@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
-using GraphicsLabor.Scripts.Editor.ScriptableObjectParents;
 using UnityEngine;
 
 namespace GraphicsLabor.Tests
 {
-    [CreateAssetMenu(menuName = "Tests/TestScriptableObject"), Manageable]
-    public class TestEditableScriptableObject : EditableScriptableObject
+    [CreateAssetMenu(menuName = "Tests/TestScriptableObject"), Manageable, Editable]
+    public class TestEditableScriptableObject : ScriptableObject
     {
         public string testString = "test";
         public int testInt = 20;

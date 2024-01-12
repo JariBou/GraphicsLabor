@@ -29,6 +29,13 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "Scriptable Object Editor");
         }
         
+        [MenuItem("Window/GraphicLabor/Settings")]
+        public static void ShowSettings()
+        {
+            CreateNewEditorWindow<ScriptableObjectEditorWindow>(GetSettings(), "GL Settings");
+
+        }
+        
         public static void ShowWindow(Object obj)
         {
             if (obj == null || !obj.InheritsFrom(typeof(ScriptableObject)))

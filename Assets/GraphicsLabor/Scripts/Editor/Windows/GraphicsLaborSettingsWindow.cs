@@ -13,6 +13,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 {
     public class GraphicsLaborSettingsWindow : EditorWindowBase
     {
+        private ScriptableObject _selectedScriptableObject;
+        private SerializedObject _serializedObject;
         private string _selectedTab = "";
 
         // [MenuItem("Window/GraphicLabor/Settings")]
@@ -20,7 +22,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         // {
         //     WindowBase.CreateAndInitWindow<GraphicsLaborSettingsWindow>("GL Settings");
         // }
-        [MenuItem("Window/GraphicLabor/Settings")]
+        [MenuItem("Window/GraphicLabor/SettingsOLD")]
         public static void ShowSettings()
         {
             CreateNewEditorWindow<GraphicsLaborSettingsWindow>(GetSettings(), "GL Settings");

@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: GraphicsLaborSettings
   m_EditorClassIdentifier: 
   _tempScriptableObjectsPath: Assets/Config/GraphicsLabor/ScriptableObjects
-  _tagsPath: Assets/Config/GraphicsLabor/LaborerTags
-  _tags: []
+  _tagsPath: Assets/GraphicsLabor/Scripts/Core/LaborerTags
+  _tags:
+  - FirstOne
+  - SecondOne
+  - ThirdOne
+  - FourthOne

@@ -11,9 +11,8 @@ namespace GraphicsLabor.Scripts.Core.LaborerTags
 {
 	[System.Flags] public enum LaborTags
 	{
-		FirstOne = 1 << 1,
-		SecondOne = 1 << 2,
-		ThirdOne = 1 << 3,
-		FourthOne = 1 << 4,
+		First = 1 << 1,
+		Second = 1 << 2,
+		Third = 1 << 3,
 	}
 }
