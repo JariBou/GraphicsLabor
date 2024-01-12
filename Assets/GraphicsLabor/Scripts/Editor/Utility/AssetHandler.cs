@@ -59,6 +59,10 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             }
         }
         
+        /// <summary>
+        /// Creates necessary folders to create the give path
+        /// Path must start with "Assets/"
+        /// </summary>
         public static void CreateFolder(string fullPath)
         {
             String[] pathParts = fullPath.Split("/");

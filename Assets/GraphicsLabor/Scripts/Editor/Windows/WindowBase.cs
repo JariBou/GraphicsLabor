@@ -1,5 +1,7 @@
 ﻿using System;
+using GraphicsLabor.Scripts.Core.Settings;
 using GraphicsLabor.Scripts.Editor.Settings;
+using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -64,6 +66,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         {
             if (_glSettings != null) return _glSettings;
             
+            AssetHandler.CreateFolder("Assets/GraphicsLabor/Scripts/Editor/Settings");
             GraphicsLaborSettings settings = AssetDatabase.LoadAssetAtPath<GraphicsLaborSettings>("Assets/GraphicsLabor/Scripts/Editor/Settings/GraphicsLaborSettings.asset");
             if (settings == null)
             {

@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
-using UnityEditor;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Editor.Settings
+namespace GraphicsLabor.Scripts.Core.Settings
 {
     public class GraphicsLaborSettings : ScriptableObject
     {

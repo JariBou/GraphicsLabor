@@ -1,7 +1,7 @@
 {
     "name": "GraphicsLabor.Core",
     "rootNamespace": "",
-    "references": [],
+    "references": ["GUID:e90fb5411ff5e7241858daa04f921028"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

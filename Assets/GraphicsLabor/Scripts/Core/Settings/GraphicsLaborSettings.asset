@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94912ccb36da45428287f20c20fc2803, type: 3}
   m_Name: GraphicsLaborSettings
   m_EditorClassIdentifier: 
+  testString: zdzd
   _tempScriptableObjectsPath: Assets/Config/GraphicsLabor/ScriptableObjects
-  _tagsPath: Assets/Config/GraphicsLabor/LaborerTags
-  _tags: []
+  Tags:
+  - dzqd
+  - 
+  - 
+  - 
+  UserAssemblies: []
