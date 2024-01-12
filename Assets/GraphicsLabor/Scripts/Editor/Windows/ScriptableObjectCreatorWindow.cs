@@ -306,6 +306,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 }
             }
             AssetDatabase.SaveAssets();
+
+            if (_soNameAssetDic.Keys.Count == 0)
+            {
+                return new List<ScriptableObject>();
+            }
             
             // Default select the first SO, should go somewhere else
             SelectSo(_soNameAssetDic.Keys.ToArray()[0]);
