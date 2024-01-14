@@ -1,5 +1,6 @@
 ﻿using System;
 using GraphicsLabor.Scripts.Core.Settings;
+using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Settings;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
@@ -76,6 +77,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
             _glSettings = settings;
             return settings;
+        }
+
+        public void SetType(Type getType)
+        {
+            SelfType = getType;
         }
     }
 }

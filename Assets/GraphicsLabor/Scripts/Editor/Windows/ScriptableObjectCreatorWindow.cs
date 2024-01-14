@@ -6,6 +6,7 @@ using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttribu
 using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using String = System.String;
@@ -15,10 +16,10 @@ namespace GraphicsLabor.Scripts.Editor.Windows
     public sealed class ScriptableObjectCreatorWindow : EditorWindowBase
     {
         // Try to put it in a non static thing maybe, be cool not to have to open a new one every time
-        private ScriptableObject _selectedScriptableObject;
-        private SerializedObject _serializedObject;
+        [SerializeField]private ScriptableObject _selectedScriptableObject;
+        [SerializeField]private SerializedObject _serializedObject;
         private string _path;
-        private string _selectedPropTab = "";
+        [SerializeField]private string _selectedPropTab = "";
         private string _selectedSoTab = "";
         private Vector2 _scrollPos;
         private float _totalDrawnHeight = 20f;
@@ -34,6 +35,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             // _window._selectedScriptableObject = null;
             // _window.WindowName = "ScriptableObjectEditor";
             CreateNewEditorWindow<ScriptableObjectCreatorWindow>(null, "Scriptable Object Creator").GetPossibleScriptableObjects();
+        }
+        
+        private SerializedObject GetSerializedObject()
+        {
+            return _serializedObject ??= new SerializedObject(_selectedScriptableObject);
         }
         
         public static void ShowWindow(Object obj)
@@ -232,7 +238,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
             using (new EditorGUI.IndentLevelScope())
             {
-                SerializedObject serializedObject = _serializedObject;
+                SerializedObject serializedObject = GetSerializedObject();
                 serializedObject.Update();
                 float yOffset = LaborerGUIUtility.PropertyHeightSpacing;
 

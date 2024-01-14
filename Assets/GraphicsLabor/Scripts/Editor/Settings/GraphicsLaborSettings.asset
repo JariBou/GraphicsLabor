@@ -12,10 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94912ccb36da45428287f20c20fc2803, type: 3}
   m_Name: GraphicsLaborSettings
   m_EditorClassIdentifier: 
-  _tempScriptableObjectsPath: Assets/Config/GraphicsLabor/ScriptableObjects
+  _tempScriptableObjectsPath: Assets/GraphicsLabor/Scripts/Core/Settings
   _tagsPath: Assets/GraphicsLabor/Scripts/Core/LaborerTags
-  _tags:
-  - FirstOne
-  - SecondOne
-  - ThirdOne
-  - FourthOne
+  _tags: []

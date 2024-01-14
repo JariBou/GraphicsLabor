@@ -33,7 +33,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         public static void ShowSettings()
         {
             CreateNewEditorWindow<ScriptableObjectEditorWindow>(GetSettings(), "GL Settings");
-
+        }
+        
+        private SerializedObject GetSerializedObject()
+        {
+            return _serializedObject ??= new SerializedObject(_selectedScriptableObject);
         }
         
         public static void ShowWindow(Object obj)
@@ -130,7 +134,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
             using (new EditorGUI.IndentLevelScope())
             {
-                SerializedObject serializedObject = _serializedObject;
+                SerializedObject serializedObject = GetSerializedObject();
                 serializedObject.Update();
                 float yOffset = LaborerGUIUtility.PropertyHeightSpacing;
 
