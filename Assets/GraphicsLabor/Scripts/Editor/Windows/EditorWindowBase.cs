@@ -21,7 +21,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             if (settings.OpenedCustomWindows.Count != 0)
             {
                 window = settings.FindWindowWhere(customEditor =>
-                    customEditor.WindowName == (obj != null ? obj.name : "null") && customEditor.SelfType == typeof(T));
+                    (customEditor.WindowName == (obj != null ? obj.name : "null") || customEditor.WindowName == displayName) && customEditor.SelfType == typeof(T));
             }
             
             if (window == null)
@@ -30,6 +30,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             }
             
             window.Focus();
+            (window as T)?.PassInspectedObject(obj);
             return window as T;
         }
 

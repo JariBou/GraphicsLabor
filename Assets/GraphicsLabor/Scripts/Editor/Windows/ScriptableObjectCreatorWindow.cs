@@ -26,6 +26,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         private readonly Dictionary<String, ScriptableObject> _soNameAssetDic = new();
 
         private readonly List<ScriptableObject> _possibleSos = new();
+
+        private Vector2 _cachedTextSize = Vector2.zero;
         
         [MenuItem("Window/GraphicLabor/Test Creator Window")]
         public static void ShowWindow()
@@ -40,6 +42,16 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         private SerializedObject GetSerializedObject()
         {
             return _serializedObject ??= new SerializedObject(_selectedScriptableObject);
+        }
+
+        private Vector2 GetCachedTextSize()
+        {
+            if (_cachedTextSize == Vector2.zero)
+            {
+                _cachedTextSize = GUI.skin.box.CalcSize(new GUIContent("No Manageable Scriptable Objects"));
+            }
+
+            return _cachedTextSize;
         }
         
         public static void ShowWindow(Object obj)
@@ -64,35 +76,43 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         {
             Rect currentRect = EditorGUILayout.GetControlRect();
 
-            Rect selectionTabRect = currentRect;
+            if (GetPossibleScriptableObjects().Count == 0)
+            {
+                Rect middleText = currentRect;
+                Vector2 textSize = GetCachedTextSize();
+                middleText.x = middleText.width / 2 - textSize.x/2;
+                middleText.y = position.height / 2 - textSize.y / 2;
+                
+                EditorGUI.LabelField(middleText, "No Manageable Scriptable Objects");
+            }
+            else
+            {
+                Rect selectionTabRect = currentRect;
 
-            int tabSelectionWidth = 150;
-            selectionTabRect.width = tabSelectionWidth - 10;
+                int tabSelectionWidth = 150;
+                selectionTabRect.width = tabSelectionWidth - 10;
             
-            currentRect.x = tabSelectionWidth;
-            currentRect.width -= tabSelectionWidth;
+                currentRect.x = tabSelectionWidth;
+                currentRect.width -= tabSelectionWidth;
             
-            Rect rect2 = currentRect;
-            currentRect.width -= LaborerGUIUtility.ScrollBarWidth;
-            Rect rect = currentRect;
-            rect.height = _totalDrawnHeight;
-            rect2.height = position.height;
+                Rect scrollViewRect = currentRect;
+                currentRect.width -= LaborerGUIUtility.ScrollBarWidth;
+                Rect viewRect = currentRect;
+                viewRect.height = _totalDrawnHeight;
+                scrollViewRect.height = position.height;
+                
+                selectionTabRect.y += CreateSoSelectionButtons(selectionTabRect);
             
-            // SO type selector part
-            GUI.Box(selectionTabRect, GUIContent.none);
-            selectionTabRect.x += 3;
-            EditorGUI.LabelField(selectionTabRect, "surprise");
-
-            selectionTabRect.y += CreateSoSelectionButtons(selectionTabRect);
+                // SO display
             
-            // SO display
+                _scrollPos = GUI.BeginScrollView(scrollViewRect, _scrollPos, viewRect, alwaysShowVertical:true, alwaysShowHorizontal:false);
             
-            _scrollPos = GUI.BeginScrollView(rect2, _scrollPos, rect, alwaysShowVertical:true, alwaysShowHorizontal:false);
+                _totalDrawnHeight = DrawWithRect(currentRect);
+                _totalDrawnHeight += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
             
-            _totalDrawnHeight = DrawWithRect(currentRect);
-            _totalDrawnHeight += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
+                GUI.EndScrollView();
+            }
             
-            GUI.EndScrollView();
         }
 
         private float CreateSoSelectionButtons(Rect selectionTabRect)
@@ -129,7 +149,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             _serializedObject = new SerializedObject(_soNameAssetDic[soName]);
         }
         
-        private String GetTruncatedTempSoName(String soName)
+        private static String GetTruncatedTempSoName(String soName)
         {
             String newSoName = GetTempSoName(soName);
             if (newSoName.Length > 22)
@@ -140,7 +160,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             return newSoName;
         }
 
-        private String GetTempSoName(String soName)
+        private static String GetTempSoName(String soName)
         {
             String newSoName = ObjectNames.NicifyVariableName(soName);
             newSoName = newSoName.Remove(newSoName.Length - "_temp".Length);
@@ -149,8 +169,37 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
         protected override void PassInspectedObject(Object obj)
         {
-            _selectedScriptableObject = (ScriptableObject)obj;
-            WindowName = obj != null ? obj.name : "null";
+
+            if (obj == null) return;
+
+            string soTypeName = obj.GetType().Name;
+            
+            GLogger.Log($"Obj: {obj.GetType().Name}");
+            GLogger.Log($"SO: {((ScriptableObject)obj).GetType().Name}");
+
+            foreach (string keyName in _soNameAssetDic.Keys.ToArray())
+            {
+                GLogger.Log(keyName);
+            }
+
+            if (GetPossibleScriptableObjects().Exists(so => so.GetType().Name == soTypeName))
+            {
+                SelectSo(soTypeName + "_temp");
+            }
+            
+           
+            
+            //WindowName = obj != null ? obj.name : "null";
+            // GetPossibleScriptableObjects();
+            // if (obj == null && _possibleSos.Count != 0)
+            // {
+            //     SelectSo(_possibleSos[0].GetType().Name);
+            // }
+            // else
+            // {
+            //     SelectSo(_selectedScriptableObject.GetType().Name);
+            // }
+
             //_serializedObject = new SerializedObject(_selectedScriptableObject);
         }
 
@@ -206,8 +255,6 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 currentRect.y += DrawScriptableObjectWithRect(currentRect, _selectedScriptableObject);
             }
             
-            //TODO: Create SO Creator
-            
             if (GUI.Button(currentRect, "Save As"))
             {
                 //String tempPath = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
@@ -223,9 +270,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 }
             }
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
-
             
-
             return currentRect.y;
         }
         
