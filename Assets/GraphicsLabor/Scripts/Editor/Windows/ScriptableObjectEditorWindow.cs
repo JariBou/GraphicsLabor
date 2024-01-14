@@ -26,19 +26,30 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             // _window.titleContent = new GUIContent("ScriptableObjectEditor");
             // _window._selectedScriptableObject = null;
             // _window.WindowName = "ScriptableObjectEditor";
-            CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "ScriptableObjectEditor");
+            CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "Scriptable Object Editor");
+        }
+        
+        [MenuItem("Window/GraphicLabor/Settings")]
+        public static void ShowSettings()
+        {
+            CreateNewEditorWindow<ScriptableObjectEditorWindow>(GetSettings(), "GL Settings");
+        }
+        
+        private SerializedObject GetSerializedObject()
+        {
+            return _serializedObject ??= new SerializedObject(_selectedScriptableObject);
         }
         
         public static void ShowWindow(Object obj)
         {
             if (obj == null || !obj.InheritsFrom(typeof(ScriptableObject)))
             {
-                CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "ScriptableObjectEditor");
+                CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "Scriptable Object Editor");
                 GLogger.LogWarning($"Object of type {obj.GetType()} is not assignable to ScriptableObject");
             }
             else
             {
-                CreateNewEditorWindow<ScriptableObjectEditorWindow>(obj, "ScriptableObjectEditor");
+                CreateNewEditorWindow<ScriptableObjectEditorWindow>(obj, "Scriptable Object Editor");
             }
             
             // _window = GetWindow<ScriptableObjectEditorWindow>();
@@ -58,7 +69,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
 
             _scrollPos = GUI.BeginScrollView(rect2, _scrollPos, rect, alwaysShowVertical:true, alwaysShowHorizontal:false);
-            DrawWithRect(ref currentRect);
+            _totalDrawnHeight = DrawWithRect(currentRect);
+            _totalDrawnHeight += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
             GUI.EndScrollView();
         }
 
@@ -69,7 +81,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             _serializedObject = new SerializedObject(_selectedScriptableObject);
         }
 
-        private void DrawWithRect(ref Rect currentRect)
+        private float DrawWithRect(Rect currentRect)
         {
             GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
 
@@ -94,7 +106,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
             if (_selectedScriptableObject)
             {
-                currentRect.y += DrawScriptableObjectWithRect(currentRect ,_selectedScriptableObject);
+                currentRect.y += DrawScriptableObjectWithRect(currentRect, _selectedScriptableObject);
             }
             
             //TODO: Create SO Creator
@@ -110,7 +122,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             }
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
 
-            _totalDrawnHeight = currentRect.y;
+            return currentRect.y;
         }
         
         // Does not fix [Expandable] ScriptableObject drawing problem
@@ -122,7 +134,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
             using (new EditorGUI.IndentLevelScope())
             {
-                SerializedObject serializedObject = _serializedObject;
+                SerializedObject serializedObject = GetSerializedObject();
                 serializedObject.Update();
                 float yOffset = LaborerGUIUtility.PropertyHeightSpacing;
 

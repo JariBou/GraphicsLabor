@@ -84,6 +84,19 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             EditorGUI.EndDisabledGroup();
         }
         
+        public static void ManageableSoButton(Object target, string buttonText)
+        {
+
+            EditorGUI.BeginDisabledGroup(false);
+
+            if (GUILayout.Button(buttonText, ButtonStyle))
+            {
+                ScriptableObjectCreatorWindow.ShowWindow(target);
+            }
+
+            EditorGUI.EndDisabledGroup();
+        }
+        
         public static void PropertyField(Rect rect, SerializedProperty property, bool includeChildren)
         {
             // Check if visible

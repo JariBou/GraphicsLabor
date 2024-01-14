@@ -10,10 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1cb85ef6b06fb4f8c92821feba1e0d, type: 3}
-  m_Name: New Another Scriptable Object
+  m_Name: AnotherEditableScriptableObject_temp
   m_EditorClassIdentifier: 
-  test: 69
-  test2: 998988
-  testList:
-  - hhhh
-  - sefse
+  test: 
+  test2: 1
+  testList: []

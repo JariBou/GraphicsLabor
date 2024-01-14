@@ -18,6 +18,7 @@ namespace GraphicsLabor.Scripts.Editor
         private IEnumerable<PropertyInfo> _properties;
         private IEnumerable<MethodInfo> _methods;
         private bool _isEditableScriptableObject;
+        private bool _isManageableScriptableObject;
 
         private void OnEnable()
         {
@@ -29,6 +30,9 @@ namespace GraphicsLabor.Scripts.Editor
 
             _isEditableScriptableObject = ReflectionUtility
                 .GetAllAttributesOfObject(target, c => c.AttributeType == typeof(EditableAttribute), true).Any();
+            
+            _isManageableScriptableObject = ReflectionUtility
+                .GetAllAttributesOfObject(target, c => c.AttributeType == typeof(ManageableAttribute), true).Any();
         }
 
         public override void OnInspectorGUI()
@@ -46,10 +50,19 @@ namespace GraphicsLabor.Scripts.Editor
             }
             DrawProperties();
             DrawButtons();
+            
+            GUILayout.BeginHorizontal();
+            
             if (_isEditableScriptableObject)
             {
                 LaborerEditorGUI.EditableSoButton(serializedObject.targetObject, "Show Editor");
             }
+            if (_isManageableScriptableObject)
+            {
+                LaborerEditorGUI.ManageableSoButton(serializedObject.targetObject, "Show Creator");
+            }
+            
+            GUILayout.EndHorizontal();
         }
 
         private void GetSerializedProperties(ref List<SerializedProperty> outSerializedProperties)

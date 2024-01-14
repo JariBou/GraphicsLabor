@@ -1,5 +1,8 @@
 ﻿using System;
+using GraphicsLabor.Scripts.Core.Settings;
+using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Settings;
+using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -64,16 +67,21 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         {
             if (_glSettings != null) return _glSettings;
             
-            GraphicsLaborSettings settings = AssetDatabase.LoadAssetAtPath<GraphicsLaborSettings>("Assets/GraphicsLabor/Scripts/Editor/Settings/GraphicsLaborSettings.asset");
+            GraphicsLaborSettings settings = AssetDatabase.LoadAssetAtPath<GraphicsLaborSettings>("Assets/GraphicsLabor/Scripts/Core/Settings/GraphicsLaborSettings.asset");
             if (settings == null)
             {
                 settings = CreateInstance<GraphicsLaborSettings>();
-                AssetDatabase.CreateAsset(settings, "Assets/GraphicsLabor/Scripts/Editor/Settings/GraphicsLaborSettings.asset");
+                AssetDatabase.CreateAsset(settings, "Assets/GraphicsLabor/Scripts/Core/Settings/GraphicsLaborSettings.asset");
                 AssetDatabase.SaveAssets();
             }
 
             _glSettings = settings;
             return settings;
+        }
+
+        public void SetType(Type getType)
+        {
+            SelfType = getType;
         }
     }
 }

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - ShowIfAttribute is now abstract and cannot be used as an attribute
+- EditorGui.ObjectField now uses allowSceneObjects param
 
 ### Fixed
 

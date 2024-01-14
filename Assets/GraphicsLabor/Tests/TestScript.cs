@@ -1,13 +1,12 @@
 using System.Collections.Generic;
+using GraphicsLabor.Generated;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
 using GraphicsLabor.Scripts.Core.Laborers;
 using GraphicsLabor.Scripts.Core.Laborers.Utils;
-using GraphicsLabor.Scripts.Core.LaborerTags;
 using GraphicsLabor.Scripts.Core.Shapes;
 using GraphicsLabor.Scripts.Editor.Utility;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -39,7 +38,7 @@ namespace GraphicsLabor.Tests
         public Color _triangleBorderColor;
         [FormerlySerializedAs("_triangleDrawMode")] public LaborerDrawMode _triangleLaborerDrawMode;
 
-        [Space, Header("Polygon"), ShowMessage("Helloooo", MessageType.Info)]
+        [Space, Header("Polygon"), ShowMessage("Helloooo", MessageLevel.Info)]
         public bool _drawPolygon;
         public List<Transform> _polygonPoints;
         public Polygon _polygon;
