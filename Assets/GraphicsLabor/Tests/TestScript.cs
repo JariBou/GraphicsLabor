@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using GraphicsLabor.Generated;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
 using GraphicsLabor.Scripts.Core.Laborers;
 using GraphicsLabor.Scripts.Core.Laborers.Utils;
+using GraphicsLabor.Scripts.Core.LaborerTags;
 using GraphicsLabor.Scripts.Core.Shapes;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEngine;

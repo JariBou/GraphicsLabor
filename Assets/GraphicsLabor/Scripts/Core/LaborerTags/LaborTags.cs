@@ -7,10 +7,11 @@
 //
 //
 //
-namespace GraphicsLabor.Generated
+namespace GraphicsLabor.Scripts.Core.LaborerTags
 {
 	[System.Flags] public enum LaborTags
 	{
+		Null = 1 << 0,
 		FirstOne = 1 << 1,
 	}
 }

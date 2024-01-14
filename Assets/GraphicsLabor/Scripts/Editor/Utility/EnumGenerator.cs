@@ -28,9 +28,11 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                            "// AUTO-GENERATED CODE - DO NOT MODIFY BY HAND!\n" +
                            "//\n" +
                            "// To regenerate this file, look at GraphicLaborer's EnumGenerator\n" +
+                           "// This file is generated inside of GraphicsLabor.Core to allow it's usage everywhere else" +
                            "//\n//\n//\n");
-            content.Append("namespace GraphicsLabor.Generated\n{\n");
+            content.Append("namespace GraphicsLabor.Scripts.Core.LaborerTags\n{\n");
             content.Append("\t[System.Flags] public enum LaborTags\n\t{\n");
+            content.Append("\t\tNull = 1 << 0,\n");
 
             for (int i = 0; i < enumNames.Count; i++)
             {
