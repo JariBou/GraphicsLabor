@@ -2,15 +2,12 @@
 using System.IO;
 using System.Text;
 using GraphicsLabor.Scripts.Core.Settings;
-using NUnit.Framework;
 using UnityEditor;
 
-namespace GraphicsLabor.Scripts.Editor.Utility
+namespace GraphicsLabor.Scripts.Core.Utility
 {
     public static class EnumGenerator
     {
-        private const string Path = "Assets/GraphicsLabor/Generated/LaborTags.cs";
-
         public static void CreateTagEnumFile()
         {
             
@@ -24,15 +21,15 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             // };
 
             List<string> enumNames = settings._tags;
-            content.Append("//\n//\n//\n" + 
+            content.Append("//\n//\n" + 
                            "// AUTO-GENERATED CODE - DO NOT MODIFY BY HAND!\n" +
                            "//\n" +
-                           "// To regenerate this file, look at GraphicLaborer's EnumGenerator\n" +
-                           "// This file is generated inside of GraphicsLabor.Core to allow it's usage everywhere else" +
-                           "//\n//\n//\n");
-            content.Append("namespace GraphicsLabor.Scripts.Core.LaborerTags\n{\n");
+                           "// To regenerate this file, look at GraphicLaborer's EnumGenerator in Core\n" +
+                           "//\n//\n");
+            content.Append("namespace GraphicsLabor.Scripts.LaborTags\n{\n");
             content.Append("\t[System.Flags] public enum LaborTags\n\t{\n");
-            content.Append("\t\tNull = 1 << 0,\n");
+            content.Append("\t\tNull = 1 << 0,\n"); // Flags with only 1 value break unity's inspector so we set 1 by default so that
+            // When the user adds one it works
 
             for (int i = 0; i < enumNames.Count; i++)
             {
@@ -44,7 +41,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             content.Append("}");
             
             
-            AssetHandler.CreateFolder(settings._tagsPath); // Just in case
+            IOHelper.CreateFolder(settings._tagsPath); // Just in case
             File.WriteAllText(settings._tagsPath + "/LaborTags.cs", content.ToString());
             
             AssetDatabase.Refresh();

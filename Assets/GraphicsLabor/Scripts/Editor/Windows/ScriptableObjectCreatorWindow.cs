@@ -6,7 +6,6 @@ using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttribu
 using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using String = System.String;
@@ -241,7 +240,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 ScriptableObject obj = _soNameAssetDic[_selectedSoTab];
                 ScriptableObject so = CreateInstance(obj.GetType());
                 so.name = so.GetType().Name;
-                AssetHandler.CreateFolder(GetSettings()._tempScriptableObjectsPath);
+                IOHelper.CreateFolder(GetSettings()._tempScriptableObjectsPath);
                 AssetDatabase.CreateAsset(so, $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset");
                 _soNameAssetDic[so.name] = so;
                 SelectSo(so.name);
@@ -349,7 +348,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                     ScriptableObject so = CreateInstance(type);
                     so.name = so.GetType().Name;
                     GetSettings();
-                    AssetHandler.CreateFolder(GetSettings()._tempScriptableObjectsPath);
+                    IOHelper.CreateFolder(GetSettings()._tempScriptableObjectsPath);
                     AssetDatabase.CreateAsset(so, $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset");
                     _possibleSos.Add(so);
                     typesList.Add(type);

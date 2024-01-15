@@ -4,15 +4,16 @@ using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
 using GraphicsLabor.Scripts.Core.Laborers;
 using GraphicsLabor.Scripts.Core.Laborers.Utils;
-using GraphicsLabor.Scripts.Core.LaborerTags;
 using GraphicsLabor.Scripts.Core.Shapes;
+using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
+using GraphicsLabor.Scripts.LaborTags;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace GraphicsLabor.Tests
 {
-    public class TestScript : MonoBehaviour
+    public class TestScript : LaborBehaviour
     {
         [Space, Header("Quad")] 
         public bool _drawQuad;
@@ -49,7 +50,7 @@ namespace GraphicsLabor.Tests
         [ShowProperty] public int Testooo => Hello;
         [ShowIf("_showSO"), Expandable] public TestEditableScriptableObject _testEditableScriptableObject;
         [Scene] public string _scene;
-        public LaborTags customTags;
+        public LaborTags _testAgainst;
         
         // public static int test;
 
@@ -62,6 +63,13 @@ namespace GraphicsLabor.Tests
         void CreateEnumFile()
         {
             EnumGenerator.CreateTagEnumFile();
+        }
+
+        [Button]
+        void TestEnumExtensions()
+        {
+            GLogger.Log($"Exact: {this.HasExactTags(_testAgainst)}");
+            GLogger.Log($"Partial: {this.HasTags(_testAgainst)}");
         }
 
         void OnDisable()
