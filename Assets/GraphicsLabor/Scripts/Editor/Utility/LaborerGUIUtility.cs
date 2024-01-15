@@ -15,8 +15,9 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         public static float CurrentViewWidth => EditorGUIUtility.currentViewWidth;
         public static float SoSelectionButtonHeight => SingleLineHeight + PropertyHeightSpacing*3;
 
-        #region Window Colors
-            public static Color SelectedTabColor => Color.gray;
+        #region Colors
+            public static Color SelectedTabColor => new (0.5f, 0.5f, 0.5f, 1f);
+            public static Color SelectedSOTabColor => new (0.7f, 0.7f, 0.7f, 1f);
             public static Color BaseBackgroundColor => new(0.9f, 0.9f, 0.9f);
         #endregion
     }

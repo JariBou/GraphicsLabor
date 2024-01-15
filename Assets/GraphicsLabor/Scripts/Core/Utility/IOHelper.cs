@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using UnityEditor;
+using Object = UnityEngine.Object;
 
 namespace GraphicsLabor.Scripts.Core.Utility
 {
@@ -31,6 +32,22 @@ namespace GraphicsLabor.Scripts.Core.Utility
             {
                 CreateFolder(currParentPath, pathParts[i]);
                 currParentPath += $"/{pathParts[i]}";
+            }
+        }
+
+        //TODO Doesn't seem to work sadge
+        public static void CreateAssetIfNeeded(Object obj, string path, bool saveAssets = true)
+        {
+            var assetAtPath = AssetDatabase.LoadAssetAtPath<Object>(path);
+
+            if (assetAtPath == null)
+            {
+                AssetDatabase.CreateAsset(obj, path);
+            }
+
+            if (saveAssets)
+            {
+                AssetDatabase.SaveAssets();
             }
         }
     }

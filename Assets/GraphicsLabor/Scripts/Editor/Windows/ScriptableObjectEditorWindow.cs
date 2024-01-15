@@ -132,57 +132,55 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties = new Dictionary<string, List<SerializedProperty>>();
             Dictionary<string, List<PropertyInfo>> tabbedProperties = new Dictionary<string, List<PropertyInfo>>();
 
-            using (new EditorGUI.IndentLevelScope())
+            SerializedObject serializedObject = GetSerializedObject();
+            serializedObject.Update();
+            float yOffset = LaborerGUIUtility.PropertyHeightSpacing;
+
+            yOffset += LaborerWindowGUI.DrawScriptableObjectNormalSerializedFields(startRect, yOffset, serializedObject, ref tabbedSerializedProperties);
+            yOffset += LaborerWindowGUI.DrawScriptableObjectNormalProperties(startRect, yOffset, serializedObject, ref tabbedProperties);
+
+            IEnumerable<string> tabs = GHelpers.ConcatenateLists(tabbedSerializedProperties.Keys, tabbedProperties.Keys).ToArray();
+            float buttonWidth = startRect.width / tabs.Count();
+            int i = 0;
+            foreach (string key in tabs)
             {
-                SerializedObject serializedObject = GetSerializedObject();
-                serializedObject.Update();
-                float yOffset = LaborerGUIUtility.PropertyHeightSpacing;
-
-                yOffset += LaborerWindowGUI.DrawScriptableObjectNormalSerializedFields(startRect, yOffset, serializedObject, ref tabbedSerializedProperties);
-                yOffset += LaborerWindowGUI.DrawScriptableObjectNormalProperties(startRect, yOffset, serializedObject, ref tabbedProperties);
-
-                IEnumerable<string> tabs = GHelpers.ConcatenateLists(tabbedSerializedProperties.Keys, tabbedProperties.Keys).ToArray();
-                float buttonWidth = startRect.width / tabs.Count();
-                int i = 0;
-                foreach (string key in tabs)
+                Rect buttonRect = new()
                 {
-                    Rect buttonRect = new()
-                    {
-                        x =startRect.x + buttonWidth * i,
-                        y = startRect.y + yOffset,
-                        width = buttonWidth,
-                        height = LaborerGUIUtility.SingleLineHeight
-                    };
-                    if (key == _selectedTab)
-                    {
-                        GUI.backgroundColor = LaborerGUIUtility.SelectedTabColor;
-                    } 
-                    if (GUI.Button(buttonRect, key, EditorStyles.toolbarButton))
-                    {
-                        _selectedTab = key == _selectedTab ? "" : key;
-                    }
-
-                    GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
-                    
-                    i++;
-                }
-                yOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing*2;
-
-                if (tabbedSerializedProperties.TryGetValue(_selectedTab, out var serializedProperties))
+                    x =startRect.x + buttonWidth * i,
+                    y = startRect.y + yOffset,
+                    width = buttonWidth,
+                    height = LaborerGUIUtility.SingleLineHeight
+                };
+                if (key == _selectedTab)
                 {
-                    // TODO: When changing values inside of serialized classes it refolds and sometimes doesn't register
-                    // Ok so what happens is that when repainting it puts the foldouts in the same state as the SO
-                    yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedSerializedFields(startRect, yOffset, serializedProperties);
-                }
-                if (tabbedProperties.TryGetValue(_selectedTab, out var normalProperties))
+                    GUI.backgroundColor = LaborerGUIUtility.SelectedTabColor;
+                } 
+                if (GUI.Button(buttonRect, key, EditorStyles.toolbarButton))
                 {
-                    yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedProperties(startRect, yOffset, serializedObject, normalProperties);
+                    _selectedTab = key == _selectedTab ? "" : key;
                 }
-                yOffset += LaborerGUIUtility.PropertyHeightSpacing;
+
+                GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
                 
-                serializedObject.ApplyModifiedProperties();
-                return yOffset;
+                i++;
             }
+            yOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing*2;
+
+            if (tabbedSerializedProperties.TryGetValue(_selectedTab, out var serializedProperties))
+            {
+                // TODO: When changing values inside of serialized classes it refolds and sometimes doesn't register
+                // Ok so what happens is that when repainting it puts the foldouts in the same state as the SO
+                yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedSerializedFields(startRect, yOffset, serializedProperties);
+            }
+            if (tabbedProperties.TryGetValue(_selectedTab, out var normalProperties))
+            {
+                yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedProperties(startRect, yOffset, serializedObject, normalProperties);
+            }
+            yOffset += LaborerGUIUtility.PropertyHeightSpacing;
+            
+            serializedObject.ApplyModifiedProperties();
+            return yOffset;
+            
         }
     }
 }
