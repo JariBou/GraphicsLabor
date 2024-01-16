@@ -37,9 +37,42 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         public static bool IsEnabled(SerializedProperty property)
         {
             ReadOnlyAttribute readOnlyAttribute = GetAttribute<ReadOnlyAttribute>(property);
-            // TODO: Add EnableIf Attribute
+
+            if (readOnlyAttribute != null) return false;
             
-            return readOnlyAttribute == null;
+            
+            // TODO: Add EnableIf Attribute
+            EnableIfAttributeBase enableIfAttributeBase = GetAttribute<EnableIfAttributeBase>(property);
+            // There is no EnableIfAttributeBase Attribute so it is visible
+            if (enableIfAttributeBase == null) return true;
+
+            // We get the object where the property is go be able to get fields' values to check for conditions
+            object target = GetTargetObjectWithProperty(property);
+
+            if (enableIfAttributeBase.EnumValue != null) // First check if it is via enum
+            {
+                Enum value = GetEnumValue(target, enableIfAttributeBase.Conditions[0]);
+                if (value != null)
+                {
+                    bool isRightEnum = enableIfAttributeBase.EnumValue.Equals(value);
+
+                    return enableIfAttributeBase.Inverted ? !isRightEnum : isRightEnum;
+                }
+            }
+            
+            // now we can check for "regular" conditions
+            List<bool> conditionValues = GetConditionValues(target, enableIfAttributeBase.Conditions);
+            if (conditionValues.Count > 0)
+            {
+                bool isVisible = ParseConditions(conditionValues, enableIfAttributeBase.ConditionOperator,
+                    enableIfAttributeBase.Inverted);
+                
+                return isVisible;
+            }
+            
+            // If we go here there is a problem
+            Debug.Log($"{enableIfAttributeBase.GetType().Name} needs valid boolean or enum fields", property.serializedObject.targetObject);
+            return false;
         }
 
         public static bool IsVisible(SerializedProperty property)
