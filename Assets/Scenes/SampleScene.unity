@@ -359,6 +359,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 161255912634011959, guid: ea46416f9a4ac9246a9df8a28b4bf977, type: 3}
+      propertyPath: _drawPolygon
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 161255912634011959, guid: ea46416f9a4ac9246a9df8a28b4bf977, type: 3}
       propertyPath: _polygonPoints.Array.size
       value: 8
       objectReference: {fileID: 0}
