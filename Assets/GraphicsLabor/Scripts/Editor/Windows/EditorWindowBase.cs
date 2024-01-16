@@ -1,5 +1,4 @@
 using System;
-using GraphicsLabor.Scripts.Core.Settings;
 using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Settings;
 using UnityEditor.Callbacks;

@@ -1,8 +1,6 @@
 ﻿using System;
 using GraphicsLabor.Scripts.Core.Settings;
-using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Settings;
-using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEditor;
 using UnityEngine;
 

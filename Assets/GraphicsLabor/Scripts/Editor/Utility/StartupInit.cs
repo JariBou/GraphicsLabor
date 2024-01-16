@@ -1,5 +1,4 @@
 ﻿using System;
-using GraphicsLabor.Scripts.Core.Settings;
 using GraphicsLabor.Scripts.Editor.Settings;
 using GraphicsLabor.Scripts.Editor.Windows;
 using UnityEditor;

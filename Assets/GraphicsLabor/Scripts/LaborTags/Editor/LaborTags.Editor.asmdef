@@ -1,0 +1,16 @@
+{
+    "name": "LaborTags.Editor",
+    "rootNamespace": "",
+    "references": ["GUID:eccb7d3dcc94606448ad4419c7218cfd"],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
