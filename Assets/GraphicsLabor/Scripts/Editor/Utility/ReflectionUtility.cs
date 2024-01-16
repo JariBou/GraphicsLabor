@@ -118,27 +118,5 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         {
             return GetAllMethods(target, m => m.Name.Equals(methodName, StringComparison.Ordinal)).FirstOrDefault();
         }
-
-        /// <summary>
-        ///		Get type and all base types of target, sorted as following:
-        ///		<para />[target's type, base type, base's base type, ...]
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        [Obsolete("Use object.GetTypes() instead")]
-        public static List<Type> GetSelfAndBaseTypes(object target) // Returns object Type along with all parents
-        {
-            List<Type> types = new List<Type>()
-            {
-                target.GetType()
-            };
-
-            while (types.Last().BaseType != null)
-            {
-                types.Add(types.Last().BaseType);
-            }
-
-            return types;
-        }
     }
 }

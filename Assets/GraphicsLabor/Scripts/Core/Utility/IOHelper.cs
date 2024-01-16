@@ -34,8 +34,7 @@ namespace GraphicsLabor.Scripts.Core.Utility
                 currParentPath += $"/{pathParts[i]}";
             }
         }
-
-        //TODO Doesn't seem to work sadge
+        
         public static void CreateAssetIfNeeded(Object obj, string path, bool saveAssets = true)
         {
             var assetAtPath = AssetDatabase.LoadAssetAtPath<Object>(path);

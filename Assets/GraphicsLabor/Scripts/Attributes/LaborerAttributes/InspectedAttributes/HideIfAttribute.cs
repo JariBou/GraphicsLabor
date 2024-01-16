@@ -3,6 +3,7 @@ using GraphicsLabor.Scripts.Attributes.Utility;
 
 namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
 {
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class HideIfAttribute : ShowIfAttributeBase
     {
         public HideIfAttribute(string condition)

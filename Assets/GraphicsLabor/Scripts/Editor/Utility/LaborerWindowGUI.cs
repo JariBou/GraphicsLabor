@@ -5,6 +5,7 @@ using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Core.Utility;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -27,7 +28,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                             
                 if (serializedProperty.name.Equals("m_Script", StringComparison.Ordinal)) continue;
 
-                bool visible = PropertyUtility.IsVisible(serializedProperty) && PropertyUtility.IsEnabled(serializedProperty);
+                bool visible = PropertyUtility.IsVisible(serializedProperty);
                 if (!visible) continue;
                             
                 float childHeight = GetPropertyHeight(serializedProperty);
@@ -111,7 +112,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             
             return localOffset + LaborerGUIUtility.PropertyHeightSpacing;
         }
-
         
         public static float DrawScriptableObjectTabbedProperties(Rect startRect, float yOffset, SerializedObject serializedObject, List<PropertyInfo> properties)
         {
@@ -147,43 +147,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             
             return localOffset + LaborerGUIUtility.PropertyHeightSpacing;
         }
-
-        #endregion
         
-        private static void DrawField(SerializedProperty serializedProperty, ref Dictionary<string, List<SerializedProperty>> tabbedProperties, bool checkForTab = false)
-        {
-            if (serializedProperty == null) return;
-            if (!PropertyUtility.IsVisible(serializedProperty)) return;
-            if (serializedProperty.name.Equals("m_Script", StringComparison.Ordinal)) return;
-            
-            if (checkForTab && PropertyUtility.GetAttribute<TabPropertyAttribute>(serializedProperty) is { } tabPropertyAttribute)
-            {
-                foreach (string tabName in tabPropertyAttribute.TabNames)
-                {
-                    if (tabbedProperties.ContainsKey(tabName))
-                    {
-                        tabbedProperties[tabName].Add(serializedProperty);
-                    }
-                    else
-                    {
-                        tabbedProperties.Add(tabName, new List<SerializedProperty> {serializedProperty});
-                    }
-                }
-            }
-            else
-            {
-                DrawField(serializedProperty);
-            }
-        }
-
-        private static void DrawField(SerializedProperty serializedProperty)
-        {
-            if (serializedProperty == null) return;
-            if (!PropertyUtility.IsVisible(serializedProperty)) return;
-
-            LaborerEditorGUI.LayoutPropertyField(serializedProperty);
-        }
-
         private static bool DrawSerializedProperty(Rect rect, SerializedProperty serializedProperty, ref Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties, bool checkForTab = false)
         {
             if (serializedProperty == null) return false;
@@ -211,6 +175,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             return true;
         }
         
+        #endregion
+        
         public static void PropertyField(Rect rect, SerializedProperty property, bool includeChildren)
         {
             // Check if visible
@@ -232,20 +198,16 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             }
         }
 
-        private static void DrawSerializedProperty(Rect rect,SerializedProperty serializedProperty)
-        {
-            if (serializedProperty == null) return;
-            if (!PropertyUtility.IsVisible(serializedProperty)) return;
-
-            LaborerEditorGUI.PropertyField(rect, serializedProperty, true);
-        }
-
-        private static bool DrawProperty(Rect rect, PropertyInfo property, Object target, ref Dictionary<string, List<PropertyInfo>> tabbedProperties, bool checkForTab = false)
+        private static bool DrawProperty(Rect rect, PropertyInfo property, Object target, [CanBeNull] ref Dictionary<string, List<PropertyInfo>> tabbedProperties, bool checkForTab = false)
         {
             if (property == null) return false;
             // if (!PropertyUtility.IsVisible(property)) return false;
             
-            if (checkForTab && PropertyUtility.GetAttribute<TabPropertyAttribute>(property) is { } tabPropertyAttribute)
+            bool isVisible = PropertyUtility.IsVisible(property, new SerializedObject(target));
+            
+            if (!isVisible) return false;
+            
+            if (checkForTab && tabbedProperties != null && PropertyUtility.GetAttribute<TabPropertyAttribute>(property) is { } tabPropertyAttribute)
             {
                 foreach (string tabName in tabPropertyAttribute.TabNames)
                 {
@@ -260,16 +222,31 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 }
                 return false;
             }
-            DrawField(rect, property.GetValue(target, null), property.Name);
+            
+            bool isEnabled = PropertyUtility.IsEnabled(property, new SerializedObject(target));
+
+            if (property.CanWrite)
+            {
+                if (DrawWritableField(rect, target, property, isEnabled)) return true;
+                
+                string warning = $"{nameof(ShowPropertyAttribute)} doesn't support {property.PropertyType.Name} types";
+                EditorGUILayout.HelpBox(warning, MessageType.Warning);
+                return false;
+            } 
+            
+            if (!DrawNonWritableField(rect, target, property, isEnabled))
+            {
+                string warning = $"{nameof(ShowPropertyAttribute)} doesn't support {property.PropertyType.Name} types";
+                EditorGUILayout.HelpBox(warning, MessageType.Warning);
+            } 
+            
             return true;
         }
 
         private static void DrawProperty(Rect rect, PropertyInfo property, Object target)
         {
-            if (property == null) return;
-            // if (!PropertyUtility.IsVisible(property)) return false;
-            
-            DrawField(rect, property.GetValue(target, null), property.Name);
+            Dictionary<string,List<PropertyInfo>> nVar = null;
+            DrawProperty(rect, property, target, ref nVar);
         }
 
 
@@ -281,23 +258,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         private static float GetPropertiesHeight(IEnumerable<SerializedProperty> properties, float spacing = 0f)
         {
             return spacing + properties.Sum(property => GetPropertyHeight(property) + spacing);
-        }
-        
-        public static void DrawSerializedProperty(Rect position, Object target, PropertyInfo property)
-        {
-            object value = property.GetValue(target, null);
-
-            if (value == null)
-            {
-                string warning =
-                    $"{ObjectNames.NicifyVariableName(property.Name)} is null. {nameof(ShowPropertyAttribute)} doesn't support reference types with null value";
-                EditorGUILayout.HelpBox(warning, MessageType.Warning);
-            }
-            else if (!DrawField(position, value, ObjectNames.NicifyVariableName(property.Name)))
-            {
-                string warning = $"{nameof(ShowPropertyAttribute)} doesn't support {property.PropertyType.Name} types";
-                EditorGUILayout.HelpBox(warning, MessageType.Warning);
-            }
         }
 
         private static bool DrawField(Rect position, object value, string label)
@@ -386,6 +346,233 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                 else if (typeof(Object).IsAssignableFrom(valueType))
                 {
                     GLogger.LogWarning(label);
+                    EditorGUI.ObjectField(position, label, (Object)value, valueType, true);
+                }
+                else if (valueType.BaseType == typeof(Enum))
+                {
+                    EditorGUI.EnumPopup(position, label, (Enum)value);
+                }
+                else if (valueType.BaseType == typeof(TypeInfo))
+                {
+                    EditorGUI.TextField(position, label, value.ToString());
+                }
+                else
+                {
+                    isDrawn = false;
+                }
+
+                return isDrawn;
+            }
+        }
+        
+        public static bool DrawWritableField(Rect position, Object targetObject, PropertyInfo property, bool enabled = false)
+        {
+            using (new EditorGUI.DisabledScope(disabled: !enabled))
+            {
+                string label = ObjectNames.NicifyVariableName(property.Name);
+                bool isDrawn = true;
+                object value = property.GetValue(targetObject, null);
+                
+                if (value == null)
+                {
+                    string warning = $"{nameof(ShowPropertyAttribute)} doesn't support {property.PropertyType.Name} types";
+                    EditorGUILayout.HelpBox(warning, MessageType.Warning);
+                    return false;
+                }
+                
+                Type valueType = value.GetType();
+
+                if (valueType == typeof(bool))
+                {
+                    property.SetValue(targetObject,EditorGUI.Toggle(position, label, (bool)value));
+                }
+                else if (valueType == typeof(short))
+                {
+                    property.SetValue(targetObject,EditorGUI.IntField(position, label, (short)value));
+                }
+                else if (valueType == typeof(ushort))
+                {
+                    property.SetValue(targetObject,EditorGUI.IntField(position, label, (ushort)value));
+                }
+                else if (valueType == typeof(int))
+                {
+                    property.SetValue(targetObject,EditorGUI.IntField(position, label, (int)value));
+                }
+                else if (valueType == typeof(uint))
+                {
+                    property.SetValue(targetObject,EditorGUI.LongField(position, label, (uint)value));
+                }
+                else if (valueType == typeof(long))
+                {
+                    property.SetValue(targetObject,EditorGUI.LongField(position, label, (long)value));
+                }
+                else if (valueType == typeof(ulong))
+                {
+                    property.SetValue(targetObject,EditorGUI.TextField(position, label, ((ulong)value).ToString()));
+                }
+                else if (valueType == typeof(float))
+                {
+                    property.SetValue(targetObject,EditorGUI.FloatField(position, label, (float)value));
+                }
+                else if (valueType == typeof(double))
+                {
+                    property.SetValue(targetObject,EditorGUI.DoubleField(position, label, (double)value));
+                }
+                else if (valueType == typeof(string))
+                {
+                    property.SetValue(targetObject,EditorGUI.TextField(position, label, (string)value));
+                }
+                else if (valueType == typeof(Vector2))
+                {
+                    property.SetValue(targetObject,EditorGUI.Vector2Field(position, label, (Vector2)value));
+                }
+                else if (valueType == typeof(Vector3))
+                {
+                    property.SetValue(targetObject,EditorGUI.Vector3Field(position, label, (Vector3)value));
+                }
+                else if (valueType == typeof(Vector4))
+                {
+                    property.SetValue(targetObject,EditorGUI.Vector4Field(position, label, (Vector4)value));
+                }
+                else if (valueType == typeof(Vector2Int))
+                {
+                    property.SetValue(targetObject,EditorGUI.Vector2IntField(position, label, (Vector2Int)value));
+                }
+                else if (valueType == typeof(Vector3Int))
+                {
+                    property.SetValue(targetObject,EditorGUI.Vector3IntField(position, label, (Vector3Int)value));
+                }
+                else if (valueType == typeof(Color))
+                {
+                    property.SetValue(targetObject,EditorGUI.ColorField(position, label, (Color)value));
+                }
+                else if (valueType == typeof(Bounds))
+                {
+                    property.SetValue(targetObject,EditorGUI.BoundsField(position, label, (Bounds)value));
+                }
+                else if (valueType == typeof(Rect))
+                {
+                    property.SetValue(targetObject,EditorGUI.RectField(position, label, (Rect)value));
+                }
+                else if (valueType == typeof(RectInt))
+                {
+                    property.SetValue(targetObject,EditorGUI.RectIntField(position, label, (RectInt)value));
+                }
+                else if (typeof(Object).IsAssignableFrom(valueType))
+                {
+                    property.SetValue(targetObject,EditorGUI.ObjectField(position, label, (Object)value, valueType, true));
+                }
+                else if (valueType.BaseType == typeof(Enum))
+                {
+                    property.SetValue(targetObject,EditorGUI.EnumPopup(position, label, (Enum)value));
+                }
+                else if (valueType.BaseType == typeof(TypeInfo))
+                {
+                    property.SetValue(targetObject,EditorGUI.TextField(position, label, value.ToString()));
+                }
+                else
+                {
+                    isDrawn = false;
+                }
+
+                return isDrawn;
+            }
+        }
+        public static bool DrawNonWritableField(Rect position, Object targetObject, PropertyInfo property, bool enabled = false)
+        {
+            using (new EditorGUI.DisabledScope(disabled: !enabled))
+            {
+                bool isDrawn = true;
+                string label = ObjectNames.NicifyVariableName(property.Name);
+                object value = property.GetValue(targetObject, null);
+
+                if (value == null)
+                {
+                    string warning = $"{nameof(ShowPropertyAttribute)} doesn't support {property.PropertyType.Name} types";
+                    EditorGUILayout.HelpBox(warning, MessageType.Warning);
+                    return false;
+                }
+                
+                Type valueType = value.GetType();
+
+                if (valueType == typeof(bool))
+                {
+                    EditorGUI.Toggle(position, label, (bool)value);
+                }
+                else if (valueType == typeof(short))
+                {
+                    EditorGUI.IntField(position, label, (short)value);
+                }
+                else if (valueType == typeof(ushort))
+                {
+                    EditorGUI.IntField(position, label, (ushort)value);
+                }
+                else if (valueType == typeof(int))
+                {
+                    EditorGUI.IntField(position, label, (int)value);
+                }
+                else if (valueType == typeof(uint))
+                {
+                    EditorGUI.LongField(position, label, (uint)value);
+                }
+                else if (valueType == typeof(long))
+                {
+                    EditorGUI.LongField(position, label, (long)value);
+                }
+                else if (valueType == typeof(ulong))
+                {
+                    EditorGUI.TextField(position, label, ((ulong)value).ToString());
+                }
+                else if (valueType == typeof(float))
+                {
+                    EditorGUI.FloatField(position, label, (float)value);
+                }
+                else if (valueType == typeof(double))
+                {
+                    EditorGUI.DoubleField(position, label, (double)value);
+                }
+                else if (valueType == typeof(string))
+                {
+                    EditorGUI.TextField(position, label, (string)value);
+                }
+                else if (valueType == typeof(Vector2))
+                {
+                    EditorGUI.Vector2Field(position, label, (Vector2)value);
+                }
+                else if (valueType == typeof(Vector3))
+                {
+                    EditorGUI.Vector3Field(position, label, (Vector3)value);
+                }
+                else if (valueType == typeof(Vector4))
+                {
+                    EditorGUI.Vector4Field(position, label, (Vector4)value);
+                }
+                else if (valueType == typeof(Vector2Int))
+                {
+                    EditorGUI.Vector2IntField(position, label, (Vector2Int)value);
+                }
+                else if (valueType == typeof(Vector3Int))
+                {
+                    EditorGUI.Vector3IntField(position, label, (Vector3Int)value);
+                }
+                else if (valueType == typeof(Color))
+                {
+                    EditorGUI.ColorField(position, label, (Color)value);
+                }
+                else if (valueType == typeof(Bounds))
+                {
+                    EditorGUI.BoundsField(position, label, (Bounds)value);
+                }
+                else if (valueType == typeof(Rect))
+                {
+                    EditorGUI.RectField(position, label, (Rect)value);
+                }
+                else if (valueType == typeof(RectInt))
+                {
+                    EditorGUI.RectIntField(position, label, (RectInt)value);
+                }
+                else if (typeof(Object).IsAssignableFrom(valueType))
+                {
                     EditorGUI.ObjectField(position, label, (Object)value, valueType, true);
                 }
                 else if (valueType.BaseType == typeof(Enum))

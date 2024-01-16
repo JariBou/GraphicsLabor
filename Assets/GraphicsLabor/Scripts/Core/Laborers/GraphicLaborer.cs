@@ -20,7 +20,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
         
         protected static readonly Color BaseBorderColor = Color.black;
         public static event Action DrawCallback;
-        protected static GraphicLaborer Instance { get; set; }
+        protected static GraphicLaborer Instance { get; private set; }
         internal Material _renderMaterial;
 
 

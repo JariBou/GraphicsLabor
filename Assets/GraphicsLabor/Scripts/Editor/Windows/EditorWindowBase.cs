@@ -43,8 +43,6 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         [DidReloadScripts]
         private static void OnScriptReloadSelf()
         {
-            GLogger.Log("Reloading scripts");
-            
             WindowSettings settings = GetWindowSettings();
             if (settings.OpenedCustomWindows.Count == 0)
             {

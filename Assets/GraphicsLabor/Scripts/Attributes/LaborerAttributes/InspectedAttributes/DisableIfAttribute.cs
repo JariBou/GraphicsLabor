@@ -3,7 +3,7 @@ using GraphicsLabor.Scripts.Attributes.Utility;
 
 namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
 {
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public class DisableIfAttribute : EnableIfAttributeBase
     {
         public DisableIfAttribute(string condition)

@@ -106,7 +106,7 @@ namespace GraphicsLabor.Scripts.Editor
             
             foreach (PropertyInfo property in _properties)
             {
-                LaborerEditorGUI.LayoutProperty(serializedObject.targetObject, property);
+                LaborerEditorGUI.LayoutProperty(serializedObject, property);
             }
         }
 

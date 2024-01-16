@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GraphicsLaborSettings
   m_EditorClassIdentifier: 
   _tempScriptableObjectsPath: Assets/GraphicsLabor/Generated/ScriptableObjects
-  _tagsPath: Assets/GraphicsLabor/Scripts/LaborTags
+  _tagsPath: Assets/GraphicsLabor/Scripts/Core/Tags
   _tags:
   - FirstOne
   - AboutThat

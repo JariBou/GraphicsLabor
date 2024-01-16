@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
+using GraphicsLabor.Scripts.Core.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,7 +21,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         
         public static T GetAttribute<T>(PropertyInfo property) where T : Attribute
         {
-            return property.GetCustomAttributes<T>().FirstOrDefault(data => data.GetType() == typeof(T));
+            T[] attributes = (T[])property.GetCustomAttributes<T>(true);
+            return attributes.Length > 0 ? attributes[0] : null;
         }
 
         private static T[] GetAttributes<T>(SerializedProperty property) where T : class
@@ -33,15 +35,15 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 
             return (T[])fieldInfo.GetCustomAttributes(typeof(T), true);
         }
-        
+
+        #region Fields
+
         public static bool IsEnabled(SerializedProperty property)
         {
             ReadOnlyAttribute readOnlyAttribute = GetAttribute<ReadOnlyAttribute>(property);
 
             if (readOnlyAttribute != null) return false;
-            
-            
-            // TODO: Add EnableIf Attribute
+
             EnableIfAttributeBase enableIfAttributeBase = GetAttribute<EnableIfAttributeBase>(property);
             // There is no EnableIfAttributeBase Attribute so it is visible
             if (enableIfAttributeBase == null) return true;
@@ -110,6 +112,112 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             Debug.Log($"{showIfAttributeBase.GetType().Name} needs valid boolean or enum fields", property.serializedObject.targetObject);
             return false;
         }
+        
+        public static Type GetPropertyType(SerializedProperty property)
+        {
+            object obj = GetTargetObjectOfProperty(property);
+            Type objType = obj.GetType();
+
+            return objType;
+        }
+
+        private static object GetTargetObjectOfProperty(SerializedProperty property)
+        {
+            return GetTargetObject(property, 0);
+        }
+
+        private static object GetTargetObjectWithProperty(SerializedProperty property)
+        {
+            return GetTargetObject(property, 1);
+        }
+        
+        #endregion
+
+        #region Properties
+
+         public static bool IsEnabled(PropertyInfo property, SerializedObject serializedObject)
+         {
+            
+            ReadOnlyAttribute readOnlyAttribute = GetAttribute<ReadOnlyAttribute>(property);
+        
+            if (readOnlyAttribute != null) return false;
+
+            bool enabled = false;
+            
+            EnableIfAttributeBase enableIfAttributeBase = GetAttribute<EnableIfAttributeBase>(property);
+            // There is no EnableIfAttributeBase Attribute so it is not enabled by default
+            if (enableIfAttributeBase != null)
+            {
+
+                // We get the object where the property is go be able to get fields' values to check for conditions
+                object target = serializedObject.targetObject;
+
+                if (enableIfAttributeBase.EnumValue != null) // First check if it is via enum
+                {
+                    Enum value = GetEnumValue(target, enableIfAttributeBase.Conditions[0]);
+                    if (value != null)
+                    {
+                        bool isRightEnum = enableIfAttributeBase.EnumValue.Equals(value);
+
+                        enabled |= enableIfAttributeBase.Inverted ? !isRightEnum : isRightEnum;
+                    }
+                }
+
+                // now we can check for "regular" conditions
+                List<bool> conditionValues = GetConditionValues(target, enableIfAttributeBase.Conditions);
+                if (conditionValues.Count > 0)
+                {
+                    bool isVisible = ParseConditions(conditionValues, enableIfAttributeBase.ConditionOperator,
+                        enableIfAttributeBase.Inverted);
+
+                    enabled |= isVisible;
+                }
+            }
+
+            ShowPropertyAttribute showPropertyAttribute = GetAttribute<ShowPropertyAttribute>(property);
+
+            if (showPropertyAttribute == null) return enabled;
+            
+            return enabled | showPropertyAttribute.Enabled;
+        }
+        
+        public static bool IsVisible(PropertyInfo property, SerializedObject serializedObject)
+        {
+            ShowIfAttributeBase showIfAttributeBase = GetAttribute<ShowIfAttributeBase>(property);
+            // There is no ShowIfAttributeBase Attribute so it is visible
+            if (showIfAttributeBase == null) return true;
+        
+            // We get the object where the property is go be able to get fields' values to check for conditions
+            object target = serializedObject.targetObject;
+        
+            if (showIfAttributeBase.EnumValue != null) // First check if it is via enum
+            {
+                Enum value = GetEnumValue(target, showIfAttributeBase.Conditions[0]);
+                if (value != null)
+                {
+                    bool isRightEnum = showIfAttributeBase.EnumValue.Equals(value);
+        
+                    return showIfAttributeBase.Inverted ? !isRightEnum : isRightEnum;
+                }
+            }
+            
+            // now we can check for "regular" conditions
+            List<bool> conditionValues = GetConditionValues(target, showIfAttributeBase.Conditions);
+            if (conditionValues.Count > 0)
+            {
+                bool isVisible = ParseConditions(conditionValues, showIfAttributeBase.ConditionOperator,
+                    showIfAttributeBase.Inverted);
+                
+        
+                return isVisible;
+            }
+            
+            // If we go here there is a problem
+            Debug.Log($"{showIfAttributeBase.GetType().Name} needs valid boolean or enum fields", serializedObject.targetObject);
+            return false;
+        }
+
+        #endregion
 
         private static bool ParseConditions(IEnumerable<bool> conditionValues, ConditionOperator conditionOperator, bool invert)
         {
@@ -174,23 +282,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             return conditionValues;
         }
         
-        public static Type GetPropertyType(SerializedProperty property)
-        {
-            object obj = GetTargetObjectOfProperty(property);
-            Type objType = obj.GetType();
 
-            return objType;
-        }
-
-        private static object GetTargetObjectOfProperty(SerializedProperty property)
-        {
-            return GetTargetObject(property, 0);
-        }
-
-        private static object GetTargetObjectWithProperty(SerializedProperty property)
-        {
-            return GetTargetObject(property, 1);
-        }
  
         /// <summary>
         /// Returns the object situated at depth back in the properties path

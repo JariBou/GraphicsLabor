@@ -21,7 +21,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         private string _selectedSoTab = "";
         private Vector2 _scrollPos;
         private float _totalDrawnHeight = 20f;
-        private readonly Dictionary<String, ScriptableObject> _soNameAssetDic = new();
+        private readonly Dictionary<string, ScriptableObject> _soNameAssetDic = new();
 
         private List<ScriptableObject> _possibleSos = new();
 
@@ -127,7 +127,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                     height = LaborerGUIUtility.SingleLineHeight
                 };
                 
-                String soName = _soNameAssetDic.Keys.ToArray()[i];
+                string soName = _soNameAssetDic.Keys.ToArray()[i];
                 
                 GUI.SetNextControlName(soName);
                 if (_selectedSoTab == soName)
@@ -141,7 +141,6 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 }
 
                 GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
-                GLogger.Log(GUI.backgroundColor.ToString());
                 
                 yOffset += LaborerGUIUtility.SoSelectionButtonHeight;
             }
@@ -156,9 +155,9 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             _serializedObject = new SerializedObject(_soNameAssetDic[soName]);
         }
         
-        private static String GetTruncatedTempSoName(String soName)
+        private static string GetTruncatedTempSoName(string soName)
         {
-            String newSoName = GetTempSoName(soName);
+            string newSoName = GetTempSoName(soName);
             if (newSoName.Length > 22)
             {
                 return $"{newSoName[..20].Trim()}...";
@@ -167,9 +166,9 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             return newSoName;
         }
 
-        private static String GetTempSoName(String soName)
+        private static string GetTempSoName(string soName)
         {
-            String newSoName = ObjectNames.NicifyVariableName(soName);
+            string newSoName = ObjectNames.NicifyVariableName(soName);
             newSoName = newSoName.Remove(newSoName.Length - "_temp".Length);
             return newSoName;
         }
@@ -241,7 +240,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             if (GUI.Button(currentRect, "Save As"))
             {
                 //String tempPath = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
-                String tempPath =
+                string tempPath =
                     EditorUtility.SaveFilePanelInProject("Save Asset", GetTempSoName(_selectedSoTab), "asset", "Enter the new SO Name");
                 if (tempPath.StartsWith("Assets")) {
                     //GetSettings()._tempScriptableObjectsPath = tempPath;
