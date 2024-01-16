@@ -1,8 +1,7 @@
-﻿using GraphicsLabor.Scripts.LaborTags;
-using GraphicsLabor.Scripts.LaborTags.Components;
+﻿using GraphicsLabor.Scripts.LaborTags.Runtime.Components;
 using UnityEditor;
 
-namespace GraphicsLabor.Scripts.Editor.LaborerTags
+namespace GraphicsLabor.Scripts.LaborTags.Editor
 {
     [CustomEditor(typeof(LaborTagComponent)), CanEditMultipleObjects]
     public class LaborTagInspector : UnityEditor.Editor

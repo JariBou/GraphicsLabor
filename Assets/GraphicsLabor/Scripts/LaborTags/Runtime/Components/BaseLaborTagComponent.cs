@@ -1,7 +1,6 @@
-﻿using GraphicsLabor.Scripts.Core.Utility;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace GraphicsLabor.Scripts.LaborTags.Components
+namespace GraphicsLabor.Scripts.LaborTags.Runtime.Components
 {
     public abstract class BaseLaborTagComponent : MonoBehaviour, ITagHolder
     {
@@ -17,7 +16,7 @@ namespace GraphicsLabor.Scripts.LaborTags.Components
         {
             if (GetComponents<ITagHolder>().Length > 1)
             {
-                GLogger.LogWarning($"Gameobject {nameof(gameObject)} has more than 1 ITagHolder Component, this may cause unwanted behaviour");
+                Debug.LogWarning($"Gameobject {nameof(gameObject)} has more than 1 ITagHolder Component, this may cause unwanted behaviour");
             }
         }
         #endif

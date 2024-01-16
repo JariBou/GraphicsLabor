@@ -1,7 +1,6 @@
-﻿using GraphicsLabor.Scripts.Core.Utility;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace GraphicsLabor.Scripts.LaborTags
+namespace GraphicsLabor.Scripts.LaborTags.Runtime
 {
     public static class Extensions
     {

@@ -5,7 +5,7 @@
 // To regenerate this file, look at GraphicLaborer's EnumGenerator in Core
 //
 //
-namespace GraphicsLabor.Scripts.LaborTags
+namespace GraphicsLabor.Scripts.LaborTags.Runtime
 {
 	[System.Flags] public enum LaborTags
 	{

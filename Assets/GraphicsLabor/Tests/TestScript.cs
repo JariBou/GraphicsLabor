@@ -8,6 +8,7 @@ using GraphicsLabor.Scripts.Core.Shapes;
 using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
 using GraphicsLabor.Scripts.LaborTags;
+using GraphicsLabor.Scripts.LaborTags.Runtime;
 using UnityEngine;
 using UnityEngine.Serialization;
 

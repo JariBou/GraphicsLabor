@@ -1,4 +1,4 @@
-﻿namespace GraphicsLabor.Scripts.LaborTags
+﻿namespace GraphicsLabor.Scripts.LaborTags.Runtime
 {
     public interface ITagHolder
     {

@@ -1,7 +1,6 @@
-﻿using GraphicsLabor.Scripts.Core.Utility;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace GraphicsLabor.Scripts.LaborTags.Components
+namespace GraphicsLabor.Scripts.LaborTags.Runtime.Components
 {
     [AddComponentMenu("GraphicsLabor/Linked Labor Tag")]
     public class LinkedLaborTagComponent : BaseLaborTagComponent

@@ -1,8 +1,10 @@
 {
-    "name": "GraphicsLabor.LaborTags",
+    "name": "LaborTags.Editor",
     "rootNamespace": "",
-    "references": ["GUID:e15dac9a765228e4da58a5d97fe78213"],
-    "includePlatforms": [],
+    "references": ["GUID:eccb7d3dcc94606448ad4419c7218cfd"],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
