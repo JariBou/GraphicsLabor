@@ -6,12 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [3.?.?] - 2023-??-??
+## [4.0.0] - 2024-??-??
+
+### Added
+
+- Manageable and Editable Attributes for ScriptableObjects 
+- SO Editor for Scriptable objects with the Editable Attribute
+- SO Creator to ease SO creation for ScriptableOBjects with the Manageable Attribute
+- EnableIf/DisableIf Attributes to Enable/Disable fields, works like ShowIf/HideIf 
+- AutoProperties with the ShowProperty can now be edited via the inspector
 
 ### Changed
 
-- ShowIfAttribute is now abstract and cannot be used as an attribute
+- ShowIfAttributeBase is now abstract and cannot be used as an attribute
 - EditorGui.ObjectField now uses allowSceneObjects param
+- ShowProperty can now take in a parameter of wether or not to enable PropertyEditing
 
 ### Fixed
 

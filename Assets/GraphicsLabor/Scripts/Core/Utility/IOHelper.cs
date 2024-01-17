@@ -11,8 +11,10 @@ namespace GraphicsLabor.Scripts.Core.Utility
     {
         
         /// <summary>
-        /// Path must start with "Assets/"
+        /// Creates a folder at parent path
         /// </summary>
+        /// <param name="parentFolderPath">Full path of the parent folder</param>
+        /// <param name="newFolderName">Name of the folder to be created</param>
         public static void CreateFolder(string parentFolderPath, string newFolderName)
         {
             if (!AssetDatabase.IsValidFolder(Path.Combine(parentFolderPath, newFolderName)))
@@ -23,9 +25,10 @@ namespace GraphicsLabor.Scripts.Core.Utility
         }
         
         /// <summary>
-        /// Creates necessary folders to create the give path
+        /// Creates necessary folders to create the given path
         /// Path must start with "Assets/"
         /// </summary>
+        /// <param name="fullPath">Full path of folders</param>
         public static void CreateFolder(string fullPath)
         {
             String[] pathParts = fullPath.Split("/");
@@ -37,6 +40,12 @@ namespace GraphicsLabor.Scripts.Core.Utility
             }
         }
         
+        /// <summary>
+        /// Creates the asset at path if it cannot load it
+        /// </summary>
+        /// <param name="obj">Object to create if needed</param>
+        /// <param name="path">Path to create the object if needed</param>
+        /// <param name="saveAssets">If false, will not call AssetDatabase.SaveAssets()</param>
         public static void CreateAssetIfNeeded(Object obj, string path, bool saveAssets = true)
         {
             var assetAtPath = AssetDatabase.LoadAssetAtPath<Object>(path);

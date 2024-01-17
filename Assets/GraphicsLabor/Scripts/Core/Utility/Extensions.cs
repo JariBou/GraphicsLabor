@@ -12,12 +12,11 @@ namespace GraphicsLabor.Scripts.Core.Utility
         /// </summary>
         /// <param name="self">The object the method is called on</param>
         /// <param name="parentType">The type to test against</param>
-        /// <param name="excludeSelfType">If set to true will ignore the object's type when testing</param>
+        /// <param name="excludeSelfType">If true, will ignore the object's type when testing</param>
         /// <returns></returns>
-        public static bool InheritsFrom(this object self, Type parentType, bool excludeSelfType = false, bool toConsole = false)
+        public static bool InheritsFrom(this object self, Type parentType, bool excludeSelfType = false)
         {
             if (self == null) throw new NullReferenceException("Using InheritsFrom on null object");
-            if (toConsole) Debug.Log($"Testing for {self.GetType()} inheriting {parentType}");
             return self.GetTypes(excludeSelfType).Contains(parentType);
         }
 

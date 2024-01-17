@@ -193,6 +193,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             IOHelper.CreateAssetIfNeeded(so, $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset");
             _soNameAssetDic[so.name] = so;
             SelectSo(so.name);
+            GUI.FocusControl(null);
         }
 
         private float DrawWithRect(Rect currentRect)

@@ -1,15 +1,18 @@
-﻿using UnityEngine;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using UnityEngine;
 
+[assembly: InternalsVisibleTo("GraphicsLabor.Editor"), InternalsVisibleTo("GraphicsLabor.Tests")]
 namespace GraphicsLabor.Scripts.Core.Utility
 {
-    public enum LogLevel
+    internal enum LogLevel
     {
         Info,
         Warning,
         Error,
     }
     
-    public static class GLogger
+    internal static class GLogger
     {
         private const string Prefix = "GraphicsLabor";
         private const string FormatString = "[{0} - {1}] ";

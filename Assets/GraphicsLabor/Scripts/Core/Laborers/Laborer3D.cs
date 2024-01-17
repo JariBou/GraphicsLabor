@@ -33,7 +33,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(glDrawMode);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(face.GetColor);
 

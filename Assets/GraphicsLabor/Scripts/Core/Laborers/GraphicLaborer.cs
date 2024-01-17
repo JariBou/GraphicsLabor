@@ -6,8 +6,7 @@ using UnityEngine.Rendering;
 
 namespace GraphicsLabor.Scripts.Core.Laborers
 {
-    // Could potentially not use a MonoBehaviour but idk how it works after that
-    public class GraphicLaborer : MonoBehaviour
+    public abstract class GraphicLaborer : MonoBehaviour
     {
         private static readonly int SrcBlend = Shader.PropertyToID("_SrcBlend");
         private static readonly int DstBlend = Shader.PropertyToID("_DstBlend");
@@ -21,27 +20,27 @@ namespace GraphicsLabor.Scripts.Core.Laborers
         protected static readonly Color BaseBorderColor = Color.black;
         public static event Action DrawCallback;
         protected static GraphicLaborer Instance { get; private set; }
-        internal Material _renderMaterial;
+        internal Material RenderMaterial;
 
 
         protected static void CreateLineMaterial()
         {
-            if (Instance._renderMaterial) return;
+            if (Instance.RenderMaterial) return;
             
             // Unity has a built-in shader that is useful for drawing
             // simple colored things.
             Shader shader = Shader.Find("Hidden/Internal-Colored");
-            Instance._renderMaterial = new Material(shader)
+            Instance.RenderMaterial = new Material(shader)
             {
                 hideFlags = HideFlags.HideAndDontSave
             };
             // Turn on alpha blending
-            Instance._renderMaterial.SetInt(SrcBlend, (int)BlendMode.SrcAlpha);
-            Instance._renderMaterial.SetInt(DstBlend, (int)BlendMode.OneMinusSrcAlpha);
+            Instance.RenderMaterial.SetInt(SrcBlend, (int)BlendMode.SrcAlpha);
+            Instance.RenderMaterial.SetInt(DstBlend, (int)BlendMode.OneMinusSrcAlpha);
             // Turn backface culling off
-            Instance._renderMaterial.SetInt(Cull, (int)CullMode.Off);
+            Instance.RenderMaterial.SetInt(Cull, (int)CullMode.Off);
             // Turn off depth writes
-            Instance._renderMaterial.SetInt(ZWrite, 0);
+            Instance.RenderMaterial.SetInt(ZWrite, 0);
         }
         
         public static Vector2 MaskVector2(Vector2 a, Vector2 mask)
@@ -115,7 +114,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINES);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(color);
             IEnumerable<Vector3> enumerable = points as Vector3[] ?? points.ToArray();
@@ -147,7 +146,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINES);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             for (int i = 0; i < numberOfLines; i++)
             {
@@ -171,7 +170,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(color);
             foreach (Vector3 point in points)
@@ -189,7 +188,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(color);
             foreach (Vector3 point in points)
@@ -215,7 +214,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             for (int i = 0; i < points.Count; i++)
             {
@@ -234,7 +233,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINES);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(color);
             GL.Vertex(a);
@@ -251,7 +250,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINES);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(colorA);
             GL.Vertex(a);

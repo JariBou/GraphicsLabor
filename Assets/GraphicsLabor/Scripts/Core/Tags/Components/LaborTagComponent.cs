@@ -3,7 +3,7 @@
 namespace GraphicsLabor.Scripts.Core.Tags.Components
 {
     [AddComponentMenu("GraphicsLabor/Labor Tags")]
-    public class LaborTagComponent : BaseLaborTagComponent
+    public sealed class LaborTagComponent : BaseLaborTagComponent
     {
         
     }

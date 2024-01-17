@@ -197,7 +197,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
 
             GUILayout.BeginHorizontal();
             // For now dont allow change of SO if set
-            using (new EditorGUI.DisabledScope(disabled: false))
+            using (new EditorGUI.DisabledScope(disabled: true))
             {
                 EditorGUI.ObjectField(selectedSoObj, "ScriptableObjectField",
                     scriptableObject, typeof(ScriptableObject), false);
