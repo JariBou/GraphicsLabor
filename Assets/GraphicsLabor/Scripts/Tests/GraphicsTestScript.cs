@@ -71,6 +71,7 @@ namespace GraphicsLabor.Scripts.Tests
         {
             GLogger.Log($"Exact: {this.HasExactTags(_testAgainst)}");
             GLogger.Log($"Partial: {this.HasTags(_testAgainst)}");
+            GLogger.Log($"OneOf: {this.HasOneOfTags(_testAgainst)}");
         }
 
         void OnDisable()

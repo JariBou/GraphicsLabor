@@ -1,31 +1,15 @@
-﻿using GraphicsLabor.Scripts.Core.Utility;
+﻿using GraphicsLabor.Scripts.Core.Tags.Components;
+using GraphicsLabor.Scripts.Core.Utility;
 using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Core.Tags
 {
-    public abstract class LaborBehaviour : MonoBehaviour, ITagHolder
+    /// <summary>
+    /// Custom MonoBehaviour subclass that natively implements LaborerTags.
+    /// A Linked version might come in the future.
+    /// </summary>
+    public abstract class LaborBehaviour : BaseLaborTagComponent
     {
-        [SerializeField] private LaborTags _tags;
-
-        public LaborTags GetLaborTags()
-        {
-            return _tags;
-        }
-
-        /// <summary>
-        /// Override this method if you want to Use the OnValidateMethod
-        /// </summary>
-        protected void OnSelfValidate(){}
-
-        #if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (GetComponents<ITagHolder>().Length > 1)
-            {
-                GLogger.LogWarning($"Gameobject {nameof(gameObject)} has more than 1 ITagHolder Component, this may cause unwanted behaviour");
-            }
-            OnSelfValidate();
-        }
-        #endif
+        
     }
 }
