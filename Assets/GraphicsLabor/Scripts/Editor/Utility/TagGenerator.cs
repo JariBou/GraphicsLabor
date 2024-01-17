@@ -9,6 +9,9 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 {
     public static class TagGenerator
     {
+        /// <summary>
+        /// Regenerates LaborTag.cs 
+        /// </summary>
         public static void CreateTagEnumFile()
         {
             
