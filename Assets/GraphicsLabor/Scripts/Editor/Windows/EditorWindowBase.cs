@@ -1,5 +1,4 @@
 using System;
-using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Settings;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -27,16 +26,19 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             {
                 window = CreateAndInitWindow<T>(obj, displayName, typeof(T));
             }
-            
+            else
+            {
+                (window as T)?.PassInspectedObject(obj);
+            }
+
             window.Focus();
-            (window as T)?.PassInspectedObject(obj);
             return window as T;
         }
 
         private static T CreateAndInitWindow<T>(Object obj, string displayName, params Type[] desiredDockNextTo) where T : EditorWindowBase
         {
             T window = WindowBase.CreateAndInitWindow<T>(displayName, desiredDockNextTo);
-            window.PassInspectedObject(obj);
+             window.PassInspectedObject(obj);
             return window;
         }
 

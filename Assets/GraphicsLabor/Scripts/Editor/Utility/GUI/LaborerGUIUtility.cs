@@ -8,7 +8,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
         public static float ScrollBarWidth => 16;
         public static float SingleLineHeight => EditorGUIUtility.singleLineHeight;
         public static float PropertyHeightSpacing => SingleLineHeight * 0.1f;
-
         public static float LineSeparatorSpacing => SingleLineHeight / 3f;
         public static float LabelWidth => EditorGUIUtility.labelWidth;
         public static float MinHelpBoxHeight => SingleLineHeight;

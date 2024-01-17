@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Core.Settings
 {
-    [Editable]
     public class GraphicsLaborSettings : ScriptableObject
     {
         // [ShowMessage("Path where \"Buffer\" Manageable Scriptable objects will be created for the Scriptable Objects Creator", MessageLevel.Info)]

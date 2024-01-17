@@ -1,5 +1,4 @@
-﻿using GraphicsLabor.Scripts.Core.Tags;
-using GraphicsLabor.Scripts.Core.Tags.Components;
+﻿using GraphicsLabor.Scripts.Core.Tags.Components;
 using UnityEditor;
 using UnityEngine;
 

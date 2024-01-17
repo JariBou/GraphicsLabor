@@ -176,6 +176,39 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
         }
         
         #endregion
+
+        public static void DrawSoFieldAndButton(Rect currentRect, ScriptableObject scriptableObject, string buttonText, Action buttonFunction)
+        {
+            Rect selectedSoObj = new()
+            {
+                x = currentRect.x,
+                y = currentRect.y,
+                width = currentRect.width *  3/4,
+                height = currentRect.height
+            };
+            
+            Rect resetButton = new()
+            {
+                x = currentRect.x + currentRect.width *  3/4,
+                y = currentRect.y,
+                width = currentRect.width / 4,
+                height = currentRect.height
+            };
+
+            GUILayout.BeginHorizontal();
+            // For now dont allow change of SO if set
+            using (new EditorGUI.DisabledScope(disabled: false))
+            {
+                EditorGUI.ObjectField(selectedSoObj, "ScriptableObjectField",
+                    scriptableObject, typeof(ScriptableObject), false);
+            }
+            
+            if (UnityEngine.GUI.Button(resetButton, buttonText))
+            {
+                buttonFunction.Invoke();
+            }
+            GUILayout.EndHorizontal();
+        }
         
         public static void PropertyField(Rect rect, SerializedProperty property, bool includeChildren)
         {

@@ -354,7 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 423ed14bd4ecc154e82df8fda4dc3cd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tags: 0
+  _tags: 4
   _drawQuad: 0
   _quad:
     _color: {r: 0.8867924, g: 0.4224813, b: 0.4224813, a: 1}
@@ -421,7 +421,7 @@ MonoBehaviour:
   _showSO: 1
   _testEditableScriptableObject: {fileID: 11400000, guid: 5fdb40ce931b1ab479e421e53f0d935e, type: 2}
   _scene: TestScene
-  _testAgainst: 0
+  _testAgainst: 2
 --- !u!4 &839026049232829200
 Transform:
   m_ObjectHideFlags: 0

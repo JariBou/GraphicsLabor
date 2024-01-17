@@ -4,12 +4,10 @@ using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using GraphicsLabor.Scripts.Core.Utility;
-using GraphicsLabor.Scripts.Editor.Utility;
 using GraphicsLabor.Scripts.Editor.Utility.GUI;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using String = System.String;
 
 namespace GraphicsLabor.Scripts.Editor.Windows
 {
@@ -182,57 +180,28 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
             if (GetPossibleScriptableObjects().Exists(so => so.GetType().Name == soTypeName))
             {
-                SelectSo(soTypeName + "_temp");
+                SelectSo(soTypeName);
             }
+        }
+
+        private void ButtonFunc()
+        {
+            ScriptableObject obj = _soNameAssetDic[_selectedSoTab];
+            ScriptableObject so = CreateInstance(obj.GetType());
+            so.name = so.GetType().Name;
+            IOHelper.CreateFolder(GetSettings()._tempScriptableObjectsPath);
+            IOHelper.CreateAssetIfNeeded(so, $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset");
+            _soNameAssetDic[so.name] = so;
+            SelectSo(so.name);
         }
 
         private float DrawWithRect(Rect currentRect)
         {
             GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
             
-            Rect selectedSoObj = new()
-            {
-                x = currentRect.x,
-                y = currentRect.y,
-                width = currentRect.width *  3/4,
-                height = currentRect.height
-            };
-            
-            Rect resetButton = new()
-            {
-                x = currentRect.x + currentRect.width *  3/4,
-                y = currentRect.y,
-                width = currentRect.width / 4,
-                height = currentRect.height
-            };
-
-            GUILayout.BeginHorizontal();
-            // For now dont allow change of SO if set
-            using (new EditorGUI.DisabledScope(disabled: _selectedScriptableObject))
-            {
-                EditorGUI.BeginChangeCheck();
-                _selectedScriptableObject = (ScriptableObject)EditorGUI.ObjectField(selectedSoObj, "ScriptableObjectField",
-                    _selectedScriptableObject, typeof(ScriptableObject), false);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    PassInspectedObject(_selectedScriptableObject);
-                }
-            }
-            
-            if (GUI.Button(resetButton, "Reset Values"))
-            {
-                ScriptableObject obj = _soNameAssetDic[_selectedSoTab];
-                ScriptableObject so = CreateInstance(obj.GetType());
-                so.name = so.GetType().Name;
-                IOHelper.CreateFolder(GetSettings()._tempScriptableObjectsPath);
-                IOHelper.CreateAssetIfNeeded(so, $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset");
-                _soNameAssetDic[so.name] = so;
-                SelectSo(so.name);
-            }
+            LaborerWindowGUI.DrawSoFieldAndButton(currentRect, _selectedScriptableObject, "Reset Values", ButtonFunc);
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
             
-            GUILayout.EndHorizontal();
-
             if (_selectedScriptableObject)
             {
                 currentRect.y += DrawScriptableObjectWithRect(currentRect, _selectedScriptableObject);
@@ -352,15 +321,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             AssetDatabase.SaveAssets();
             
             // Remove unused SOs
-            string[] folder = { GetSettings()._tempScriptableObjectsPath };
-            foreach (string asset in AssetDatabase.FindAssets("", folder))
-            {
-                string path = AssetDatabase.GUIDToAssetPath(asset);
-                if (!soPaths.Contains(path))
-                {
-                    AssetDatabase.DeleteAsset(path);
-                }
-            }
+            string[] folders = { GetSettings()._tempScriptableObjectsPath };
+            IOHelper.DeleteAssets(folders, soPaths);
 
             if (_soNameAssetDic.Keys.Count == 0) return new List<ScriptableObject>();
             

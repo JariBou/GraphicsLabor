@@ -1,5 +1,4 @@
 ﻿using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
-using GraphicsLabor.Scripts.Editor.Utility;
 using GraphicsLabor.Scripts.Editor.Utility.GUI;
 using GraphicsLabor.Scripts.Editor.Utility.Reflection;
 using UnityEditor;
@@ -79,10 +78,6 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
                             width = LaborerGUIUtility.LabelWidth,
                             height = LaborerGUIUtility.SingleLineHeight
                         };
-                        
-                        Vector2 v2 = EditorStyles.label.CalcSize(label);
-
-                        
                         
                         property.isExpanded = EditorGUI.Foldout(foldoutRect, property.isExpanded, label, toggleOnLabelClick: true);
 

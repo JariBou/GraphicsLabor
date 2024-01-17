@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using GraphicsLabor.Scripts.Attributes;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using GraphicsLabor.Scripts.Core.Utility;
-using GraphicsLabor.Scripts.Editor.Utility;
 using GraphicsLabor.Scripts.Editor.Utility.GUI;
+using GraphicsLabor.Scripts.Editor.Utility.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -13,12 +16,13 @@ namespace GraphicsLabor.Scripts.Editor.Windows
     public class ScriptableObjectEditorWindow : EditorWindowBase
     {
         // Try to put it in a non static thing maybe, be cool not to have to open a new one every time
-        private ScriptableObject _selectedScriptableObject;
-        private SerializedObject _serializedObject;
-        private string _selectedTab = "";
-        private Vector2 _scrollPos;
+        [SerializeField] private ScriptableObject _selectedScriptableObject;
+        [SerializeField] private SerializedObject _serializedObject;
+        [SerializeField] private string _selectedTab = "";
+        [SerializeField] private Vector2 _scrollPos;
         protected float _totalDrawnHeight = 20f;
-        
+        private List<Type> _attributeTypes;
+
         [MenuItem("Window/GraphicLabor/Test Window")]
         public static void ShowWindow()
         {
@@ -75,6 +79,24 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             _selectedScriptableObject = (ScriptableObject)obj;
             WindowName = obj != null ? obj.name : "null";
             _serializedObject = new SerializedObject(_selectedScriptableObject);
+            GetAttributeTypes();
+        }
+
+        private void ButtonFunc()
+        {
+            ScriptableObjectCreatorWindow.ShowWindow(_selectedScriptableObject);
+        }
+
+        private List<Type> GetAttributeTypes()
+        {
+            if (_attributeTypes == null)
+            {
+                List<CustomAttributeData> objectCustomAttributes = ReflectionUtility
+                    .GetAllAttributesOfObject(_selectedScriptableObject,
+                        data => data.AttributeType.IsSubclassOf(typeof(ScriptableObjectAttribute)), true).ToList();
+                _attributeTypes = objectCustomAttributes.Select(data => data.AttributeType).ToList();
+            }
+            return _attributeTypes;
         }
 
         protected float DrawWithRect(Rect currentRect)
@@ -82,18 +104,20 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
             
             // For now dont allow change of SO if set
-            using (new EditorGUI.DisabledScope(disabled: _selectedScriptableObject))
+            if (GetAttributeTypes().Contains(typeof(ManageableAttribute)))
             {
-                EditorGUI.BeginChangeCheck();
-                _selectedScriptableObject = (ScriptableObject)EditorGUI.ObjectField(currentRect, "ScriptableObjectField",
-                    _selectedScriptableObject, typeof(ScriptableObject), false);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    PassInspectedObject(_selectedScriptableObject);
-                }
-                currentRect.y += LaborerGUIUtility.SingleLineHeight;
+                LaborerWindowGUI.DrawSoFieldAndButton(currentRect, _selectedScriptableObject, "Open Manager", ButtonFunc);
             }
-
+            else
+            {
+                using (new EditorGUI.DisabledScope(disabled: false))
+                {
+                    _selectedScriptableObject = (ScriptableObject)EditorGUI.ObjectField(currentRect, "ScriptableObjectField",
+                        _selectedScriptableObject, typeof(ScriptableObject), false);
+                }
+            }
+            
+            currentRect.y += LaborerGUIUtility.SingleLineHeight;
             if (_selectedScriptableObject)
             {
                 currentRect.y += DrawScriptableObjectWithRect(currentRect, _selectedScriptableObject);
@@ -153,7 +177,6 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             
             serializedObject.ApplyModifiedProperties();
             return yOffset;
-            
         }
     }
 }

@@ -17,23 +17,16 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         [OnOpenAsset]
         private static bool OpenEditor(int instanceID, int line)
         {
-            // Also works with user Custom ScriptableObjects that do not inherit from one of the SO parents provided
             Object obj = EditorUtility.InstanceIDToObject(instanceID);
-
-            // Not handled by GraphicsLabor
-            // if (!obj.InheritsFrom(typeof(ScriptableObject))) return false;
             
-            // Editable takes priority over Manager
-
-
             IEnumerable<CustomAttributeData> objectCustomAttributes = ReflectionUtility.GetAllAttributesOfObject(obj,
                 data => data.AttributeType.IsSubclassOf(typeof(ScriptableObjectAttribute)), true).ToList();
             
-
             List<Type> attributeTypes = objectCustomAttributes.Select(data => data.AttributeType).ToList();
 
             if (attributeTypes.Count == 0)
             {
+                // Not handled by GraphicsLabor
                 return false;
             }
             

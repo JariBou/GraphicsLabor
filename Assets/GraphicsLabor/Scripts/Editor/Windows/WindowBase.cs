@@ -26,7 +26,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             GetWindowSettings().OpenedCustomWindows.Remove(GetWindowSettings().FindWindowWhere(ComparisonPredicate));
         }
         
-        protected bool ComparisonPredicate(WindowBase editor)
+        protected virtual bool ComparisonPredicate(WindowBase editor)
         {
             bool isSame = true;
             isSame &= editor.WindowName == WindowName;

@@ -2,7 +2,7 @@
 
 namespace GraphicsLabor.Scripts.Core.Tags
 {
-    public static class Extensions
+    public static class TagExtensions
     {
 
         /// <summary>
