@@ -35,6 +35,13 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             return isSame;
         }
         
+        /// <summary>
+        /// Creates and inits a new WindowBase
+        /// </summary>
+        /// <param name="displayName">The window's display name</param>
+        /// <param name="desiredDockNextTo">The type of window to dock next to</param>
+        /// <typeparam name="T">The type of the window</typeparam>
+        /// <returns></returns>
         protected static T CreateAndInitWindow<T>(string displayName, params Type[] desiredDockNextTo) where T : WindowBase
         {
             WindowBase window = CreateWindow<T>(desiredDockNextTo);
@@ -45,6 +52,10 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             return (T)window;
         }
 
+        /// <summary>
+        /// Returns the ScriptableObject holding Window Settings 
+        /// </summary>
+        /// <returns></returns>
         public static WindowSettings GetWindowSettings()
         {
             if (_windowSettings != null) return _windowSettings;
@@ -61,6 +72,10 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             return settings;
         }
         
+        /// <summary>
+        /// Returns the ScriptableObject holding GraphicsLabor Settings 
+        /// </summary>
+        /// <returns></returns>
         public static GraphicsLaborSettings GetSettings()
         {
             if (_glSettings != null) return _glSettings;
@@ -77,6 +92,10 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             return settings;
         }
 
+        /// <summary>
+        /// Sets the SelfType variable
+        /// </summary>
+        /// <param name="getType">The type to set to</param>
         public void SetType(Type getType)
         {
             SelfType = getType;
