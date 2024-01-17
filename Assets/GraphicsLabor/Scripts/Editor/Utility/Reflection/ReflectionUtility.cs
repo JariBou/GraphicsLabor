@@ -5,7 +5,7 @@ using System.Reflection;
 using GraphicsLabor.Scripts.Core.Utility;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Editor.Utility
+namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
 {
     public static class ReflectionUtility
     {

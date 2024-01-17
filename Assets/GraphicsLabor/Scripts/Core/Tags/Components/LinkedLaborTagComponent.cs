@@ -8,18 +8,22 @@ namespace GraphicsLabor.Scripts.Core.Tags.Components
         [SerializeField] private GameObject _linkedGameObject;
         [SerializeField] private MonoBehaviour _linkedMonoBehaviour;
 
-        public GameObject GetLinkedGameObject() => _linkedGameObject;
+        [SerializeField] private bool _linkGameObject;
+        [SerializeField] private bool _linkMonoBehaviour;
+
+        public GameObject GetLinkedGameObject() => _linkGameObject ? _linkedGameObject : null;
 
         public T GetGameObjectComponent<T>() where T : Component
         {
+            if (!_linkGameObject || _linkedGameObject == null) return null;
             return _linkedGameObject.GetComponent<T>();
         }
         
-        public MonoBehaviour GetLinkedMonoBehaviour() => _linkedMonoBehaviour;
+        public MonoBehaviour GetLinkedMonoBehaviour() => _linkMonoBehaviour ? _linkedMonoBehaviour : null;
 
         public T GetLinkedMonoBehaviour<T>() where T : MonoBehaviour
         {
-            return (T) _linkedMonoBehaviour;
+            return _linkMonoBehaviour ? (T) _linkedMonoBehaviour : null;
         }
     }
 }

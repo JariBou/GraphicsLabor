@@ -5,6 +5,7 @@ using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
+using GraphicsLabor.Scripts.Editor.Utility.GUI;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -132,7 +133,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 GUI.SetNextControlName(soName);
                 if (_selectedSoTab == soName)
                 {
-                    GUI.backgroundColor = LaborerGUIUtility.SelectedSOTabColor;
+                    GUI.backgroundColor = LaborerGUIUtility.SelectedSoTabColor;
                 }
                 if (GUI.Button(buttonRect, new GUIContent(GetTruncatedTempSoName(soName), GetTempSoName(soName)) , EditorStyles.toolbarButton))
                 {

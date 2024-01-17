@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GraphicsLabor.Scripts.Core.Utility;
+using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Core.Tags
 {
@@ -21,7 +22,7 @@ namespace GraphicsLabor.Scripts.Core.Tags
         {
             if (GetComponents<ITagHolder>().Length > 1)
             {
-                Debug.LogWarning($"Gameobject {nameof(gameObject)} has more than 1 ITagHolder Component, this may cause unwanted behaviour");
+                GLogger.LogWarning($"Gameobject {nameof(gameObject)} has more than 1 ITagHolder Component, this may cause unwanted behaviour");
             }
             OnSelfValidate();
         }

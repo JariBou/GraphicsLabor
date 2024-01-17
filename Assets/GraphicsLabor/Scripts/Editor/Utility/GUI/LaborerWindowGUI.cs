@@ -4,13 +4,13 @@ using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
-using GraphicsLabor.Scripts.Core.Utility;
+using GraphicsLabor.Scripts.Editor.Utility.Reflection;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace GraphicsLabor.Scripts.Editor.Utility
+namespace GraphicsLabor.Scripts.Editor.Utility.GUI
 {
     public static class LaborerWindowGUI
     {
@@ -92,7 +92,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                     height = GetPropertiesHeight(properties, LaborerGUIUtility.PropertyHeightSpacing)
                 };
                 
-                GUI.Box(bgRect, GUIContent.none);
+                UnityEngine.GUI.Box(bgRect, GUIContent.none);
 
                 foreach (SerializedProperty property in properties)
                 {
@@ -127,7 +127,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
                     height = (LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing) * properties.Count + LaborerGUIUtility.PropertyHeightSpacing
                 };
 
-                GUI.Box(bgRect, GUIContent.none);
+                UnityEngine.GUI.Box(bgRect, GUIContent.none);
 
                 foreach (PropertyInfo property in properties)
                 {
@@ -258,111 +258,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         private static float GetPropertiesHeight(IEnumerable<SerializedProperty> properties, float spacing = 0f)
         {
             return spacing + properties.Sum(property => GetPropertyHeight(property) + spacing);
-        }
-
-        private static bool DrawField(Rect position, object value, string label)
-        {
-            using (new EditorGUI.DisabledScope(disabled: true))
-            {
-                bool isDrawn = true;
-                Type valueType = value.GetType();
-
-                if (valueType == typeof(bool))
-                {
-                    EditorGUI.Toggle(position, label, (bool)value);
-                }
-                else if (valueType == typeof(short))
-                {
-                    EditorGUI.IntField(position, label, (short)value);
-                }
-                else if (valueType == typeof(ushort))
-                {
-                    EditorGUI.IntField(position, label, (ushort)value);
-                }
-                else if (valueType == typeof(int))
-                {
-                    EditorGUI.IntField(position, label, (int)value);
-                }
-                else if (valueType == typeof(uint))
-                {
-                    EditorGUI.LongField(position, label, (uint)value);
-                }
-                else if (valueType == typeof(long))
-                {
-                    EditorGUI.LongField(position, label, (long)value);
-                }
-                else if (valueType == typeof(ulong))
-                {
-                    EditorGUI.TextField(position, label, ((ulong)value).ToString());
-                }
-                else if (valueType == typeof(float))
-                {
-                    EditorGUI.FloatField(position, label, (float)value);
-                }
-                else if (valueType == typeof(double))
-                {
-                    EditorGUI.DoubleField(position, label, (double)value);
-                }
-                else if (valueType == typeof(string))
-                {
-                    EditorGUI.TextField(position, label, (string)value);
-                }
-                else if (valueType == typeof(Vector2))
-                {
-                    EditorGUI.Vector2Field(position, label, (Vector2)value);
-                }
-                else if (valueType == typeof(Vector3))
-                {
-                    EditorGUI.Vector3Field(position, label, (Vector3)value);
-                }
-                else if (valueType == typeof(Vector4))
-                {
-                    EditorGUI.Vector4Field(position, label, (Vector4)value);
-                }
-                else if (valueType == typeof(Vector2Int))
-                {
-                    EditorGUI.Vector2IntField(position, label, (Vector2Int)value);
-                }
-                else if (valueType == typeof(Vector3Int))
-                {
-                    EditorGUI.Vector3IntField(position, label, (Vector3Int)value);
-                }
-                else if (valueType == typeof(Color))
-                {
-                    EditorGUI.ColorField(position, label, (Color)value);
-                }
-                else if (valueType == typeof(Bounds))
-                {
-                    EditorGUI.BoundsField(position, label, (Bounds)value);
-                }
-                else if (valueType == typeof(Rect))
-                {
-                    EditorGUI.RectField(position, label, (Rect)value);
-                }
-                else if (valueType == typeof(RectInt))
-                {
-                    EditorGUI.RectIntField(position, label, (RectInt)value);
-                }
-                else if (typeof(Object).IsAssignableFrom(valueType))
-                {
-                    GLogger.LogWarning(label);
-                    EditorGUI.ObjectField(position, label, (Object)value, valueType, true);
-                }
-                else if (valueType.BaseType == typeof(Enum))
-                {
-                    EditorGUI.EnumPopup(position, label, (Enum)value);
-                }
-                else if (valueType.BaseType == typeof(TypeInfo))
-                {
-                    EditorGUI.TextField(position, label, value.ToString());
-                }
-                else
-                {
-                    isDrawn = false;
-                }
-
-                return isDrawn;
-            }
         }
         
         public static bool DrawWritableField(Rect position, Object targetObject, PropertyInfo property, bool enabled = false)

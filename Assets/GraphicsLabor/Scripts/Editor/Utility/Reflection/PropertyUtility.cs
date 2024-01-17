@@ -5,11 +5,10 @@ using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
-using GraphicsLabor.Scripts.Core.Utility;
 using UnityEditor;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Editor.Utility
+namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
 {
     public static class PropertyUtility
     {

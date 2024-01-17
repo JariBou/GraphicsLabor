@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Editor.Utility
+namespace GraphicsLabor.Scripts.Editor.Utility.GUI
 {
     public static class LaborerGUIUtility
     {
@@ -17,7 +17,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
 
         #region Colors
             public static Color SelectedTabColor => new (0.5f, 0.5f, 0.5f, 1f);
-            public static Color SelectedSOTabColor => new (0.7f, 0.7f, 0.7f, 1f);
+            public static Color SelectedSoTabColor => new (0.7f, 0.7f, 0.7f, 1f);
             public static Color BaseBackgroundColor => new(0.9f, 0.9f, 0.9f);
         #endregion
     }

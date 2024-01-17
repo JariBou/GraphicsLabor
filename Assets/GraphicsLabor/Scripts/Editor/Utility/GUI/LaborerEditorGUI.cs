@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
+using GraphicsLabor.Scripts.Editor.Utility.Reflection;
 using GraphicsLabor.Scripts.Editor.Windows;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -10,11 +11,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
-namespace GraphicsLabor.Scripts.Editor.Utility
+namespace GraphicsLabor.Scripts.Editor.Utility.GUI
 {
     public static class LaborerEditorGUI
     {
-        private static readonly GUIStyle ButtonStyle = new GUIStyle(GUI.skin.button) { richText = true };
+        private static readonly GUIStyle ButtonStyle = new(UnityEngine.GUI.skin.button) { richText = true };
 
         public static void Button(Object target, MethodInfo methodInfo)
         {
@@ -143,8 +144,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             if (!isVisible) return;
 
             bool isEnabled = PropertyUtility.IsEnabled(property, serializedObject);
-
-
+            
             if (property.CanWrite)
             {
                 if (DrawWritableField(serializedObject.targetObject, property, isEnabled)) return;
