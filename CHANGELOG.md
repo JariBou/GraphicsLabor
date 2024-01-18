@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EnableIf/DisableIf Attributes to Enable/Disable fields, works like ShowIf/HideIf 
 - AutoProperties with the ShowProperty can now be edited via the inspector
 - Links to versions compare in CHANGELOG.md
+- Code Doc on most Methods
+- HTML Offline documentation generated with [Doxygen](https://www.doxygen.nl/)
 
 ### Changed
 
