@@ -20,6 +20,11 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
     {
         private static readonly GUIStyle ButtonStyle = new(UnityEngine.GUI.skin.button) { richText = true };
 
+        /// <summary>
+        /// Draws a Button on the editor calling the method on the target
+        /// </summary>
+        /// <param name="target">The Object that has the method</param>
+        /// <param name="methodInfo">The MethodInfo</param>
         public static void Button(Object target, MethodInfo methodInfo)
         {
             if (methodInfo.GetParameters().All(p => p.IsOptional))
@@ -78,38 +83,27 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             }
         }
 
-        #region Scriptable Objects
-
-        public static void EditableSoButton(Object target, string buttonText)
+        /// <summary>
+        /// Creates a Button on the editor
+        /// </summary>
+        /// <param name="buttonText">The text displayed in the button</param>
+        /// <param name="predicate">The predicate to call when button is clicked</param>
+        public static void CustomPredicateButton(string buttonText, Action predicate)
         {
-
-            EditorGUI.BeginDisabledGroup(false);
-
             if (GUILayout.Button(buttonText, ButtonStyle))
             {
-                ScriptableObjectEditorWindow.ShowWindow(target);
+                predicate.Invoke();
             }
-
-            EditorGUI.EndDisabledGroup();
         }
-        
-        public static void ManageableSoButton(Object target, string buttonText)
-        {
-
-            EditorGUI.BeginDisabledGroup(false);
-
-            if (GUILayout.Button(buttonText, ButtonStyle))
-            {
-                ScriptableObjectCreatorWindow.ShowWindow(target);
-            }
-
-            EditorGUI.EndDisabledGroup();
-        }
-
-        #endregion
 
         #region Fields
 
+        /// <summary>
+        /// Draws a SerializedProperty field on the editor
+        /// </summary>
+        /// <param name="rect">The rect for the property</param>
+        /// <param name="property">The SerializedProperty</param>
+        /// <param name="includeChildren">Whether or not to include property's children</param>
         public static void PropertyField(Rect rect, SerializedProperty property, bool includeChildren)
         {
             // Check if visible
@@ -123,6 +117,10 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             }
         }
 
+        /// <summary>
+        /// Draws a SerializedProperty on the editor using Layout
+        /// </summary>
+        /// <param name="property">The SerializedProperty</param>
         public static void LayoutPropertyField(SerializedProperty property)
         {
             if (!PropertyUtility.IsVisible(property)) return;
@@ -139,6 +137,11 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
 
         #region Properties
         
+        /// <summary>
+        /// Draws a Property on the editor using Layout
+        /// </summary>
+        /// <param name="serializedObject">The SerializedObject holding the property</param>
+        /// <param name="property">The PropertyInfo</param>
         public static void LayoutProperty(SerializedObject serializedObject, PropertyInfo property)
         {
             
@@ -159,8 +162,15 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
                 string warning = $"{nameof(ShowPropertyAttribute)} doesn't support {property.PropertyType.Name} types";
                 EditorGUILayout.HelpBox(warning, MessageType.Warning);
             } 
-            
         }
+        
+        /// <summary>
+        /// Draws a Property on the editor and makes it modifiable. Only works on Auto-Properties 
+        /// </summary>
+        /// <param name="targetObject">The object holding the property</param>
+        /// <param name="property">The PropertyInfo</param>
+        /// <param name="enabled">Whether or not property is enabled</param>
+        /// <returns>True if Drawn</returns>
         public static bool DrawWritableField(Object targetObject, PropertyInfo property, bool enabled = false)
         {
             using (new EditorGUI.DisabledScope(disabled: !enabled))
@@ -274,6 +284,14 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
                 return isDrawn;
             }
         }
+        
+        /// <summary>
+        /// Draws a Property on the editor
+        /// </summary>
+        /// <param name="targetObject">The object holding the property</param>
+        /// <param name="property">The PropertyInfo</param>
+        /// <param name="enabled">Whether or not property is enabled</param>
+        /// <returns>True if Drawn</returns>
         public static bool DrawNonWritableField(Object targetObject, PropertyInfo property, bool enabled = false)
         {
             using (new EditorGUI.DisabledScope(disabled: !enabled))
@@ -390,12 +408,26 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
 
         #endregion
         
+        /// <summary>
+        /// Draws an horizontal line in the editor
+        /// </summary>
+        /// <param name="rect">The position and size</param>
+        /// <param name="height">The height of the line (overrides rect value)</param>
+        /// <param name="color">The color of the line</param>
         public static void HorizontalLine(Rect rect, float height, Color color)
         {
             rect.height = height;
             EditorGUI.DrawRect(rect, color);
         }
-        
+
+        /// <summary>
+        ///   Draws a help box with a message to the user
+        /// </summary>
+        /// <param name="rect">Rectangle on the screen to draw the help box within.</param>
+        /// <param name="message">The message text.</param>
+        /// <param name="type">The type of message.</param>
+        /// <param name="context">Context for Logging</param>
+        /// <param name="logToConsole">If true will also log message to console</param>
         public static void HelpBox(Rect rect, string message, MessageType type, Object context = null, bool logToConsole = false)
         {
             EditorGUI.HelpBox(rect, message, type);
@@ -419,6 +451,11 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             }
         }
 
+        /// <summary>
+        /// Returns the current indent level for a given rect
+        /// </summary>
+        /// <param name="sourceRect">The Rect to check for Indent Level</param>
+        /// <returns></returns>
         public static float GetIndentLength(Rect sourceRect)
         {
             Rect indentRect = EditorGUI.IndentedRect(sourceRect);

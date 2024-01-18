@@ -20,11 +20,15 @@ namespace GraphicsLabor.Samples.SampleScripts
         private int _sceneInt;
 
         [SerializeField, HorizontalSeparator, ReadOnly]
-        private string _uneditable = "You can't edit this";
-        [SerializeField] private bool _enableEditing;
+        private string _uneditable = "You can only read this";
+        [SerializeField] private bool _enableEditingOfProp3;
         [ShowProperty] public int AutoProp1 { get; private set; }
         [ShowProperty(true), Label("Editable Prop")] public int AutoProp2 { get; private set; }
-        [ShowProperty, EnableIf(nameof(_enableEditing))] public int AutoProp3 { get; private set; }
+        [ShowProperty, EnableIf(nameof(_enableEditingOfProp3))] public int AutoProp3 { get; private set; }
+
+        [SerializeField, HorizontalSeparator, TabProperty("")]
+        private GameObject _invalidTab;
+        [SerializeField, Scene] private GameObject _invalidScene;
     }
 
     public enum SceneType

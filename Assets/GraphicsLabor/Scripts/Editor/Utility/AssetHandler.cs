@@ -17,6 +17,12 @@ namespace GraphicsLabor.Scripts.Editor.Utility
     /// </summary>
     public static class AssetHandler
     {
+        /// <summary>
+        /// Static Method called when opening an asset, returns whether or not asset opening was handled
+        /// </summary>
+        /// <param name="instanceID">The instanceID of the asset opened</param>
+        /// <param name="line"></param>
+        /// <returns></returns>
         [OnOpenAsset]
         private static bool OpenEditor(int instanceID, int line)
         {

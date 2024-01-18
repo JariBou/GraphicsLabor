@@ -15,18 +15,36 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
     /// </summary>
     public static class PropertyUtility
     {
+        /// <summary>
+        /// Tries to retrieve the first attribute of type T from SerializedProperty
+        /// </summary>
+        /// <param name="property">The Serialized Property</param>
+        /// <typeparam name="T">Type of the attribute (can be inherited)</typeparam>
+        /// <returns></returns>
         public static T GetAttribute<T>(SerializedProperty property) where T : class
         {
             T[] attributes = GetAttributes<T>(property);
             return attributes.Length > 0 ? attributes[0] : null;
         }
         
+        /// <summary>
+        /// Tries to retrieve the first attribute of type T from property
+        /// </summary>
+        /// <param name="property">The Property Info</param>
+        /// <typeparam name="T">Type of the attribute (can be inherited)</typeparam>
+        /// <returns></returns>
         public static T GetAttribute<T>(PropertyInfo property) where T : Attribute
         {
             T[] attributes = (T[])property.GetCustomAttributes<T>(true);
             return attributes.Length > 0 ? attributes[0] : null;
         }
 
+        /// <summary>
+        /// Tries to retrieve all attributes of type T from SerializedProperty
+        /// </summary>
+        /// <param name="property">The Serialized Property</param>
+        /// <typeparam name="T">Type of the attribute (can be inherited)</typeparam>
+        /// <returns></returns>
         private static T[] GetAttributes<T>(SerializedProperty property) where T : class
         {
             FieldInfo fieldInfo = ReflectionUtility.GetField(GetTargetObjectWithProperty(property), property.name);
@@ -40,6 +58,11 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
 
         #region Fields
 
+        /// <summary>
+        /// Returns whether or not a SerializedProperty should be enabled in the inspector
+        /// </summary>
+        /// <param name="property">The SerializedProperty</param>
+        /// <returns></returns>
         public static bool IsEnabled(SerializedProperty property)
         {
             ReadOnlyAttribute readOnlyAttribute = GetAttribute<ReadOnlyAttribute>(property);
@@ -79,6 +102,11 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return false;
         }
 
+        /// <summary>
+        /// Returns whether or not a SerializedProperty should be visible in the inspector
+        /// </summary>
+        /// <param name="property">The SerializedProperty</param>
+        /// <returns></returns>
         public static bool IsVisible(SerializedProperty property)
         {
             ShowIfAttributeBase showIfAttributeBase = GetAttribute<ShowIfAttributeBase>(property);
@@ -115,6 +143,11 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return false;
         }
         
+        /// <summary>
+        /// Returns the Type of a given SerializedProperty
+        /// </summary>
+        /// <param name="property">The SerializedProperty</param>
+        /// <returns></returns>
         public static Type GetPropertyType(SerializedProperty property)
         {
             object obj = GetTargetObjectOfProperty(property);
@@ -123,16 +156,31 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return objType;
         }
 
+        /// <summary>
+        /// Returns the object held by the property
+        /// </summary>
+        /// <param name="property">The SerializedProperty</param>
+        /// <returns></returns>
         private static object GetTargetObjectOfProperty(SerializedProperty property)
         {
             return GetTargetObject(property, 0);
         }
 
+        /// <summary>
+        /// Returns the object the property is a part of
+        /// </summary>
+        /// <param name="property">The SerializedProperty</param>
+        /// <returns></returns>
         private static object GetTargetObjectWithProperty(SerializedProperty property)
         {
             return GetTargetObject(property, 1);
         }
         
+        /// <summary>
+        /// Returns the GUIContent label of a given SerializedProperty
+        /// </summary>
+        /// <param name="property">The SerializedProperty</param>
+        /// <returns></returns>
         public static GUIContent GetLabel(SerializedProperty property)
         {
             LabelAttribute labelAttribute = GetAttribute<LabelAttribute>(property);
@@ -143,12 +191,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
                 return label;                
             }
 
-            // ExpandableAttribute expandableAttribute = GetAttribute<ExpandableAttribute>(property);
-            // if (expandableAttribute != null)
-            // {
-            //     return GUIContent.none;
-            // }
-            
             label = new GUIContent(property.displayName);
             return label;
         }
@@ -157,7 +199,13 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
 
         #region Properties
 
-         public static bool IsEnabled(PropertyInfo property, SerializedObject serializedObject)
+        /// <summary>
+        /// Returns whether or not a Property should be enabled in the inspector
+        /// </summary>
+        /// <param name="property">The Property</param>
+        /// <param name="serializedObject">The serializedObject the property is part of</param>
+        /// <returns></returns>
+        public static bool IsEnabled(PropertyInfo property, SerializedObject serializedObject)
          {
             
             ReadOnlyAttribute readOnlyAttribute = GetAttribute<ReadOnlyAttribute>(property);
@@ -203,6 +251,12 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return enabled | showPropertyAttribute.Enabled;
         }
         
+        /// <summary>
+        /// Returns whether or not a Property should be visible in the inspector
+        /// </summary>
+        /// <param name="property">The Property</param>
+        /// <param name="serializedObject">The serializedObject the property is part of</param>
+        /// <returns></returns>
         public static bool IsVisible(PropertyInfo property, SerializedObject serializedObject)
         {
             ShowIfAttributeBase showIfAttributeBase = GetAttribute<ShowIfAttributeBase>(property);
@@ -239,6 +293,11 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return false;
         }
         
+        /// <summary>
+        /// Returns the GUIContent label of a given Property
+        /// </summary>
+        /// <param name="property">The Property</param>
+        /// <returns></returns>
         public static GUIContent GetLabel(PropertyInfo property)
         {
             LabelAttribute labelAttribute = GetAttribute<LabelAttribute>(property);
@@ -261,6 +320,13 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
 
         #endregion
 
+        /// <summary>
+        /// Parses given bool values according to a given ConditionOperator
+        /// </summary>
+        /// <param name="conditionValues">The Collection of boolean values</param>
+        /// <param name="conditionOperator">The Operator to use for parsing</param>
+        /// <param name="invert">If true inverts the output</param>
+        /// <returns></returns>
         private static bool ParseConditions(IEnumerable<bool> conditionValues, ConditionOperator conditionOperator, bool invert)
         {
             var tempCondition = conditionOperator == ConditionOperator.And ? 
@@ -270,6 +336,12 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return invert ? !tempCondition : tempCondition;
         }
 
+        /// <summary>
+        /// Returns the EnumValue of name enumName in object target
+        /// </summary>
+        /// <param name="target">The object holding the enum</param>
+        /// <param name="enumName">The name of the target Enum</param>
+        /// <returns></returns>
         private static Enum GetEnumValue(object target, string enumName)
         {
             FieldInfo enumField = ReflectionUtility.GetField(target, enumName);
@@ -293,6 +365,13 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return null;
         }
 
+        /// <summary>
+        /// Returns a Collection of booleans after searching their values in the object
+        /// </summary>
+        /// <param name="target">The object to search for conditions in</param>
+        /// <param name="conditions">A Collection of conditions defined by string. 
+        /// Valid conditions are: names of boolean fields, properties or methods returning bool with 0 parameters</param>
+        /// <returns></returns>
         private static List<bool> GetConditionValues(object target, IEnumerable<string> conditions)
         {
             List<bool> conditionValues = new List<bool>();
@@ -358,6 +437,12 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return obj;
         }
         
+        /// <summary>
+        /// Returns value of Field or Property from object
+        /// </summary>
+        /// <param name="source">The object holding the Field or Property</param>
+        /// <param name="name">The name of the Field or Property</param>
+        /// <returns></returns>
         private static object GetValue(object source, string name)
         {
             if (source == null) return null;
@@ -384,6 +469,13 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return null;
         }
 
+        /// <summary>
+        /// Returns value of Field or Property from object at index
+        /// </summary>
+        /// <param name="source">The object holding the Field or Property</param>
+        /// <param name="name">The name of the Field or Property</param>
+        /// <param name="index">The index to look at</param>
+        /// <returns></returns>
         private static object GetValue(object source, string name, int index)
         {
             if (GetValue(source, name) is not IEnumerable enumerable) return null;

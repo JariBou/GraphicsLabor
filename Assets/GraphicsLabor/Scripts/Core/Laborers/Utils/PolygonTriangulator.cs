@@ -9,6 +9,12 @@ namespace GraphicsLabor.Scripts.Core.Laborers.Utils
     public class PolygonTriangulator : MonoBehaviour
     {
 
+        /// <summary>
+        /// Returns a list of Triangles composing the polygon. !This algorithm is very naive and breaks at some shapes!
+        /// </summary>
+        /// <param name="polygon">The Polygon to "Triangulate"</param>
+        /// <returns></returns>
+        /// <exception cref="TimeoutException">If Algorithm takes more than 1s, throws the exception</exception>
         public static List<Triangle> TriangulatePolygon(Polygon polygon)
         {
             // Not Perfect but off to a good start

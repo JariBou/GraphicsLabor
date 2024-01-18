@@ -5,6 +5,9 @@ using UnityEditor;
 
 namespace GraphicsLabor.Scripts.Editor.Utility
 {
+    /// <summary>
+    /// Called when opening Unity Editor to close all custom LaborerWindows to avoid reference exceptions
+    /// </summary>
     [InitializeOnLoad]
     public class Startup {
         static Startup()

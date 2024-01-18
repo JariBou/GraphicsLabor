@@ -6,6 +6,7 @@ using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using GraphicsLabor.Scripts.Editor.Utility.GUI;
 using GraphicsLabor.Scripts.Editor.Utility.Reflection;
+using GraphicsLabor.Scripts.Editor.Windows;
 using UnityEditor;
 using UnityEngine;
 
@@ -56,11 +57,17 @@ namespace GraphicsLabor.Scripts.Editor
             
             if (_isEditableScriptableObject)
             {
-                LaborerEditorGUI.EditableSoButton(serializedObject.targetObject, "Show Editor");
+                LaborerEditorGUI.CustomPredicateButton("Show Editor", () =>
+                {
+                    ScriptableObjectEditorWindow.ShowWindow(serializedObject.targetObject);
+                });
             }
             if (_isManageableScriptableObject)
             {
-                LaborerEditorGUI.ManageableSoButton(serializedObject.targetObject, "Show Creator");
+                LaborerEditorGUI.CustomPredicateButton("Show Creator", () =>
+                {
+                    ScriptableObjectCreatorWindow.ShowWindow(serializedObject.targetObject);
+                });
             }
             
             GUILayout.EndHorizontal();

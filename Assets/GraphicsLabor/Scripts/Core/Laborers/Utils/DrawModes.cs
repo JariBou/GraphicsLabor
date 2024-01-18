@@ -1,5 +1,8 @@
 namespace GraphicsLabor.Scripts.Core.Laborers.Utils
 {
+    /// <summary>
+    /// Used to define DrawMode of GraphicLaborers
+    /// </summary>
     public enum LaborerDrawMode
     {
         Wired = 0,

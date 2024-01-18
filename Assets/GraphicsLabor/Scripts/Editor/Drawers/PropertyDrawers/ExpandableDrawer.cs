@@ -49,7 +49,6 @@ namespace GraphicsLabor.Scripts.Editor.Drawers
 
             totalHeight += EditorGUIUtility.standardVerticalSpacing;
             return totalHeight;
-
         }
 
         protected override void OnSelfGUI(Rect rect, SerializedProperty property, GUIContent label)

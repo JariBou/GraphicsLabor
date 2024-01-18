@@ -2,7 +2,9 @@
 
 namespace GraphicsLabor.Scripts.Attributes.Utility
 {
-
+    /// <summary>
+    /// UnityEngine.Color counterparts for usage with CustomAttributes
+    /// </summary>
     public enum LaborColor
     {
         Clear,
@@ -21,6 +23,11 @@ namespace GraphicsLabor.Scripts.Attributes.Utility
 
     public static class LaborColorExtension
     {
+        /// <summary>
+        /// Returns a UnityEngine.Color given its LaborColor counterpart 
+        /// </summary>
+        /// <param name="color">The color expected</param>
+        /// <returns></returns>
         public static Color GetColor(this LaborColor color)
         {
             // Unfortunately Color class field colors are not known at this compile time
