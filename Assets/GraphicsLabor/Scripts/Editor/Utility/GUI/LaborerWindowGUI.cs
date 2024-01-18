@@ -12,6 +12,9 @@ using Object = UnityEngine.Object;
 
 namespace GraphicsLabor.Scripts.Editor.Utility.GUI
 {
+    /// <summary>
+    /// Helper class for Custom Labor Windows
+    /// </summary>
     public static class LaborerWindowGUI
     {
         #region ScriptableObject Drawer

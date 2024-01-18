@@ -13,6 +13,9 @@ using Object = UnityEngine.Object;
 
 namespace GraphicsLabor.Scripts.Editor.Utility.GUI
 {
+    /// <summary>
+    /// Helper class for GraphicsLaborInspector
+    /// </summary>
     public static class LaborerEditorGUI
     {
         private static readonly GUIStyle ButtonStyle = new(UnityEngine.GUI.skin.button) { richText = true };

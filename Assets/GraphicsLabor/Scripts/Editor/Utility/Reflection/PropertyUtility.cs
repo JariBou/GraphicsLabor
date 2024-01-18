@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
 {
+    /// <summary>
+    /// Helper class holding methods to manipulate Serialized Fields and Properties
+    /// </summary>
     public static class PropertyUtility
     {
         public static T GetAttribute<T>(SerializedProperty property) where T : class

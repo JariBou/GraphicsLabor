@@ -12,6 +12,9 @@ using Object = UnityEngine.Object;
 
 namespace GraphicsLabor.Scripts.Editor.Utility
 {
+    /// <summary>
+    /// Helper class Handling the opening of ScriptableObjects with the EditableTag
+    /// </summary>
     public static class AssetHandler
     {
         [OnOpenAsset]

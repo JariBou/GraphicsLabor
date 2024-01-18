@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Editor.Utility.GUI
 {
+    /// <summary>
+    /// Helper class holding useful values for GL Custom Editors and Inspector
+    /// </summary>
     public static class LaborerGUIUtility
     {
         public static float ScrollBarWidth => 16;
