@@ -2,7 +2,7 @@
 
 namespace GraphicsLabor.Scripts.Core.Tags.Components
 {
-    [AddComponentMenu("GraphicsLabor/Labor Tags")]
+    [AddComponentMenu("GraphicsLabor/Tags/Labor Tags")]
     public sealed class LaborTagComponent : BaseLaborTagComponent
     {
         

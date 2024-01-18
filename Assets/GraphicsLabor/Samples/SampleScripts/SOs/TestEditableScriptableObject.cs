@@ -5,22 +5,22 @@ using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Tests
+namespace GraphicsLabor.Samples.SampleScripts.SOs
 {
-    [CreateAssetMenu(menuName = "Tests/TestScriptableObject"), Manageable, Editable]
+    [Manageable, Editable]
     public class TestEditableScriptableObject : ScriptableObject
     {
         public string testString = "test";
         public int testInt = 20;
         public SerializableTestClass SerializableTestClass;
-        [TabProperty("FirstOne", "AnotherOne")]public int testInt2 = 25;
-        [TabProperty("FirstOne")]public float testFloat = 56.2f;
+        [TabProperty("First Tab", "Second Tab")]public int testInt2 = 25;
+        [TabProperty("First Tab")]public float testFloat = 56.2f;
         [ShowProperty] public float testProp2 => testFloat;
         public List<string> testList;
-        [Expandable, TabProperty("AnotherOne")] public AnotherEditableScriptableObject TestSO;
-        [TabProperty("Terasse", "FirstOne"), ShowProperty] public float testProp => testFloat;
-        [TabProperty("AnotherOne")]public GameObject testGameObject;
-        [TabProperty("AnotherOne")]public SerializableTestClass SerializableTestClass2;
+        [Expandable, TabProperty("Second Tab")] public AnotherEditableScriptableObject TestSO;
+        [TabProperty("Third Tab", "First Tab"), ShowProperty] public float testProp => testFloat;
+        [TabProperty("Second Tab")]public GameObject testGameObject;
+        [TabProperty("Second Tab")]public SerializableTestClass SerializableTestClass2;
     }
 
     [Serializable]

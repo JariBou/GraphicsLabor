@@ -8,7 +8,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
     public sealed class SettingsEditorWindow : ScriptableObjectEditorWindow
     {
         
-        [MenuItem("Window/GraphicLabor/Settings")]
+        [MenuItem("Window/GraphicLabor/GL Settings")]
         public static void ShowSettings()
         {
             CreateNewEditorWindow<SettingsEditorWindow>(GetSettings(), "GL Settings");

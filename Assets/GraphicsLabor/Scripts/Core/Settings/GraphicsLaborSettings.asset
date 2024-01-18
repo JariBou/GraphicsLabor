@@ -15,5 +15,5 @@ MonoBehaviour:
   _tempScriptableObjectsPath: Assets/GraphicsLabor/Generated/ScriptableObjects
   _tagsPath: Assets/GraphicsLabor/Scripts/Core/Tags
   _tags:
-  - FirstOne
-  - AboutThat
+  - Entity
+  - Player

@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Core.Laborers
 {
+    [AddComponentMenu("GraphicsLabor/Graphics/Laborer 2D")]
     public class Laborer2D : GraphicLaborer
     {
         #region Quads

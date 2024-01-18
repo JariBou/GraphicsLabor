@@ -5,7 +5,7 @@ namespace GraphicsLabor.Scripts.Core.Tags.Components
     /// <summary>
     /// A Component giving access to LaborTags and allowing for a direct access to a linkedGameObject and/or a linkedMonoBehaviour
     /// </summary>
-    [AddComponentMenu("GraphicsLabor/Linked Labor Tags")]
+    [AddComponentMenu("GraphicsLabor/Tags/Linked Labor Tags")]
     public class LinkedLaborTagComponent : BaseLaborTagComponent
     {
         [SerializeField] private GameObject _linkedGameObject;

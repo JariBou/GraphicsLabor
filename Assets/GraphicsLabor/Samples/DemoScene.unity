@@ -342,6 +342,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1126098478
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1126098480}
+  - component: {fileID: 1126098479}
+  m_Layer: 0
+  m_Name: AttributeTests
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1126098479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126098478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc6878582954352bc257e361efe21c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tags: 0
+  _showSo: 1
+  _so: {fileID: 11400000, guid: cd2595304ee1533479f355f8f7638f64, type: 2}
+  _sceneString: DemoScene
+  _sceneInt: 0
+--- !u!4 &1126098480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126098478}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.222835, y: 1.4519114, z: -9.960047}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &161255911371292398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,11 +466,6 @@ MonoBehaviour:
     - {x: -3.6606045, y: 1.4295412}
   _polygonBorderColor: {r: 0, g: 0.044265814, b: 0.735849, a: 1}
   _polygonLaborerDrawMode: 0
-  Hello: 0
-  _showSO: 1
-  _testEditableScriptableObject: {fileID: 11400000, guid: 5fdb40ce931b1ab479e421e53f0d935e, type: 2}
-  _scene: TestScene
-  _testAgainst: 2
 --- !u!4 &839026049232829200
 Transform:
   m_ObjectHideFlags: 0
@@ -717,7 +761,7 @@ GameObject:
   - component: {fileID: 161255911371292398}
   - component: {fileID: 6748720234766528409}
   m_Layer: 0
-  m_Name: TestsGameObject
+  m_Name: GraphicsTests
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -730,3 +774,4 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 7199568454821596140}
+  - {fileID: 1126098480}

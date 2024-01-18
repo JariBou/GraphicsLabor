@@ -1,79 +1,51 @@
 using System.Collections.Generic;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
-using GraphicsLabor.Scripts.Attributes.Utility;
 using GraphicsLabor.Scripts.Core.Laborers;
 using GraphicsLabor.Scripts.Core.Laborers.Utils;
 using GraphicsLabor.Scripts.Core.Shapes;
-using GraphicsLabor.Scripts.Core.Tags;
-using GraphicsLabor.Scripts.Core.Utility;
-using GraphicsLabor.Scripts.Editor.Utility;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace GraphicsLabor.Scripts.Tests
+namespace GraphicsLabor.Samples.SampleScripts
 {
-    public class GraphicsTestScript : LaborBehaviour
+    public class GraphicsTestScript : MonoBehaviour
     {
         [Space, Header("Quad")] 
         public bool _drawQuad;
         public Quad _quad;
         public Color _quadBorderColor;
-        [FormerlySerializedAs("_quadDrawMode")] public LaborerDrawMode _quadLaborerDrawMode;
+        public LaborerDrawMode _quadLaborerDrawMode;
         
         [Space, Header("Cube")] 
         public bool _drawCube;
         public Cube _cube;
         public Color _cubeBorderColor;
-        [FormerlySerializedAs("_cubeDrawMode")] public LaborerDrawMode _cubeLaborerDrawMode;
+        public LaborerDrawMode _cubeLaborerDrawMode;
         
         [Space, Header("Circle")]
         public bool _drawCircle;
         public Circle _circle;
         public Color _circleBorderColor;
-        [FormerlySerializedAs("_circleDrawMode")] public LaborerDrawMode _circleLaborerDrawMode;
+        public LaborerDrawMode _circleLaborerDrawMode;
 
         [Space, Header("Triangle")]
         public bool _drawTriangle;
         public Triangle _triangle;
         public Color _triangleBorderColor;
-        [FormerlySerializedAs("_triangleDrawMode")] public LaborerDrawMode _triangleLaborerDrawMode;
+        public LaborerDrawMode _triangleLaborerDrawMode;
 
-        [Space, Header("Polygon"), ShowMessage("Helloooo", MessageLevel.Info)]
+        [Space, Header("Polygon"), ShowMessage("Move this GO's children to move the points of the polygon", MessageLevel.Info)]
         public bool _drawPolygon;
         public List<Transform> _polygonPoints;
         public Polygon _polygon;
         public Color _polygonBorderColor;
-        [FormerlySerializedAs("_polygonDrawMode")] public LaborerDrawMode _polygonLaborerDrawMode;
-        [HideIf(ConditionOperator.Or, "_drawPolygon", "_drawCircle")] public int Hello;
-        public bool _showSO;
-        [ShowProperty] public int Testooo => Hello;
-        [ShowProperty(true)] public int Testooo2 { get; set; }
-        [ShowIf("_showSO"), Expandable] public TestEditableScriptableObject _testEditableScriptableObject;
-        [Scene] public string _scene;
-        public LaborTags _testAgainst;
-        
-        // public static int test;
+        public LaborerDrawMode _polygonLaborerDrawMode;
 
         void OnEnable()
         {
             GraphicLaborer.DrawCallback += OnDraw;
         }
-
-        [Button]
-        void CreateEnumFile()
-        {
-            TagGenerator.CreateTagEnumFile();
-        }
-
-        [Button]
-        void TestEnumExtensions()
-        {
-            GLogger.Log($"Exact: {this.HasExactTags(_testAgainst)}");
-            GLogger.Log($"Partial: {this.HasTags(_testAgainst)}");
-            GLogger.Log($"OneOf: {this.HasOneOfTags(_testAgainst)}");
-        }
-
+        
         void OnDisable()
         {
             GraphicLaborer.DrawCallback -= OnDraw;

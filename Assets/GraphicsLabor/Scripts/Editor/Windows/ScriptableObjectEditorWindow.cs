@@ -22,17 +22,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         [SerializeField] private Vector2 _scrollPos;
         protected float _totalDrawnHeight = 20f;
         private List<Type> _attributeTypes;
-
-        [MenuItem("Window/GraphicLabor/Test Window")]
-        public static void ShowWindow()
-        {
-            // _window = GetWindow<ScriptableObjectEditorWindow>();
-            // _window.titleContent = new GUIContent("ScriptableObjectEditor");
-            // _window._selectedScriptableObject = null;
-            // _window.WindowName = "ScriptableObjectEditor";
-            CreateNewEditorWindow<ScriptableObjectEditorWindow>(null, "Scriptable Object Editor");
-        }
-
+        
         private SerializedObject GetSerializedObject()
         {
             return _serializedObject ??= new SerializedObject(_selectedScriptableObject);
@@ -110,7 +100,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             }
             else
             {
-                using (new EditorGUI.DisabledScope(disabled: false))
+                using (new EditorGUI.DisabledScope(disabled: true))
                 {
                     _selectedScriptableObject = (ScriptableObject)EditorGUI.ObjectField(currentRect, "ScriptableObjectField",
                         _selectedScriptableObject, typeof(ScriptableObject), false);

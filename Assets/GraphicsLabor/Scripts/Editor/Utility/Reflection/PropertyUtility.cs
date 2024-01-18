@@ -133,6 +133,26 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return GetTargetObject(property, 1);
         }
         
+        public static GUIContent GetLabel(SerializedProperty property)
+        {
+            LabelAttribute labelAttribute = GetAttribute<LabelAttribute>(property);
+            GUIContent label;
+            if (labelAttribute != null)
+            {
+                label = new GUIContent(labelAttribute._label);
+                return label;                
+            }
+
+            // ExpandableAttribute expandableAttribute = GetAttribute<ExpandableAttribute>(property);
+            // if (expandableAttribute != null)
+            // {
+            //     return GUIContent.none;
+            // }
+            
+            label = new GUIContent(property.displayName);
+            return label;
+        }
+        
         #endregion
 
         #region Properties
@@ -218,6 +238,26 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             Debug.Log($"{showIfAttributeBase.GetType().Name} needs valid boolean or enum fields", serializedObject.targetObject);
             return false;
         }
+        
+        public static GUIContent GetLabel(PropertyInfo property)
+        {
+            LabelAttribute labelAttribute = GetAttribute<LabelAttribute>(property);
+            GUIContent label;
+            if (labelAttribute != null)
+            {
+                label = new GUIContent(labelAttribute._label);
+                return label;                
+            }
+
+            // ExpandableAttribute expandableAttribute = GetAttribute<ExpandableAttribute>(property);
+            // if (expandableAttribute != null)
+            // {
+            //     return GUIContent.none;
+            // }
+            
+            label = new GUIContent(ObjectNames.NicifyVariableName(property.Name));
+            return label;
+        }
 
         #endregion
 
@@ -284,8 +324,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return conditionValues;
         }
         
-
- 
         /// <summary>
         /// Returns the object situated at depth back in the properties path
         /// </summary>
@@ -320,26 +358,6 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             return obj;
         }
         
-        public static GUIContent GetLabel(SerializedProperty property)
-        {
-            LabelAttribute labelAttribute = GetAttribute<LabelAttribute>(property);
-            GUIContent label;
-            if (labelAttribute != null)
-            {
-                label = new GUIContent(labelAttribute._label);
-                return label;                
-            }
-
-            // ExpandableAttribute expandableAttribute = GetAttribute<ExpandableAttribute>(property);
-            // if (expandableAttribute != null)
-            // {
-            //     return GUIContent.none;
-            // }
-            
-            label = new GUIContent(property.displayName);
-            return label;
-        }
-
         private static object GetValue(object source, string name)
         {
             if (source == null) return null;

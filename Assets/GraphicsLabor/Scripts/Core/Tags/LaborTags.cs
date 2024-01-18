@@ -10,7 +10,7 @@ namespace GraphicsLabor.Scripts.Core.Tags
 	[System.Flags] public enum LaborTags
 	{
 		Null = 1 << 0,
-		FirstOne = 1 << 1,
-		AboutThat = 1 << 2,
+		Entity = 1 << 1,
+		Player = 1 << 2,
 	}
 }

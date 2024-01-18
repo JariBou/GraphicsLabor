@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Core.Laborers
 {
+    [AddComponentMenu("GraphicsLabor/Graphics/Laborer 3D")]
     public class Laborer3D : GraphicLaborer
     {
         #region Faces

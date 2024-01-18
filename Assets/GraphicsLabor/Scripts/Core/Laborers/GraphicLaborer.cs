@@ -6,6 +6,10 @@ using UnityEngine.Rendering;
 
 namespace GraphicsLabor.Scripts.Core.Laborers
 {
+    /// <summary>
+    /// Usage: Attach a Laborer2D or Laborer3D to a GameObject on your scene that
+    /// isn't destroyed for as long as you need to draw on screen 
+    /// </summary>
     public abstract class GraphicLaborer : MonoBehaviour
     {
         private static readonly int SrcBlend = Shader.PropertyToID("_SrcBlend");
@@ -18,6 +22,9 @@ namespace GraphicsLabor.Scripts.Core.Laborers
         public static readonly Vector3 ZMask = new(0, 0, 1);
         
         protected static readonly Color BaseBorderColor = Color.black;
+        /// <summary>
+        /// Subscribe to this event with a function calling Laborer's DrawingFunctions to draw on screen
+        /// </summary>
         public static event Action DrawCallback;
         protected static GraphicLaborer Instance { get; private set; }
         internal Material RenderMaterial;

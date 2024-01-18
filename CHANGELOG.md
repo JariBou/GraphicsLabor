@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [4.0.0] - 2024-??-??
+## [UNRELEASED] - 2024-??-??
 
 ### Added
 
@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SO Creator to ease SO creation for ScriptableOBjects with the Manageable Attribute
 - EnableIf/DisableIf Attributes to Enable/Disable fields, works like ShowIf/HideIf 
 - AutoProperties with the ShowProperty can now be edited via the inspector
+- Links to versions compare in CHANGELOG.md
 
 ### Changed
 
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - ReadOnly Attribute now properly works
+- LabelAttribute not working on Properties
 
 
 
@@ -138,3 +140,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Code Refactoring
+
+
+[UNRELEASED]: https://github.com/JariBou/GraphicsLabor/compare/v3.0.2...HEAD
+[3.0.2]: https://github.com/JariBou/GraphicsLabor/compare/v3.0.1...v3.0.2
+[3.0.1]: https://github.com/JariBou/GraphicsLabor/compare/v3.0.0...v3.0.1
+[3.0.0]: https://github.com/JariBou/GraphicsLabor/compare/v2.0.0...v3.0.0
+[2.0.0]: https://github.com/JariBou/GraphicsLabor/compare/v1.1.1...v2.0.0
+[1.1.1]: https://github.com/JariBou/GraphicsLabor/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/JariBou/GraphicsLabor/releases/tag/v1.1.0

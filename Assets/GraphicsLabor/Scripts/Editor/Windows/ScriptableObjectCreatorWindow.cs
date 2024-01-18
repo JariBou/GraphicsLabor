@@ -26,7 +26,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
         private Vector2 _cachedTextSize = Vector2.zero;
         
-        [MenuItem("Window/GraphicLabor/Test Creator Window")]
+        [MenuItem("Window/GraphicLabor/SO Creator")]
         public static void ShowWindow()
         {
             // _window = GetWindow<ScriptableObjectEditorWindow>();

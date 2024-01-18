@@ -3,9 +3,9 @@ using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Tests
+namespace GraphicsLabor.Samples.SampleScripts.SOs
 {
-    [CreateAssetMenu(menuName = "Tests/AnotherScriptableObject"), Manageable, Editable]
+    [Manageable, Editable]
     public class AnotherEditableScriptableObject : ScriptableObject
     {
         public string test;

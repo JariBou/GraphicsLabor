@@ -40,9 +40,17 @@ It also provides ScriptableObjects-only Attributes aimed to be used with the cus
 - TabProperty
 
 ### LaborerEditor:
-Provides Custom Editor Window to help developing:
+Provides Custom Editor Window to help managing ScriptableObjects:
 - ScriptableObjects Editor
 - ScriptableObjects Creator
+
+### LaborerTags:
+
+Provides User-defined tags via the GL Settings window that can be used with a ITagHolder component. Labor Tags are BitMasks and thus multiple can be applied to a single object. Graphics Labor provides 2 ready-to-use components:
+- LaborTagComponent
+- LinkedLaborTagComponent
+As well as a MonoBehaviour subclass that natively implements LaborTags:
+- LaborBehaviour
 
 ## Overview
 *Coming Soon...*
