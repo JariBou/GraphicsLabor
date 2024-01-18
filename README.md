@@ -1,41 +1,48 @@
 # Graphics Labor 
 
-![version](https://img.shields.io/badge/Version-3.0.2-blue)
+![version](https://img.shields.io/badge/Version-4.0.0-blue)
 [![license](https://img.shields.io/badge/License-GNU-green)](https://github.com/KSXGitHub/GPL-3.0)
 [![author](https://img.shields.io/badge/Author-JariBou-orange)](https://jaribou.github.io/)  
 ![unity](https://img.shields.io/badge/Unity-2022.3-blue)  
-Graphics labor is a unity package composed as of **v3.0.0** of 3 parts:
+Graphics labor is a unity package composed as of **v4.0.0** of 4 main parts:
 - GraphicLaborer
 - LaborerAttributes
 - LaborerEditor
+- LaborerTags
+It's main goal is to help Game Programmers and Game Designers to make a game.
 
 > [!IMPORTANT]
 > DISCLAIMER: This package was made using Unity 2022.3.12f1.
 > It has been tested from version 2022.3.8f1 up and there is no guarantee that it will work for any lower version.
+> Tests show compatibility with unity 2021.
 
 ### GraphicLaborer:
-Provides simple solutions to draw shapes on the screen.  
+Provides simple solutions to draw shapes on the screen while in play mode. Works in both the editor and the build.  
 Its main purpose is to allow for debugging 2D Hitboxes and Hurtboxes in games.
 
 ### LaborerAttributes:
-Provides Custom Attributes to help developing:
+Provides Custom Attributes for all Scripts:
 - ReadOnly
 - ShowMessage
 - Button
 - ShowIf/HideIf
+- EnableIf/DisableIf
 - ShowProperty
 - Label
+- Expandable
+- Scene
+- HorizontalSeparator
 
-### LaborerEditor:
-Provides Custom Editors to help developing:
-- ReadOnly
-- ShowMessage
-- Button
-
-Along with new Attributes:
+It also allows to enable Auto-Properties editing via the inspector using the ShowProperty or EnableIf/DisableIf Attributes
+It also provides ScriptableObjects-only Attributes aimed to be used with the custom editor window:
 - Editable
+- Manageable
 - TabProperty
 
+### LaborerEditor:
+Provides Custom Editor Window to help developing:
+- ScriptableObjects Editor
+- ScriptableObjects Creator
 
 ## Overview
 *Coming Soon...*
