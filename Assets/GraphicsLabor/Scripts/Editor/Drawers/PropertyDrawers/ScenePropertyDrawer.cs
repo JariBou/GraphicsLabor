@@ -5,7 +5,7 @@ using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using UnityEditor;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Editor.Drawers
+namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(SceneAttribute))]
     public class ScenePropertyDrawer : PropertyDrawerBase

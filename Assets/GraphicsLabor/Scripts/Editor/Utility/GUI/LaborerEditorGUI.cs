@@ -101,7 +101,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
         /// <summary>
         /// Draws a SerializedProperty field on the editor
         /// </summary>
-        /// <param name="rect">The rect for the property</param>
+        /// <param name="rect">The rect for the SerializedProperty</param>
         /// <param name="property">The SerializedProperty</param>
         /// <param name="includeChildren">Whether or not to include property's children</param>
         public static void PropertyField(Rect rect, SerializedProperty property, bool includeChildren)

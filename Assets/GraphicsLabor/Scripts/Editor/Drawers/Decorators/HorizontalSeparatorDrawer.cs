@@ -4,7 +4,7 @@ using GraphicsLabor.Scripts.Editor.Utility.GUI;
 using UnityEditor;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Editor.Drawers
+namespace GraphicsLabor.Scripts.Editor.Drawers.Decorators
 {
     [CustomPropertyDrawer(typeof(HorizontalSeparatorAttribute))]
     public class HorizontalSeparatorDrawer : DecoratorDrawer

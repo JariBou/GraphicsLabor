@@ -19,6 +19,14 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
     {
         #region ScriptableObject Drawer
 
+        /// <summary>
+        /// Draws a ScriptableObjects' Serialized Fields on the editor
+        /// </summary>
+        /// <param name="startRect">The start rect of the editor view</param>
+        /// <param name="yOffset">The yOffset for the rect</param>
+        /// <param name="serializedObject">The So's SerializedObject</param>
+        /// <param name="tabbedSerializedProperties">A ref to a dictionary of tabbedSerializedProperties</param>
+        /// <returns></returns>
         public static float DrawScriptableObjectNormalSerializedFields(Rect startRect, float yOffset, SerializedObject serializedObject, ref Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties)
         {
             float localOffset = 0;
@@ -53,6 +61,14 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             return localOffset;
         }
 
+        /// <summary>
+        /// Draws a ScriptableObjects' Shown Properties on the editor
+        /// </summary>
+        /// <param name="startRect">The start rect of the editor view</param>
+        /// <param name="yOffset">The yOffset for the rect</param>
+        /// <param name="serializedObject">The So's SerializedObject</param>
+        /// <param name="tabbedProperties">A ref to a dictionary of tabbedProperties</param>
+        /// <returns></returns>
         public static float DrawScriptableObjectNormalProperties(Rect startRect, float yOffset, SerializedObject serializedObject, ref Dictionary<string, List<PropertyInfo>> tabbedProperties)
         {
             float localOffset = 0;
@@ -80,7 +96,14 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             }
             return localOffset;
         }
-        
+
+        /// <summary>
+        /// Draws a ScriptableObjects' Tabbed Serialized Fields on the editor
+        /// </summary>
+        /// <param name="startRect">The start rect of the editor view</param>
+        /// <param name="yOffset">The yOffset for the rect</param>
+        /// <param name="properties">A list of the tabbed Properties</param>
+        /// <returns></returns>
         public static float DrawScriptableObjectTabbedSerializedFields(Rect startRect, float yOffset, List<SerializedProperty> properties)
         {
             float localOffset = 0;
@@ -115,7 +138,15 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             
             return localOffset + LaborerGUIUtility.PropertyHeightSpacing;
         }
-        
+
+        /// <summary>
+        /// Draws a ScriptableObjects' Tabbed Shown Properties on the editor
+        /// </summary>
+        /// <param name="startRect">The start rect of the editor view</param>
+        /// <param name="yOffset">The yOffset for the rect</param>
+        /// <param name="serializedObject">The So's SerializedObject</param>
+        /// <param name="properties">A list of the tabbed PropertyInfo</param>
+        /// <returns></returns>
         public static float DrawScriptableObjectTabbedProperties(Rect startRect, float yOffset, SerializedObject serializedObject, List<PropertyInfo> properties)
         {
             float localOffset = 0;
@@ -142,15 +173,26 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
                         width = startRect.width,
                         height = childHeight
                     };
-                    DrawProperty(childRect, property, serializedObject.targetObject);
-                    
-                    localOffset += childHeight + LaborerGUIUtility.PropertyHeightSpacing;
+                    if (DrawProperty(childRect, property, serializedObject.targetObject))
+                    {
+                        localOffset += childHeight + LaborerGUIUtility.PropertyHeightSpacing;
+                    }
                 }
             }
             
             return localOffset + LaborerGUIUtility.PropertyHeightSpacing;
         }
         
+        #endregion
+        
+        /// <summary>
+        /// Draws a SerializedProperty on the editor or adds it to the tabbedProperties dictionary if checkTab is set to True 
+        /// </summary>
+        /// <param name="rect">The rect for the property</param>
+        /// <param name="serializedProperty">The SerializedProperty</param>
+        /// <param name="tabbedSerializedProperties">A ref to a Dictionary containing tabbedSerializedProperties</param>
+        /// <param name="checkForTab">If set to True will not draw Property if tabbed</param>
+        /// <returns></returns>
         private static bool DrawSerializedProperty(Rect rect, SerializedProperty serializedProperty, ref Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties, bool checkForTab = false)
         {
             if (serializedProperty == null) return false;
@@ -178,8 +220,13 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             return true;
         }
         
-        #endregion
-
+        /// <summary>
+        /// Draws a ScriptableObject Field with a Button on same line (ration 3/4 to 1/4)
+        /// </summary>
+        /// <param name="currentRect">The rect for the Rect</param>
+        /// <param name="scriptableObject">The ScriptableObject help by the field</param>
+        /// <param name="buttonText">The text displayed on the button</param>
+        /// <param name="buttonFunction">The function called when Button is clicked</param>
         public static void DrawSoFieldAndButton(Rect currentRect, ScriptableObject scriptableObject, string buttonText, Action buttonFunction)
         {
             Rect selectedSoObj = new()
@@ -213,6 +260,12 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             GUILayout.EndHorizontal();
         }
         
+        /// <summary>
+        /// Draws a SerializedProperty on the editor
+        /// </summary>
+        /// <param name="rect">The rect for the SerializedProperty</param>
+        /// <param name="property">The SerializedProperty</param>
+        /// <param name="includeChildren">Whether or not to include the SerializedProperty's children</param>
         public static void PropertyField(Rect rect, SerializedProperty property, bool includeChildren)
         {
             // Check if visible
@@ -234,6 +287,15 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             }
         }
 
+        /// <summary>
+        /// Draws a Property on the editor or adds it to the tabbedProperties dictionary if checkTab is set to True 
+        /// </summary>
+        /// <param name="rect">The rect for the property</param>
+        /// <param name="property">The PropertyInfo</param>
+        /// <param name="target">The object holding the property</param>
+        /// <param name="tabbedProperties">A ref to a Dictionary containing tabbedProperties</param>
+        /// <param name="checkForTab">If set to True will not draw Property if tabbed</param>
+        /// <returns>True if property was drawn</returns>
         private static bool DrawProperty(Rect rect, PropertyInfo property, Object target, [CanBeNull] ref Dictionary<string, List<PropertyInfo>> tabbedProperties, bool checkForTab = false)
         {
             if (property == null) return false;
@@ -274,28 +336,54 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             {
                 string warning = $"{nameof(ShowPropertyAttribute)} doesn't support {property.PropertyType.Name} types";
                 EditorGUILayout.HelpBox(warning, MessageType.Warning);
+                return false;
             } 
             
             return true;
         }
 
-        private static void DrawProperty(Rect rect, PropertyInfo property, Object target)
+        /// <summary>
+        /// Draws a Property on the editor
+        /// </summary>
+        /// <param name="rect">The rect for the property</param>
+        /// <param name="property">The PropertyInfo</param>
+        /// <param name="target">The object holding the property</param>
+        /// <returns>True if property was drawn</returns>
+        private static bool DrawProperty(Rect rect, PropertyInfo property, Object target)
         {
             Dictionary<string,List<PropertyInfo>> nVar = null;
-            DrawProperty(rect, property, target, ref nVar);
+            return DrawProperty(rect, property, target, ref nVar);
         }
 
-
+        /// <summary>
+        /// Returns the height of a SerializedProperty
+        /// </summary>
+        /// <param name="property">The SerializedProperty</param>
+        /// <returns></returns>
         private static float GetPropertyHeight(SerializedProperty property)
         {
             return EditorGUI.GetPropertyHeight(property, includeChildren: true);
         }
 
+        /// <summary>
+        /// Returns the height of a Collection of SerializedProperties
+        /// </summary>
+        /// <param name="properties">The Collection of SerializedProperties</param>
+        /// <param name="spacing">The spacing between each SerializedProperty</param>
+        /// <returns></returns>
         private static float GetPropertiesHeight(IEnumerable<SerializedProperty> properties, float spacing = 0f)
         {
             return spacing + properties.Sum(property => GetPropertyHeight(property) + spacing);
         }
-        
+
+        /// <summary>
+        /// Draws a Property on the editor and makes it modifiable. Only works on Auto-Properties 
+        /// </summary>
+        /// <param name="position">The Rect where to Draw the Field</param>
+        /// <param name="targetObject">The object holding the property</param>
+        /// <param name="property">The PropertyInfo</param>
+        /// <param name="enabled">Whether or not property is enabled</param>
+        /// <returns>True if Drawn</returns>
         public static bool DrawWritableField(Rect position, Object targetObject, PropertyInfo property, bool enabled = false)
         {
             using (new EditorGUI.DisabledScope(disabled: !enabled))
@@ -409,6 +497,15 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
                 return isDrawn;
             }
         }
+        
+        /// <summary>
+        /// Draws a Property on the editor
+        /// </summary>
+        /// <param name="position">The Rect where to Draw the Field</param>
+        /// <param name="targetObject">The object holding the property</param>
+        /// <param name="property">The PropertyInfo</param>
+        /// <param name="enabled">Whether or not property is enabled</param>
+        /// <returns>True if Drawn</returns>
         public static bool DrawNonWritableField(Rect position, Object targetObject, PropertyInfo property, bool enabled = false)
         {
             using (new EditorGUI.DisabledScope(disabled: !enabled))

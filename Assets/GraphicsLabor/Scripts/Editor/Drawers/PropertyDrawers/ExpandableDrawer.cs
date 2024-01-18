@@ -4,7 +4,7 @@ using GraphicsLabor.Scripts.Editor.Utility.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace GraphicsLabor.Scripts.Editor.Drawers
+namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(ExpandableAttribute))]
     public class ExpandableDrawer : PropertyDrawerBase

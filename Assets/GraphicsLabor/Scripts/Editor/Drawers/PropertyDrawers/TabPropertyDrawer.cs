@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace GraphicsLabor.Scripts.Editor.Drawers
+namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(TabPropertyAttribute))]
     public class TabPropertyDrawer : PropertyDrawerBase
