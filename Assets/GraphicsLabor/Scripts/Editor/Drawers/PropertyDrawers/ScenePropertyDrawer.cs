@@ -55,6 +55,10 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers
             EditorGUI.EndProperty();
         }
 
+        /// <summary>
+        /// Gets all scenes added to the buildSettings
+        /// </summary>
+        /// <returns>An array of Scene names</returns>
         private string[] GetScenes()
         {
             return EditorBuildSettings.scenes
@@ -63,11 +67,23 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers
                 .ToArray();
         }
 
+        /// <summary>
+        /// Returns an Array of formatted strings for the options dropdown
+        /// </summary>
+        /// <param name="scenes">The array of possible scenes' names</param>
+        /// <returns></returns>
         private string[] GetSceneOptions(string[] scenes)
         {
             return scenes.Select((s, i) => string.Format(SceneListItem, s, i)).ToArray();
         }
 
+        /// <summary>
+        /// Draws the SerializedProperty for a string field
+        /// </summary>
+        /// <param name="rect">The Rect for the SerializedProperty</param>
+        /// <param name="property">The SerializedProperty</param>
+        /// <param name="label">The GUIContent label</param>
+        /// <param name="sceneOptions">The scene options dropdown</param>
         private static void DrawPropertyForString(Rect rect, SerializedProperty property, GUIContent label, string[] scenes, string[] sceneOptions)
         {
             int index = IndexOf(scenes, property.stringValue);
@@ -80,6 +96,13 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers
             }
         }
 
+        /// <summary>
+        /// Draws the SerializedProperty for an int field
+        /// </summary>
+        /// <param name="rect">The Rect for the SerializedProperty</param>
+        /// <param name="property">The SerializedProperty</param>
+        /// <param name="label">The GUIContent label</param>
+        /// <param name="sceneOptions">The scene options dropdown</param>
         private static void DrawPropertyForInt(Rect rect, SerializedProperty property, GUIContent label, string[] sceneOptions)
         {
             int index = property.intValue;
@@ -91,6 +114,12 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers
             }
         }
 
+        /// <summary>
+        /// Returns the index of a scene name in an array of scenes
+        /// </summary>
+        /// <param name="scenes">Array of scenes</param>
+        /// <param name="scene">Scene name to find the index of</param>
+        /// <returns></returns>
         private static int IndexOf(string[] scenes, string scene)
         {
             var index = Array.IndexOf(scenes, scene);

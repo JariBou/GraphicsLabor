@@ -36,4 +36,4 @@ MonoBehaviour:
       testFloat: 0
       testInt2: 0
       testListInt: 
-      testezrr: {fileID: 0}
+      testezrr: {fileID: 11400000, guid: fdcf5f8c632ef0142a10e89673e174ef, type: 2}

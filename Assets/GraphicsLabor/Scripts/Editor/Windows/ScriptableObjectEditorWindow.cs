@@ -15,15 +15,12 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 {
     public class ScriptableObjectEditorWindow : EditorWindowBase
     {
-        // Try to put it in a non static thing maybe, be cool not to have to open a new one every time
         [SerializeField] private ScriptableObject _selectedScriptableObject;
         [SerializeField] private SerializedObject _serializedObject;
-        [SerializeField] private string _selectedTab = "";
-        [SerializeField] private Vector2 _scrollPos;
         protected float _totalDrawnHeight = 20f;
         private List<Type> _attributeTypes;
-        
-        private SerializedObject GetSerializedObject()
+
+        protected override SerializedObject GetSerializedObject()
         {
             return _serializedObject ??= new SerializedObject(_selectedScriptableObject);
         }
@@ -57,13 +54,16 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             GUI.EndScrollView();
         }
 
+        /// <summary>
+        /// Called to draw in the ScrollView
+        /// </summary>
+        /// <param name="currentRect">The ScrollView Rect</param>
         protected virtual void OnSelfGui(Rect currentRect)
         {
             _totalDrawnHeight = DrawWithRect(currentRect);
             _totalDrawnHeight += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
         }
-
-
+        
         protected override void PassInspectedObject(Object obj)
         {
             _selectedScriptableObject = (ScriptableObject)obj;
@@ -72,11 +72,18 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             GetAttributeTypes();
         }
 
+        /// <summary>
+        /// Method called for the button drawn next to the ObjectField containing the selected SO
+        /// </summary>
         private void ButtonFunc()
         {
             ScriptableObjectCreatorWindow.ShowWindow(_selectedScriptableObject);
         }
 
+        /// <summary>
+        /// Returns all custom ScriptableObjectAttribute of the inspected ScriptableObject. Caches it if possible
+        /// </summary>
+        /// <returns>A List of all custom ScriptableObjectAttribute</returns>
         private List<Type> GetAttributeTypes()
         {
             if (_attributeTypes == null)
@@ -89,7 +96,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             return _attributeTypes;
         }
 
-        protected float DrawWithRect(Rect currentRect)
+        protected override float DrawWithRect(Rect currentRect)
         {
             GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
             
@@ -113,60 +120,6 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 currentRect.y += DrawScriptableObjectWithRect(currentRect, _selectedScriptableObject);
             }
             return currentRect.y;
-        }
-        
-        private float DrawScriptableObjectWithRect(Rect startRect, ScriptableObject scriptableObject)
-        {
-            if (!scriptableObject) return 0f;
-            Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties = new Dictionary<string, List<SerializedProperty>>();
-            Dictionary<string, List<PropertyInfo>> tabbedProperties = new Dictionary<string, List<PropertyInfo>>();
-
-            SerializedObject serializedObject = GetSerializedObject();
-            serializedObject.Update();
-            float yOffset = LaborerGUIUtility.PropertyHeightSpacing;
-
-            yOffset += LaborerWindowGUI.DrawScriptableObjectNormalSerializedFields(startRect, yOffset, serializedObject, ref tabbedSerializedProperties);
-            yOffset += LaborerWindowGUI.DrawScriptableObjectNormalProperties(startRect, yOffset, serializedObject, ref tabbedProperties);
-
-            IEnumerable<string> tabs = GHelpers.ConcatenateLists(tabbedSerializedProperties.Keys, tabbedProperties.Keys).ToArray();
-            float buttonWidth = startRect.width / tabs.Count();
-            int i = 0;
-            foreach (string key in tabs)
-            {
-                Rect buttonRect = new()
-                {
-                    x =startRect.x + buttonWidth * i,
-                    y = startRect.y + yOffset,
-                    width = buttonWidth,
-                    height = LaborerGUIUtility.SingleLineHeight
-                };
-                if (key == _selectedTab)
-                {
-                    GUI.backgroundColor = LaborerGUIUtility.SelectedTabColor;
-                } 
-                if (GUI.Button(buttonRect, key, EditorStyles.toolbarButton))
-                {
-                    _selectedTab = key == _selectedTab ? "" : key;
-                }
-
-                GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
-                
-                i++;
-            }
-            yOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing*2;
-
-            if (tabbedSerializedProperties.TryGetValue(_selectedTab, out var serializedProperties))
-            {
-                yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedSerializedFields(startRect, yOffset, serializedProperties);
-            }
-            if (tabbedProperties.TryGetValue(_selectedTab, out var normalProperties))
-            {
-                yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedProperties(startRect, yOffset, serializedObject, normalProperties);
-            }
-            yOffset += LaborerGUIUtility.PropertyHeightSpacing;
-            
-            serializedObject.ApplyModifiedProperties();
-            return yOffset;
         }
     }
 }

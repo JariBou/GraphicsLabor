@@ -73,6 +73,10 @@ namespace GraphicsLabor.Scripts.Editor
             GUILayout.EndHorizontal();
         }
 
+        /// <summary>
+        /// Initializes the SerializedPropertiesList
+        /// </summary>
+        /// <param name="outSerializedProperties">A List of SerializedProperties</param>
         private void GetSerializedProperties(ref List<SerializedProperty> outSerializedProperties)
         {
             outSerializedProperties.Clear();
@@ -89,6 +93,9 @@ namespace GraphicsLabor.Scripts.Editor
             }
         }
 
+        /// <summary>
+        /// Draws all SerializedProperties
+        /// </summary>
         private void DrawSerializedProperties()
         {
             serializedObject.Update();
@@ -108,6 +115,9 @@ namespace GraphicsLabor.Scripts.Editor
             serializedObject.ApplyModifiedProperties();
         }
 
+        /// <summary>
+        /// Draws all properties
+        /// </summary>
         private void DrawProperties()
         {
             if (!_properties.Any()) return;
@@ -118,7 +128,10 @@ namespace GraphicsLabor.Scripts.Editor
             }
         }
 
-        private void DrawButtons(bool drawHeader = false)
+        /// <summary>
+        /// Draws all buttons
+        /// </summary>
+        private void DrawButtons()
         {
             if (!_methods.Any()) return;
             

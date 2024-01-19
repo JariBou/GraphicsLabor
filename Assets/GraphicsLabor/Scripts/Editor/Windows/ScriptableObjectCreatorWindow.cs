@@ -16,9 +16,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         [SerializeField]private ScriptableObject _selectedScriptableObject;
         [SerializeField]private SerializedObject _serializedObject;
         private string _path;
-        [SerializeField]private string _selectedPropTab = "";
         private string _selectedSoTab = "";
-        private Vector2 _scrollPos;
         private float _totalDrawnHeight = 20f;
         private readonly Dictionary<string, ScriptableObject> _soNameAssetDic = new();
 
@@ -36,11 +34,15 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             CreateNewEditorWindow<ScriptableObjectCreatorWindow>(null, "Scriptable Object Creator").GetPossibleScriptableObjects();
         }
         
-        private SerializedObject GetSerializedObject()
+        protected override SerializedObject GetSerializedObject()
         {
             return _serializedObject ??= new SerializedObject(_selectedScriptableObject);
         }
 
+        /// <summary>
+        /// Returns the _cachedTextSize of the text shown when no SOs with the Manageable attribute exist and calculates it beforehand if necessary 
+        /// </summary>
+        /// <returns></returns>
         private Vector2 GetCachedTextSize()
         {
             if (_cachedTextSize == Vector2.zero)
@@ -51,6 +53,10 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             return _cachedTextSize;
         }
         
+        /// <summary>
+        /// Opens a Object Creator Window
+        /// </summary>
+        /// <param name="obj">The Object inspected</param>
         public static void ShowWindow(Object obj)
         {
             if (obj == null || !obj.InheritsFrom(typeof(ScriptableObject)))
@@ -62,11 +68,6 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             {
                 CreateNewEditorWindow<ScriptableObjectCreatorWindow>(obj, "Scriptable Object Creator").GetPossibleScriptableObjects();
             }
-            
-            // _window = GetWindow<ScriptableObjectEditorWindow>();
-            // _window.titleContent = new GUIContent("ScriptableObjectEditor");
-            // _window._selectedScriptableObject = (ScriptableObject)obj;
-            // _window.WindowName = obj.name;
         }
 
         protected override void OnGUI()
@@ -112,6 +113,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             
         }
 
+        /// <summary>
+        /// Creates the Buttons used to select which SO to create
+        /// </summary>
+        /// <param name="selectionTabRect">The Rect for the buttons</param>
+        /// <returns></returns>
         private float CreateSoSelectionButtons(Rect selectionTabRect)
         {
             float yOffset = 0;
@@ -147,6 +153,10 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             return yOffset;
         }
 
+        /// <summary>
+        /// Changes the inspected SO
+        /// </summary>
+        /// <param name="soName">The name of the SO to select</param>
         private void SelectSo(string soName)
         {
             _selectedSoTab = soName;
@@ -154,6 +164,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             _serializedObject = new SerializedObject(_soNameAssetDic[soName]);
         }
         
+        /// <summary>
+        /// Returns a Truncated SO Name to 20chars+"..." if longer than 22 chars
+        /// </summary>
+        /// <param name="soName">The name to be truncated</param>
+        /// <returns></returns>
         private static string GetTruncatedTempSoName(string soName)
         {
             string newSoName = GetTempSoName(soName);
@@ -165,13 +180,25 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             return newSoName;
         }
 
+        /// <summary>
+        /// Returns the Nicifyed name of a temp SO without the "_temp" at the end if needed
+        /// </summary>
+        /// <param name="soName">The SO name to change</param>
+        /// <returns></returns>
         private static string GetTempSoName(string soName)
         {
             string newSoName = ObjectNames.NicifyVariableName(soName);
-            newSoName = newSoName.Remove(newSoName.Length - "_temp".Length);
+            if (newSoName.EndsWith("Temp"))
+            {
+                newSoName = newSoName.Remove(newSoName.Length - "_Temp".Length);
+            }
             return newSoName;
         }
 
+        /// <summary>
+        /// Selects the SO by passing the object to inspect, if doesn't exist will do nothing
+        /// </summary>
+        /// <param name="obj">The SO to inspect</param>
         protected override void PassInspectedObject(Object obj)
         {
             if (obj == null) return;
@@ -184,6 +211,9 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             }
         }
 
+        /// <summary>
+        /// Method called for the button drawn next to the ObjectField containing the selected SO
+        /// </summary>
         private void ButtonFunc()
         {
             ScriptableObject obj = _soNameAssetDic[_selectedSoTab];
@@ -195,8 +225,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             SelectSo(so.name);
             GUI.FocusControl(null);
         }
-
-        private float DrawWithRect(Rect currentRect)
+        
+        protected override float DrawWithRect(Rect currentRect)
         {
             GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
             
@@ -218,8 +248,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                     ScriptableObject obj = Instantiate(_soNameAssetDic[_selectedSoTab]);
                     string objName = tempPath.Split('/')[^1].Replace(".asset", "");
                     obj.name = objName;
-                    AssetDatabase.CreateAsset(obj, tempPath);
-                    AssetDatabase.SaveAssets();   
+                    IOHelper.CreateAssetIfNeeded(obj, tempPath);
                 }
             }
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
@@ -227,63 +256,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             return currentRect.y;
         }
         
-        // Does not fix [Expandable] ScriptableObject drawing problem
-        private float DrawScriptableObjectWithRect(Rect startRect, ScriptableObject scriptableObject)
-        {
-            if (!scriptableObject) return 0f;
-            Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties = new Dictionary<string, List<SerializedProperty>>();
-            Dictionary<string, List<PropertyInfo>> tabbedProperties = new Dictionary<string, List<PropertyInfo>>();
-
-            SerializedObject serializedObject = GetSerializedObject();
-            serializedObject.Update();
-            float yOffset = LaborerGUIUtility.PropertyHeightSpacing;
-
-            yOffset += LaborerWindowGUI.DrawScriptableObjectNormalSerializedFields(startRect, yOffset, serializedObject, ref tabbedSerializedProperties);
-            yOffset += LaborerWindowGUI.DrawScriptableObjectNormalProperties(startRect, yOffset, serializedObject, ref tabbedProperties);
-
-            IEnumerable<string> tabs = GHelpers.ConcatenateLists(tabbedSerializedProperties.Keys, tabbedProperties.Keys).ToArray();
-            float buttonWidth = startRect.width / tabs.Count();
-            int i = 0;
-            foreach (string key in tabs)
-            {
-                Rect buttonRect = new()
-                {
-                    x =startRect.x + buttonWidth * i,
-                    y = startRect.y + yOffset,
-                    width = buttonWidth,
-                    height = LaborerGUIUtility.SingleLineHeight
-                };
-                if (key == _selectedPropTab)
-                {
-                    GUI.backgroundColor = LaborerGUIUtility.SelectedTabColor;
-                } 
-                if (GUI.Button(buttonRect, key, EditorStyles.toolbarButton))
-                {
-                    _selectedPropTab = key == _selectedPropTab ? "" : key;
-                }
-
-                GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
-                
-                i++;
-            }
-            yOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing*2;
-
-            if (tabbedSerializedProperties.TryGetValue(_selectedPropTab, out var serializedProperties))
-            {
-                // TODO: When changing values inside of serialized classes it refolds and sometimes doesn't register
-                // Ok so what happens is that when repainting it puts the foldouts in the same state as the SO
-                yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedSerializedFields(startRect, yOffset, serializedProperties);
-            }
-            if (tabbedProperties.TryGetValue(_selectedPropTab, out var normalProperties))
-            {
-                yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedProperties(startRect, yOffset, serializedObject, normalProperties);
-            }
-            yOffset += LaborerGUIUtility.PropertyHeightSpacing;
-            
-            serializedObject.ApplyModifiedProperties();
-            return yOffset;
-        }
-
+        /// <summary>
+        /// Looks through assemblies to find ScriptableObjects with the ManageableAttribute and returns that list.
+        /// Also Initializes the Dictionary containing the SONames and the SOs Caches it when possible. 
+        /// </summary>
+        /// <returns>A List of Scriptable Objects with the Manageable Attribute</returns>
         private List<ScriptableObject> GetPossibleScriptableObjects()
         {
             if (_possibleSos != null && _possibleSos.Count != 0)
@@ -311,10 +288,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 ScriptableObject so = CreateInstance(type);
                 so.name = so.GetType().Name;
                     
+                string soPath = $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset";
                 IOHelper.CreateFolder(GetSettings()._tempScriptableObjectsPath);
-                IOHelper.CreateAssetIfNeeded(so, $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset", false);
-                    
-                soPaths.Add($"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset");
+                so = IOHelper.CreateAssetIfNeeded<ScriptableObject>(so, soPath, false);
+                
+                soPaths.Add(soPath);
                 _possibleSos.Add(so);
                 typesList.Add(type);
                 _soNameAssetDic.Add(so.name, so);

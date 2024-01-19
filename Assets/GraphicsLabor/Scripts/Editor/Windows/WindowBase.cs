@@ -26,6 +26,11 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             GetWindowSettings().OpenedCustomWindows.Remove(GetWindowSettings().FindWindowWhere(ComparisonPredicate));
         }
         
+        /// <summary>
+        /// The Comparison Predicate used to determine if a window is the same as another
+        /// </summary>
+        /// <param name="editor"></param>
+        /// <returns></returns>
         protected virtual bool ComparisonPredicate(WindowBase editor)
         {
             bool isSame = true;

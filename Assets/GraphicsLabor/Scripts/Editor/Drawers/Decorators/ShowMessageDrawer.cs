@@ -31,6 +31,10 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.Decorators
             });
         }
         
+        /// <summary>
+        /// Returns the height the Help box's text
+        /// </summary>
+        /// <returns></returns>
         private float GetHelpBoxHeight()
         {
             ShowMessageAttribute showMessageAttributeAttribute = (ShowMessageAttribute)attribute;

@@ -111,6 +111,11 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers
             EditorGUI.EndProperty();
         }
 
+        /// <summary>
+        /// Draws a ScriptableObject's child Properties
+        /// </summary>
+        /// <param name="rect">The Rect where to draw the properties</param>
+        /// <param name="property">The SerializedProperty contaiining the ScriptableObject</param>
         private void DrawChildProperties(Rect rect, SerializedProperty property)
         {
             ScriptableObject scriptableObject = property.objectReferenceValue as ScriptableObject;

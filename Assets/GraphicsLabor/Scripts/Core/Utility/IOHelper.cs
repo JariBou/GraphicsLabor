@@ -48,7 +48,7 @@ namespace GraphicsLabor.Scripts.Core.Utility
         /// <param name="saveAssets">If false, will not call AssetDatabase.SaveAssets()</param>
         public static void CreateAssetIfNeeded(Object obj, string path, bool saveAssets = true)
         {
-            var assetAtPath = AssetDatabase.LoadAssetAtPath<Object>(path);
+            Object assetAtPath = AssetDatabase.LoadAssetAtPath<Object>(path);
 
             if (assetAtPath == null)
             {
@@ -59,6 +59,32 @@ namespace GraphicsLabor.Scripts.Core.Utility
             {
                 AssetDatabase.SaveAssets();
             }
+        }
+        
+        /// <summary>
+        /// Creates the asset at path if it cannot load it and returns it cast as T
+        /// </summary>
+        /// <param name="obj">Object to create if needed</param>
+        /// <param name="path">Path to create the object if needed</param>
+        /// <param name="saveAssets">If false, will not call AssetDatabase.SaveAssets()</param>
+        /// <typeparam name="T">The type to cast returned asset as</typeparam>
+        /// <returns></returns>
+        public static T CreateAssetIfNeeded<T>(Object obj, string path, bool saveAssets = true) where T : Object
+        {
+            Object assetAtPath = AssetDatabase.LoadAssetAtPath<Object>(path);
+
+            if (assetAtPath == null)
+            {
+                AssetDatabase.CreateAsset(obj, path);
+                assetAtPath = AssetDatabase.LoadAssetAtPath<Object>(path);
+            }
+
+            if (saveAssets)
+            {
+                AssetDatabase.SaveAssets();
+            }
+
+            return (T)assetAtPath;
         }
 
         /// <summary>
