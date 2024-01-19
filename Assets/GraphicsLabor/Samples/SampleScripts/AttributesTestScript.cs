@@ -1,6 +1,7 @@
 ﻿using GraphicsLabor.Samples.SampleScripts.SOs;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
+using GraphicsLabor.Scripts.Attributes.Utility;
 using GraphicsLabor.Scripts.Core.Tags;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ namespace GraphicsLabor.Samples.SampleScripts
         [SerializeField, Scene, HideIf(nameof(_sceneType), SceneType.String)]
         private int _sceneInt;
 
-        [SerializeField, HorizontalSeparator, ReadOnly]
+        [SerializeField, HorizontalSeparator(5, LaborColor.Blue), ReadOnly]
         private string _uneditable = "You can only read this";
         [SerializeField] private bool _enableEditingOfProp3;
         [ShowProperty] public int AutoProp1 { get; private set; }

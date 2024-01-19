@@ -187,7 +187,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             GUIContent label;
             if (labelAttribute != null)
             {
-                label = new GUIContent(labelAttribute._label);
+                label = new GUIContent(labelAttribute.Label);
                 return label;                
             }
 
@@ -304,7 +304,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             GUIContent label;
             if (labelAttribute != null)
             {
-                label = new GUIContent(labelAttribute._label);
+                label = new GUIContent(labelAttribute.Label);
                 return label;                
             }
 

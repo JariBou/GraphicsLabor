@@ -9,8 +9,7 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
         public ConditionOperator ConditionOperator { get; private set; }
         public bool Inverted { get; protected set; }
         public Enum EnumValue { get; private set; }
-
-        // TODO: Apply ShowIf to Properties
+        
         protected EnableIfAttributeBase(string condition)
         {
             ConditionOperator = ConditionOperator.And;
