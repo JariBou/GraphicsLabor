@@ -1,5 +1,6 @@
 ﻿using System;
 using GraphicsLabor.Scripts.Core.Settings;
+using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Settings;
 using UnityEditor;
 using UnityEngine;
@@ -65,13 +66,9 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         {
             if (_windowSettings != null) return _windowSettings;
             
-            WindowSettings settings = AssetDatabase.LoadAssetAtPath<WindowSettings>("Assets/GraphicsLabor/Scripts/Editor/Settings/WindowSettingsSo.asset");
-            if (settings == null)
-            {
-                settings = CreateInstance<WindowSettings>();
-                AssetDatabase.CreateAsset(settings, "Assets/GraphicsLabor/Scripts/Editor/Settings/WindowSettingsSo.asset");
-                AssetDatabase.SaveAssets();
-            }
+            IOHelper.CreateFolder("Assets/GraphicsLabor/Scripts/Editor/Settings");
+            WindowSettings settings = IOHelper.CreateAssetIfNeeded<WindowSettings>(CreateInstance<WindowSettings>(),
+                "Assets/GraphicsLabor/Scripts/Editor/Settings/WindowSettingsSo.asset");
 
             _windowSettings = settings;
             return settings;
@@ -85,13 +82,9 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         {
             if (_glSettings != null) return _glSettings;
             
-            GraphicsLaborSettings settings = AssetDatabase.LoadAssetAtPath<GraphicsLaborSettings>("Assets/GraphicsLabor/Scripts/Core/Settings/GraphicsLaborSettings.asset");
-            if (settings == null)
-            {
-                settings = CreateInstance<GraphicsLaborSettings>();
-                AssetDatabase.CreateAsset(settings, "Assets/GraphicsLabor/Scripts/Core/Settings/GraphicsLaborSettings.asset");
-                AssetDatabase.SaveAssets();
-            }
+            IOHelper.CreateFolder("Assets/GraphicsLabor/Scripts/Core/Settings");
+            GraphicsLaborSettings settings = IOHelper.CreateAssetIfNeeded<GraphicsLaborSettings>(CreateInstance<GraphicsLaborSettings>(), 
+                "Assets/GraphicsLabor/Scripts/Core/Settings/GraphicsLaborSettings.asset");
 
             _glSettings = settings;
             return settings;
