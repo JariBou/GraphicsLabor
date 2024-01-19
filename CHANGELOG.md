@@ -1,9 +1,39 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to GraphicsLabor will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+
+## [UNRELEASED] - 2024-??-??
+
+## [4.0.0] - 2024-01-19
+
+### Added
+
+- Manageable and Editable Attributes for ScriptableObjects 
+- SO Editor for Scriptable objects with the Editable Attribute
+- SO Creator to ease SO creation for ScriptableOBjects with the Manageable Attribute
+- EnableIf/DisableIf Attributes to Enable/Disable fields, works like ShowIf/HideIf 
+- AutoProperties with the ShowProperty can now be edited via the inspector
+- Links to versions compare in CHANGELOG.md
+- Code Doc on most Methods
+- HTML Offline documentation generated with [Doxygen](https://www.doxygen.nl/)
+
+### Changed
+
+- ShowIfAttributeBase is now abstract and cannot be used as an attribute
+- EditorGui.ObjectField now uses allowSceneObjects param
+- ShowProperty can now take in a parameter of wether or not to enable PropertyEditing
+
+### Fixed
+
+- ReadOnly Attribute now properly works
+- LabelAttribute not working on Properties
+- TabAttribute info box now properly displays when using it outside of a ScriptableObject 
+
+
 
 ## [3.0.2] - 2023-11-07
 
@@ -115,3 +145,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Code Refactoring
+
+
+[UNRELEASED]: https://github.com/JariBou/GraphicsLabor/compare/v3.0.2...HEAD
+[3.0.2]: https://github.com/JariBou/GraphicsLabor/compare/v3.0.1...v3.0.2
+[3.0.1]: https://github.com/JariBou/GraphicsLabor/compare/v3.0.0...v3.0.1
+[3.0.0]: https://github.com/JariBou/GraphicsLabor/compare/v2.0.0...v3.0.0
+[2.0.0]: https://github.com/JariBou/GraphicsLabor/compare/v1.1.1...v2.0.0
+[1.1.1]: https://github.com/JariBou/GraphicsLabor/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/JariBou/GraphicsLabor/releases/tag/v1.1.0

@@ -3,14 +3,13 @@ using GraphicsLabor.Scripts.Attributes.Utility;
 
 namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
 {
-    public class ShowIfAttributeBase : InspectedAttribute
+    public abstract class ShowIfAttributeBase : InspectedAttribute
     {
         public string[] Conditions { get; private set; }
         public ConditionOperator ConditionOperator { get; private set; }
         public bool Inverted { get; protected set; }
         public Enum EnumValue { get; private set; }
 
-        // TODO: Apply ShowIf to Properties
         protected ShowIfAttributeBase(string condition)
         {
             ConditionOperator = ConditionOperator.And;

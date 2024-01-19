@@ -1,99 +1,164 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using GraphicsLabor.Scripts.Core.Utility;
-using GraphicsLabor.Scripts.Editor.Utility;
+using GraphicsLabor.Scripts.Editor.Settings;
+using GraphicsLabor.Scripts.Editor.Utility.GUI;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 
 namespace GraphicsLabor.Scripts.Editor.Windows
 {
-    public abstract class EditorWindowBase : EditorWindow
+    public abstract class EditorWindowBase : WindowBase
     {
-        protected string WindowName { get; set; }
-        private Type SelfType { get; set; }
-        private int InstanceId { get; set; }
+        [SerializeField] protected string _selectedPropTab = "";
+        [SerializeField] protected Vector2 _scrollPos;
 
-        private static WindowSettings _settings;
-        
-        protected abstract void OnGUI();
+        /// <summary>
+        /// Called to pass the Inspected Object
+        /// </summary>
+        /// <param name="obj">Inspected Object</param>
         protected abstract void PassInspectedObject(Object obj);
+
+        /// <summary>
+        /// Returns the SerializedObject or creates a new one based on the selected ScriptableObjected
+        /// </summary>
+        /// <returns></returns>
+        protected abstract SerializedObject GetSerializedObject();
+
+        /// <summary>
+        /// Calls Methods to draw Parts of the editor
+        /// </summary>
+        /// <param name="currentRect">The current Rect of the window</param>
+        /// <returns>The sum height of all draws</returns>
+        protected abstract float DrawWithRect(Rect currentRect);
         
-        private void OnInspectorUpdate()
-        {
-            Repaint();
-        }
-
-        // TODO: fix opening and closing of windows
-        private void OnDestroy()
-        {
-            GetWindowsSetting().OpenedCustomEditors.Remove(GetWindowsSetting().OpenedCustomEditors.Find(StrictComparisonPredicate));
-        }
-
-        private bool StrictComparisonPredicate(EditorWindowBase editor)
-        {
-            bool isSame = true;
-            isSame &= editor.WindowName == (WindowName ?? "null");
-            isSame &= editor.SelfType == SelfType;
-            // isSame &= editor.InstanceId == InstanceId;
-            return isSame;
-        }
-
+        /// <summary>
+        /// Creates and returns a new EditorWindow 
+        /// </summary>
+        /// <param name="obj">The Object the editor will be inspecting</param>
+        /// <param name="displayName">The display name of the window</param>
+        /// <typeparam name="T">The type of the editor window</typeparam>
+        /// <returns></returns>
         protected static T CreateNewEditorWindow<T>(Object obj, string displayName = "EditorWindowBase") where T : EditorWindowBase
         {
-            EditorWindowBase window = null;
-            WindowSettings settings = GetWindowsSetting();
-            
-            bool found = false;
-            if (settings.OpenedCustomEditors.Count != 0)
+            WindowBase window = null;
+            WindowSettings settings = GetWindowSettings();
+
+            if (settings.OpenedCustomWindows.Count != 0)
             {
-                GLogger.Log(settings.OpenedCustomEditors.Count.ToString());
-                foreach (EditorWindowBase customEditor in settings.OpenedCustomEditors
-                             .Where(customEditor => customEditor.WindowName == (obj != null ? obj.name : "null") && customEditor.SelfType == typeof(T)))
-                {
-                    window = customEditor;
-                    found = true;
-                    break;
-                }
+                window = settings.FindWindowWhere(customEditor =>
+                    (customEditor.WindowName == (obj != null ? obj.name : "null") || customEditor.WindowName == displayName) && customEditor.SelfType == typeof(T));
             }
             
-            if (!found)
+            if (window == null)
             {
                 window = CreateAndInitWindow<T>(obj, displayName, typeof(T));
             }
-            
+            else
+            {
+                (window as T)?.PassInspectedObject(obj);
+            }
+
             window.Focus();
             return window as T;
         }
 
+        /// <summary>
+        /// Creates and inits a new EditorWindow
+        /// </summary>
+        /// <param name="obj">The inspected object</param>
+        /// <param name="displayName">The window's display name</param>
+        /// <param name="desiredDockNextTo">The type of window to dock next to</param>
+        /// <typeparam name="T">The type of the editor window</typeparam>
+        /// <returns></returns>
         private static T CreateAndInitWindow<T>(Object obj, string displayName, params Type[] desiredDockNextTo) where T : EditorWindowBase
         {
-            GLogger.Log("Initing new window");
-            EditorWindowBase window = CreateWindow<T>(desiredDockNextTo);
-            window.titleContent = new GUIContent(displayName);
-            window.SelfType = typeof(T);
-            window.InstanceId = window.GetInstanceID();
-            window.PassInspectedObject(obj);
-            GetWindowsSetting().OpenedCustomEditors.Add(window);
-            return (T)window;
+            T window = WindowBase.CreateAndInitWindow<T>(displayName, desiredDockNextTo);
+             window.PassInspectedObject(obj);
+            return window;
         }
 
-        private static WindowSettings GetWindowsSetting()
+        /// <summary>
+        /// Called on recompilation in the editor to reset windowBase.SelfType lost during recompilation
+        /// </summary>
+        [DidReloadScripts]
+        private static void OnScriptReloadSelf()
         {
-            if (_settings != null) return _settings;
-            
-            WindowSettings settings = AssetDatabase.LoadAssetAtPath<WindowSettings>("Assets/GraphicsLabor/Settings/WindowSettingsSo.asset");
-            if (settings == null)
+            WindowSettings settings = GetWindowSettings();
+            if (settings.OpenedCustomWindows.Count == 0)
             {
-                settings = CreateInstance<WindowSettings>();
-                AssetDatabase.CreateAsset(settings, "Assets/GraphicsLabor/Settings/WindowSettingsSo.asset");
-                AssetDatabase.SaveAssets();
-            }
+                settings.OpenedCustomWindows.AddRange(Resources.FindObjectsOfTypeAll<WindowBase>());
 
-            _settings = settings;
-            return settings;
+                foreach (WindowBase windowBase in settings.OpenedCustomWindows)
+                {
+                    windowBase.SetType(windowBase.GetType());
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Draws a ScriptableObject with given startRect for position
+        /// </summary>
+        /// <param name="startRect">The Rect representing the starting position</param>
+        /// <param name="scriptableObject">The Scriptable Object to draw</param>
+        /// <returns>The sum height of all draws</returns>
+        protected float DrawScriptableObjectWithRect(Rect startRect, ScriptableObject scriptableObject)
+        {
+            if (!scriptableObject) return 0f;
+            Dictionary<string, List<SerializedProperty>> tabbedSerializedProperties = new Dictionary<string, List<SerializedProperty>>();
+            Dictionary<string, List<PropertyInfo>> tabbedProperties = new Dictionary<string, List<PropertyInfo>>();
+
+            SerializedObject serializedObject = GetSerializedObject();
+            serializedObject.Update();
+            float yOffset = LaborerGUIUtility.PropertyHeightSpacing;
+
+            yOffset += LaborerWindowGUI.DrawScriptableObjectNormalSerializedFields(startRect, yOffset, serializedObject, ref tabbedSerializedProperties);
+            yOffset += LaborerWindowGUI.DrawScriptableObjectNormalProperties(startRect, yOffset, serializedObject, ref tabbedProperties);
+
+            IEnumerable<string> tabs = GHelpers.ConcatenateLists(tabbedSerializedProperties.Keys, tabbedProperties.Keys).ToArray();
+            float buttonWidth = startRect.width / tabs.Count();
+            int i = 0;
+            foreach (string key in tabs)
+            {
+                Rect buttonRect = new()
+                {
+                    x =startRect.x + buttonWidth * i,
+                    y = startRect.y + yOffset,
+                    width = buttonWidth,
+                    height = LaborerGUIUtility.SingleLineHeight
+                };
+                if (key == _selectedPropTab)
+                {
+                    GUI.backgroundColor = LaborerGUIUtility.SelectedTabColor;
+                } 
+                if (GUI.Button(buttonRect, key, EditorStyles.toolbarButton))
+                {
+                    _selectedPropTab = key == _selectedPropTab ? "" : key;
+                }
+
+                GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
+                
+                i++;
+            }
+            yOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing*2;
+
+            if (tabbedSerializedProperties.TryGetValue(_selectedPropTab, out var serializedProperties))
+            {
+                yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedSerializedFields(startRect, yOffset, serializedProperties);
+            }
+            if (tabbedProperties.TryGetValue(_selectedPropTab, out var normalProperties))
+            {
+                yOffset += LaborerWindowGUI.DrawScriptableObjectTabbedProperties(startRect, yOffset, serializedObject, normalProperties);
+            }
+            yOffset += LaborerGUIUtility.PropertyHeightSpacing;
+            
+            serializedObject.ApplyModifiedProperties();
+            return yOffset;
         }
     }
 }

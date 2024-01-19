@@ -1,12 +1,19 @@
-﻿namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
-{
-    public abstract class LabelAttribute: InspectedAttribute
-    {
-        public readonly string _label;
+﻿using System;
 
-        protected LabelAttribute(string label)
+namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
+{
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+    public class LabelAttribute: InspectedAttribute
+    {
+        public readonly string Label;
+
+        /// <summary>
+        /// Changes the label of a field or property
+        /// </summary>
+        /// <param name="label">The new label text</param>
+        public LabelAttribute(string label)
         {
-            _label = label;
+            Label = label;
         }
     }
 }

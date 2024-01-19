@@ -4,7 +4,9 @@ using System.Reflection;
 using GraphicsLabor.Scripts.Attributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
-using GraphicsLabor.Scripts.Editor.Utility;
+using GraphicsLabor.Scripts.Editor.Utility.GUI;
+using GraphicsLabor.Scripts.Editor.Utility.Reflection;
+using GraphicsLabor.Scripts.Editor.Windows;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,6 +20,7 @@ namespace GraphicsLabor.Scripts.Editor
         private IEnumerable<PropertyInfo> _properties;
         private IEnumerable<MethodInfo> _methods;
         private bool _isEditableScriptableObject;
+        private bool _isManageableScriptableObject;
 
         private void OnEnable()
         {
@@ -29,6 +32,9 @@ namespace GraphicsLabor.Scripts.Editor
 
             _isEditableScriptableObject = ReflectionUtility
                 .GetAllAttributesOfObject(target, c => c.AttributeType == typeof(EditableAttribute), true).Any();
+            
+            _isManageableScriptableObject = ReflectionUtility
+                .GetAllAttributesOfObject(target, c => c.AttributeType == typeof(ManageableAttribute), true).Any();
         }
 
         public override void OnInspectorGUI()
@@ -46,12 +52,31 @@ namespace GraphicsLabor.Scripts.Editor
             }
             DrawProperties();
             DrawButtons();
+            
+            GUILayout.BeginHorizontal();
+            
             if (_isEditableScriptableObject)
             {
-                LaborerEditorGUI.EditableSoButton(serializedObject.targetObject, "Show Editor");
+                LaborerEditorGUI.CustomPredicateButton("Show Editor", () =>
+                {
+                    ScriptableObjectEditorWindow.ShowWindow(serializedObject.targetObject);
+                });
             }
+            if (_isManageableScriptableObject)
+            {
+                LaborerEditorGUI.CustomPredicateButton("Show Creator", () =>
+                {
+                    ScriptableObjectCreatorWindow.ShowWindow(serializedObject.targetObject);
+                });
+            }
+            
+            GUILayout.EndHorizontal();
         }
 
+        /// <summary>
+        /// Initializes the SerializedPropertiesList
+        /// </summary>
+        /// <param name="outSerializedProperties">A List of SerializedProperties</param>
         private void GetSerializedProperties(ref List<SerializedProperty> outSerializedProperties)
         {
             outSerializedProperties.Clear();
@@ -68,6 +93,9 @@ namespace GraphicsLabor.Scripts.Editor
             }
         }
 
+        /// <summary>
+        /// Draws all SerializedProperties
+        /// </summary>
         private void DrawSerializedProperties()
         {
             serializedObject.Update();
@@ -87,17 +115,23 @@ namespace GraphicsLabor.Scripts.Editor
             serializedObject.ApplyModifiedProperties();
         }
 
+        /// <summary>
+        /// Draws all properties
+        /// </summary>
         private void DrawProperties()
         {
             if (!_properties.Any()) return;
             
             foreach (PropertyInfo property in _properties)
             {
-                LaborerEditorGUI.LayoutProperty(serializedObject.targetObject, property);
+                LaborerEditorGUI.LayoutProperty(serializedObject, property);
             }
         }
 
-        private void DrawButtons(bool drawHeader = false)
+        /// <summary>
+        /// Draws all buttons
+        /// </summary>
+        private void DrawButtons()
         {
             if (!_methods.Any()) return;
             

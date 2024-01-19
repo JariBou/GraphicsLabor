@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Core.Laborers
 {
+    [AddComponentMenu("GraphicsLabor/Graphics/Laborer 2D")]
     public class Laborer2D : GraphicLaborer
     {
         #region Quads
@@ -34,7 +35,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(glDrawMode);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(quad.GetColor);
             GL.Vertex(quad.PointA);
@@ -86,7 +87,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.QUADS);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(quad.GetColor);
             GL.Vertex(quad.PointA);
@@ -106,7 +107,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.QUADS);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(color);
             GL.Vertex(a);
@@ -126,7 +127,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.QUADS);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(color);
             GL.Vertex(center - MaskVector2(size, XMask) / 2 + MaskVector2(size, YMask) / 2); // Top left
@@ -146,7 +147,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.QUADS);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
 
             foreach (Quad quad in quads)
             {
@@ -169,7 +170,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(quad.GetColor);
             GL.Vertex(quad.PointA);
@@ -190,7 +191,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(color);
             GL.Vertex(a);
@@ -211,7 +212,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(color);
             GL.Vertex(center - MaskVector2(size, XMask) / 2 + MaskVector2(size, YMask) / 2); // Top left
@@ -232,7 +233,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
 
             foreach (Quad quad in quads)
             {
@@ -252,7 +253,6 @@ namespace GraphicsLabor.Scripts.Core.Laborers
         
         #endregion
 
-        // For filled circles can use triangles with center point
         #region Circles
         
         /// <summary>
@@ -357,7 +357,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             Vector3 firstPoint = Vector3.zero;
             GL.Color(circle.GetColor);
@@ -400,7 +400,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             Vector3 firstPoint = Vector3.zero;
             GL.Color(color);
@@ -438,7 +438,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             Vector3 firstPoint = Vector3.zero;
 
@@ -546,7 +546,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             
             GL.Begin(GL.LINE_STRIP);
             
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(polygon.GetColor);
             foreach (Vector2 point in polygon.Points)
@@ -573,7 +573,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
 
             GL.Color(color);
             foreach (Vector2 point in points)
@@ -600,7 +600,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             
             GL.Begin(GL.LINE_STRIP);
             
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
 
             foreach (Polygon polygon in polygons)
             {
@@ -647,7 +647,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(glDrawMode);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(triangle.GetColor);
             GL.Vertex(triangle.PointA);
@@ -692,7 +692,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.TRIANGLES);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(triangle.GetColor);
             GL.Vertex(triangle.PointA);
@@ -711,7 +711,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.TRIANGLES);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(color);
             GL.Vertex(a);
@@ -730,7 +730,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.TRIANGLES);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
 
             foreach (Triangle triangle in triangles)
             {
@@ -752,7 +752,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(triangle.GetColor);
             GL.Vertex(triangle.PointA);
@@ -772,7 +772,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(color);
             GL.Vertex(a);
@@ -792,7 +792,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(GL.LINE_STRIP);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
 
             foreach (Triangle triangle in triangles)
             {

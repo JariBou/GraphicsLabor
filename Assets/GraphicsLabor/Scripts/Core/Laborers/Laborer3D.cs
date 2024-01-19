@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Core.Laborers
 {
+    [AddComponentMenu("GraphicsLabor/Graphics/Laborer 3D")]
     public class Laborer3D : GraphicLaborer
     {
         #region Faces
@@ -33,7 +34,7 @@ namespace GraphicsLabor.Scripts.Core.Laborers
             GL.PushMatrix();
             
             GL.Begin(glDrawMode);
-            Instance._renderMaterial.SetPass(0);
+            Instance.RenderMaterial.SetPass(0);
             
             GL.Color(face.GetColor);
 

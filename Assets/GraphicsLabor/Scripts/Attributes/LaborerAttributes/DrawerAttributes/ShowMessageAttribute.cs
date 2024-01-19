@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEditor;
 
 namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes
 {
@@ -12,9 +11,6 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes
         Error
     }
     
-    /// <summary>
-    /// Allows to display a box above the field to give a warning or info
-    /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = true)]
     public class ShowMessageAttribute : DrawerAttribute
     {
@@ -22,6 +18,11 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes
         public string Message { get; private set; }
         public MessageLevel MessageType { get; private set; }
 
+        /// <summary>
+        /// Draws a box with text for the user above the property
+        /// </summary>
+        /// <param name="message">The message for the user</param>
+        /// <param name="messageType">The level of the message (Info, Warning...)</param>
         public ShowMessageAttribute(string message, MessageLevel messageType = MessageLevel.None)
         {
             Message = message;

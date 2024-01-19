@@ -12,6 +12,11 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes
         public float Height { get; private set; }
         public LaborColor Color { get; private set; }
 
+        /// <summary>
+        /// Draws an HorizontalSeparator 
+        /// </summary>
+        /// <param name="height">The height of the separator</param>
+        /// <param name="color">The color of the separator</param>
         public HorizontalSeparatorAttribute(float height = DefaultHeight, LaborColor color = DefaultColor)
         {
             Height = height;
