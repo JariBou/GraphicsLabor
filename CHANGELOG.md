@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED] - 2024-??-??
 
+## [4.0.0] - 2024-01-19
+
 ### Added
 
 - Manageable and Editable Attributes for ScriptableObjects 

@@ -15,6 +15,7 @@ It's main goal is to help Game Programmers and Game Designers to make a game.
 > DISCLAIMER: This package was made using Unity 2022.3.12f1.
 > It has been tested from version 2022.3.8f1 up and there is no guarantee that it will work for any lower version.
 > Tests show compatibility with unity 2021.
+> Package under Review for publishing on the Unity Asset Store
 
 ### GraphicLaborer:
 Provides simple solutions to draw shapes on the screen while in play mode. Works in both the editor and the build.  
