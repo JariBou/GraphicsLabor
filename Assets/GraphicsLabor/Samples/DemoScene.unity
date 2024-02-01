@@ -378,7 +378,7 @@ MonoBehaviour:
   _sceneString: DemoScene
   _sceneInt: 0
   _uneditable: You can't edit this
-  _enableEditingOfProp3: 0
+  _showProp3: 0
   _invalidTab: {fileID: 0}
   _invalidScene: {fileID: 0}
 --- !u!4 &1126098480

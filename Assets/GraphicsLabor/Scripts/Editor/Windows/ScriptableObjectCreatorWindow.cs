@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using GraphicsLabor.Scripts.Core.Utility;
+using GraphicsLabor.Scripts.Editor.Utility;
 using GraphicsLabor.Scripts.Editor.Utility.GUI;
 using UnityEditor;
 using UnityEngine;
