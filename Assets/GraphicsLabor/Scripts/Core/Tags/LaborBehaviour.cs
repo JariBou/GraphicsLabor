@@ -1,6 +1,4 @@
 ﻿using GraphicsLabor.Scripts.Core.Tags.Components;
-using GraphicsLabor.Scripts.Core.Utility;
-using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Core.Tags
 {
@@ -10,6 +8,6 @@ namespace GraphicsLabor.Scripts.Core.Tags
     /// </summary>
     public abstract class LaborBehaviour : BaseLaborTagComponent
     {
-        
+
     }
 }
