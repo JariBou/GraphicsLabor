@@ -8,6 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED] - 2024-??-??
 
+## [4.0.1] - 2024-02-02
+
+### Changed
+
+- Moved IOHelper.cs from Core/Utility to Editor/Utility to avoid being included in build
+
+### Fixed
+
+- OnSelfValidate was not virtual
+
+### Removed
+
+- Auto-Properties lose their set values when entering playmode. So the option to edit them has been removed for now
+
+
+
 ## [4.0.0] - 2024-01-19
 
 ### Added
@@ -147,7 +163,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Code Refactoring
 
 
-[UNRELEASED]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.0...HEAD
+[UNRELEASED]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.1...HEAD
+[4.0.1]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/JariBou/GraphicsLabor/compare/v3.0.2...v4.0.0
 [3.0.2]: https://github.com/JariBou/GraphicsLabor/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/JariBou/GraphicsLabor/compare/v3.0.0...v3.0.1

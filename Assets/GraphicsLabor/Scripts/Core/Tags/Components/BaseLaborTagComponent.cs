@@ -15,7 +15,7 @@ namespace GraphicsLabor.Scripts.Core.Tags.Components
         /// <summary>
         /// Override this method if you want to Use the OnValidate Method
         /// </summary>
-        protected void OnSelfValidate(){}
+        protected virtual void OnSelfValidate(){}
 
         #if UNITY_EDITOR
         private void OnValidate()

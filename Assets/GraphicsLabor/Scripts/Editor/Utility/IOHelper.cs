@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor;
 using Object = UnityEngine.Object;
 
-namespace GraphicsLabor.Scripts.Core.Utility
+namespace GraphicsLabor.Scripts.Editor.Utility
 {
     public static class IOHelper
     {

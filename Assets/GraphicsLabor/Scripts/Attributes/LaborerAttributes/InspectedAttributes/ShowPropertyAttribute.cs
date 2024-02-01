@@ -10,10 +10,15 @@ namespace GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes
         /// <summary>
         /// Shows a property in the Inspector
         /// </summary>
-        /// <param name="enabled">If true, will allow modification of an Auto-Property</param>
-        public ShowPropertyAttribute(bool enabled = false)
+        public ShowPropertyAttribute()
         {
-            Enabled = enabled;
+            Enabled = false;
         }
+
+        // <param name="enabled">If true, will allow modification of an Auto-Property</param>
+        // public ShowPropertyAttribute(bool enabled = false)
+        // {
+        //     Enabled = enabled;
+        // }
     }
 }

@@ -144,19 +144,25 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
         public static void LayoutProperty(SerializedObject serializedObject, PropertyInfo property)
         {
             
-            bool isVisible = PropertyUtility.IsVisible(property, serializedObject);
+            // bool isVisible = PropertyUtility.IsVisible(property, serializedObject);
+            //
+            // if (!isVisible) return;
+            //
+            // bool isEnabled = PropertyUtility.IsEnabled(property, serializedObject);
             
-            if (!isVisible) return;
-
-            bool isEnabled = PropertyUtility.IsEnabled(property, serializedObject);
+            // if (property.CanWrite)
+            // {
+            //     if (DrawWritableField(serializedObject.targetObject, property, isEnabled)) return;
+            //     
+            //     string warning = $"{nameof(ShowPropertyAttribute)} doesn't support {property.PropertyType.Name} types";
+            //     EditorGUILayout.HelpBox(warning, MessageType.Warning);
+            // } else if (!DrawNonWritableField(serializedObject.targetObject, property, isEnabled))
+            // {
+            //     string warning = $"{nameof(ShowPropertyAttribute)} doesn't support {property.PropertyType.Name} types";
+            //     EditorGUILayout.HelpBox(warning, MessageType.Warning);
+            // } 
             
-            if (property.CanWrite)
-            {
-                if (DrawWritableField(serializedObject.targetObject, property, isEnabled)) return;
-                
-                string warning = $"{nameof(ShowPropertyAttribute)} doesn't support {property.PropertyType.Name} types";
-                EditorGUILayout.HelpBox(warning, MessageType.Warning);
-            } else if (!DrawNonWritableField(serializedObject.targetObject, property, isEnabled))
+            if (!DrawNonWritableField(serializedObject.targetObject, property))
             {
                 string warning = $"{nameof(ShowPropertyAttribute)} doesn't support {property.PropertyType.Name} types";
                 EditorGUILayout.HelpBox(warning, MessageType.Warning);
