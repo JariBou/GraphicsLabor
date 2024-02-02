@@ -4,6 +4,7 @@ using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
 using GraphicsLabor.Scripts.Core.Tags;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GraphicsLabor.Samples.SampleScripts
 {
@@ -30,10 +31,10 @@ namespace GraphicsLabor.Samples.SampleScripts
         [SerializeField, HorizontalSeparator, TabProperty("")]
         private GameObject _invalidTab;
         [SerializeField, Scene] private GameObject _invalidScene;
-        [SerializeField] private bool _showButton;
+        [SerializeField] private bool _enableButton;
 
 
-        [Button, EnableIf(nameof(_showButton))]
+        [Button, EnableIf(nameof(_enableButton))]
         void DummyMethod()
         {
             Debug.Log("Clicked");
