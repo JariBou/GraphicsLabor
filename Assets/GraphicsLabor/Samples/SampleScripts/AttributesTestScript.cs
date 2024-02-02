@@ -30,6 +30,14 @@ namespace GraphicsLabor.Samples.SampleScripts
         [SerializeField, HorizontalSeparator, TabProperty("")]
         private GameObject _invalidTab;
         [SerializeField, Scene] private GameObject _invalidScene;
+        [SerializeField] private bool _showButton;
+
+
+        [Button, EnableIf(nameof(_showButton))]
+        void DummyMethod()
+        {
+            Debug.Log("Clicked");
+        }
     }
 
     public enum SceneType

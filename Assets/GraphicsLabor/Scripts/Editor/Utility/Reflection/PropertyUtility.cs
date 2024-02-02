@@ -7,6 +7,7 @@ using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.Utility;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
 {
@@ -54,6 +55,18 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
             }
 
             return (T[])fieldInfo.GetCustomAttributes(typeof(T), true);
+        }
+        
+        /// <summary>
+        /// Tries to retrieve the first attribute of type T from method
+        /// </summary>
+        /// <param name="methodInfo">The Method Info</param>
+        /// <typeparam name="T">Type of the attribute (can be inherited)</typeparam>
+        /// <returns></returns>
+        public static T GetAttribute<T>(MethodInfo methodInfo) where T : Attribute
+        {
+            T[] attributes = (T[])methodInfo.GetCustomAttributes<T>(true);
+            return attributes.Length > 0 ? attributes[0] : null;
         }
 
         #region Fields
@@ -320,6 +333,94 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
 
         #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// Returns whether or not a Method should be enabled in the inspector
+        /// </summary>
+        /// <param name="methodInfo">The MethodInfo</param>
+        /// <param name="target">The target object the method is part of</param>
+        /// <returns></returns>
+        public static bool IsEnabled(MethodInfo methodInfo, Object target)
+         {
+            bool enabled = false;
+            
+            EnableIfAttributeBase enableIfAttributeBase = GetAttribute<EnableIfAttributeBase>(methodInfo);
+            // There is no EnableIfAttributeBase Attribute so it is not enabled by default
+            if (enableIfAttributeBase != null)
+            {
+                if (enableIfAttributeBase.EnumValue != null) // First check if it is via enum
+                {
+                    Enum value = GetEnumValue(target, enableIfAttributeBase.Conditions[0]);
+                    if (value != null)
+                    {
+                        bool isRightEnum = enableIfAttributeBase.EnumValue.Equals(value);
+
+                        enabled |= enableIfAttributeBase.Inverted ? !isRightEnum : isRightEnum;
+                    }
+                }
+
+                // now we can check for "regular" conditions
+                List<bool> conditionValues = GetConditionValues(target, enableIfAttributeBase.Conditions);
+                if (conditionValues.Count > 0)
+                {
+                    bool isVisible = ParseConditions(conditionValues, enableIfAttributeBase.ConditionOperator,
+                        enableIfAttributeBase.Inverted);
+
+                    enabled |= isVisible;
+                }
+            }
+
+            ShowPropertyAttribute showPropertyAttribute = GetAttribute<ShowPropertyAttribute>(methodInfo);
+
+            if (showPropertyAttribute == null) return enabled;
+            
+            return enabled | showPropertyAttribute.Enabled;
+        }
+        
+        /// <summary>
+        /// Returns whether or not a Method should be visible in the inspector
+        /// </summary>
+        /// <param name="methodInfo">The MethodInfo</param>
+        /// <param name="target">The target object of the method</param>
+        /// <returns></returns>
+        public static bool IsVisible(MethodInfo methodInfo, Object target)
+        {
+            ShowIfAttributeBase showIfAttributeBase = GetAttribute<ShowIfAttributeBase>(methodInfo);
+
+            // There is no ShowIfAttributeBase Attribute so it is visible
+            if (showIfAttributeBase == null) return true;
+        
+            // We get the object where the property is go be able to get fields' values to check for conditions
+        
+            if (showIfAttributeBase.EnumValue != null) // First check if it is via enum
+            {
+                Enum value = GetEnumValue(target, showIfAttributeBase.Conditions[0]);
+                if (value != null)
+                {
+                    bool isRightEnum = showIfAttributeBase.EnumValue.Equals(value);
+        
+                    return showIfAttributeBase.Inverted ? !isRightEnum : isRightEnum;
+                }
+            }
+            
+            // now we can check for "regular" conditions
+            List<bool> conditionValues = GetConditionValues(target, showIfAttributeBase.Conditions);
+            if (conditionValues.Count > 0)
+            {
+                bool isVisible = ParseConditions(conditionValues, showIfAttributeBase.ConditionOperator,
+                    showIfAttributeBase.Inverted);
+        
+                return isVisible;
+            }
+            
+            // If we go here there is a problem
+            Debug.Log($"{showIfAttributeBase.GetType().Name} needs valid boolean or enum fields", target);
+            return false;
+        }
+
+        #endregion
+
         /// <summary>
         /// Parses given bool values according to a given ConditionOperator
         /// </summary>
@@ -491,5 +592,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
 
             return enumerator.Current;
         }
+
+
+        
     }
 }

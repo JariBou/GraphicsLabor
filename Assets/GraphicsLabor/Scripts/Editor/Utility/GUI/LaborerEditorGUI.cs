@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
+using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -32,7 +33,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
                     (ButtonAttribute)methodInfo.GetCustomAttributes(typeof(ButtonAttribute), true)[0];
                 
                 // TODO: see if show if Attribute can be used here
-                
+                if (!PropertyUtility.IsVisible(methodInfo, target)) return;
+
                 string buttonText = string.IsNullOrEmpty(buttonAttribute.Text)
                     ? ObjectNames.NicifyVariableName(methodInfo.Name)
                     : buttonAttribute.Text;
@@ -49,7 +51,12 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
                 {
                     buttonEnabled &= Application.isPlaying;
                 }
-                EditorGUI.BeginDisabledGroup(!buttonEnabled);
+
+                bool isEnabledViaAttribute = PropertyUtility.IsEnabled(methodInfo, target);
+                
+                GLogger.Log($"IsEnabled = {isEnabledViaAttribute}");
+                
+                EditorGUI.BeginDisabledGroup(!(buttonEnabled && isEnabledViaAttribute));
 
                 if (GUILayout.Button(buttonText, ButtonStyle))
                 {
