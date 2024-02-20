@@ -48,12 +48,17 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         /// <param name="saveAssets">If false, will not call AssetDatabase.SaveAssets()</param>
         public static void CreateAssetIfNeeded(Object obj, string path, bool saveAssets = true)
         {
-            Object assetAtPath = AssetDatabase.LoadAssetAtPath<Object>(path);
-
-            if (assetAtPath == null)
-            {
-                AssetDatabase.CreateAsset(obj, path);
-            }
+            CreateAssetIfNeeded<Object>(obj, path, saveAssets);
+        }
+        /// <summary>
+        /// Creates the asset at path if it cannot load it
+        /// </summary>
+        /// <param name="obj">Object to create if needed</param>
+        /// <param name="path">Path to create the object if needed</param>
+        /// <param name="saveAssets">If false, will not call AssetDatabase.SaveAssets()</param>
+        public static void CreateAssetAndOverride(Object obj, string path, bool saveAssets = true)
+        {
+            AssetDatabase.CreateAsset(obj, path);
 
             if (saveAssets)
             {

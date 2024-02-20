@@ -381,7 +381,7 @@ MonoBehaviour:
   _showProp3: 0
   _invalidTab: {fileID: 0}
   _invalidScene: {fileID: 0}
-  _showButton: 0
+  _enableButton: 0
 --- !u!4 &1126098480
 Transform:
   m_ObjectHideFlags: 0

@@ -182,7 +182,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         }
 
         /// <summary>
-        /// Returns the Nicifyed name of a temp SO without the "_temp" at the end if needed
+        /// Returns the Nicifyed name of a temp SO without the "_Temp" at the end if needed
         /// </summary>
         /// <param name="soName">The SO name to change</param>
         /// <returns></returns>
@@ -206,7 +206,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
             string soTypeName = obj.GetType().Name;
 
-            if (GetPossibleScriptableObjects().Exists(so => so.GetType().Name == soTypeName))
+            if (GetPossibleScriptableObjects().Exists(so => GetSoClassName(so) == soTypeName))
             {
                 SelectSo(soTypeName);
             }
@@ -219,12 +219,26 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         {
             ScriptableObject obj = _soNameAssetDic[_selectedSoTab];
             ScriptableObject so = CreateInstance(obj.GetType());
-            so.name = so.GetType().Name;
+            so.name = GetSoClassName(so);
             IOHelper.CreateFolder(GetSettings()._tempScriptableObjectsPath);
-            IOHelper.CreateAssetIfNeeded(so, $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset");
-            _soNameAssetDic[so.name] = so;
-            SelectSo(so.name);
+            IOHelper.CreateAssetAndOverride(so, $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset");
+            _soNameAssetDic[GetSoClassName(so)] = so;
+            SelectSo(GetSoClassName(so));
             GUI.FocusControl(null);
+            foreach (string key in _soNameAssetDic.Keys)
+            {
+                GLogger.Log($"Key: {key}");
+            }
+        }
+
+        /// <summary>
+        /// Returns the class name of the ScriptableObject
+        /// </summary>
+        /// <param name="scriptableObject"></param>
+        /// <returns></returns>
+        private string GetSoClassName(ScriptableObject scriptableObject)
+        {
+            return scriptableObject.GetType().Name;
         }
         
         protected override float DrawWithRect(Rect currentRect)
@@ -249,7 +263,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                     ScriptableObject obj = Instantiate(_soNameAssetDic[_selectedSoTab]);
                     string objName = tempPath.Split('/')[^1].Replace(".asset", "");
                     obj.name = objName;
-                    IOHelper.CreateAssetIfNeeded(obj, tempPath);
+                    IOHelper.CreateAssetAndOverride(obj, tempPath);
                 }
             }
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
@@ -266,9 +280,9 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         {
             if (_possibleSos != null && _possibleSos.Count != 0)
             {
-                foreach (ScriptableObject so in _possibleSos.Where(so => !_soNameAssetDic.ContainsKey(so.name)))
+                foreach (ScriptableObject so in _possibleSos.Where(so => !_soNameAssetDic.ContainsKey(GetSoClassName(so))))
                 {
-                    _soNameAssetDic.Add(so.name, so);
+                    _soNameAssetDic.Add(GetSoClassName(so), so);
                 }
                 return _possibleSos;
             }
@@ -287,7 +301,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 if (!type.IsSubclassOf(typeof(ScriptableObject)) || typesList.Contains(type)) continue;
                 
                 ScriptableObject so = CreateInstance(type);
-                so.name = so.GetType().Name;
+                so.name = GetSoClassName(so);
                     
                 string soPath = $"{GetSettings()._tempScriptableObjectsPath}/{so.name}_temp.asset";
                 IOHelper.CreateFolder(GetSettings()._tempScriptableObjectsPath);
@@ -296,7 +310,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 soPaths.Add(soPath);
                 _possibleSos.Add(so);
                 typesList.Add(type);
-                _soNameAssetDic.Add(so.name, so);
+                _soNameAssetDic.Add(GetSoClassName(so), so);
             }
             AssetDatabase.SaveAssets();
             
@@ -311,6 +325,5 @@ namespace GraphicsLabor.Scripts.Editor.Windows
 
             return _possibleSos;
         }
-        
     }
 }
