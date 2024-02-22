@@ -8,9 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED] - 2024-??-??
 
+
+
+## [4.0.2] - 2024-02-22
+
 ### Addded
 
 - Buttons now support ShowIfBase And EnableIfBase attributes
+
+### Fixed
+
+- So Creator now properly works
 
 
 
@@ -169,7 +177,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Code Refactoring
 
 
-[UNRELEASED]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.1...HEAD
+[UNRELEASED]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.2...HEAD
+[4.0.2]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/JariBou/GraphicsLabor/compare/v3.0.2...v4.0.0
 [3.0.2]: https://github.com/JariBou/GraphicsLabor/compare/v3.0.1...v3.0.2
