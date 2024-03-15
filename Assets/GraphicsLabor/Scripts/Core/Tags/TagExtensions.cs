@@ -12,7 +12,7 @@ namespace GraphicsLabor.Scripts.Core.Tags
         /// <param name="tags">Tags to test for</param>
         /// <returns></returns>
         /// <exception cref="MissingComponentException">Whenever the checked MonoBehaviour doesn't have a component implementing ITagHolder</exception>
-        public static bool HasExactTags(this MonoBehaviour self, LaborTags tags)
+        public static bool HasExactTags(this Component self, LaborTags tags)
         {
             ITagHolder component = self.GetComponent<ITagHolder>();
             if (component == null)
@@ -30,7 +30,7 @@ namespace GraphicsLabor.Scripts.Core.Tags
         /// <param name="tags">Tags to test for</param>
         /// <returns></returns>
         /// <exception cref="MissingComponentException">Whenever the checked MonoBehaviour doesn't have a component implementing ITagHolder</exception>
-        public static bool HasTags(this MonoBehaviour self, LaborTags tags)
+        public static bool HasTags(this Component self, LaborTags tags)
         {
             ITagHolder component = self.GetComponent<ITagHolder>();
             if (component == null)
@@ -50,7 +50,7 @@ namespace GraphicsLabor.Scripts.Core.Tags
         /// <param name="tags">Tags to test for</param>
         /// <returns></returns>
         /// <exception cref="MissingComponentException">Whenever the checked MonoBehaviour doesn't have a component implementing ITagHolder</exception>
-        public static bool HasOneOfTags(this MonoBehaviour self, LaborTags tags)
+        public static bool HasOneOfTags(this Component self, LaborTags tags)
         {
             ITagHolder component = self.GetComponent<ITagHolder>();
             if (component == null)
