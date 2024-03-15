@@ -139,6 +139,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 if (GUI.Button(buttonRect, key, EditorStyles.toolbarButton))
                 {
                     _selectedPropTab = key == _selectedPropTab ? "" : key;
+                    GUI.FocusControl(null);
                 }
 
                 GUI.backgroundColor = LaborerGUIUtility.BaseBackgroundColor;
