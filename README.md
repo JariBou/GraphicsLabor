@@ -10,7 +10,7 @@ Graphics labor is a unity package composed as of **v4.0.0** of 4 main parts:
 - LaborerEditor
 - LaborerTags
 It's main goal is to help Game Programmers and Game Designers to make a game.
-[![Doc files](https://img.shields.io/badge/Doc-8A2BE2)](https://github.com/JariBou/GraphicsLabor/tree/main/Assets/GraphicsLabor/Documentation)
+[![Doc files](https://img.shields.io/badge/Doc-8A2BE2)](https://github.com/JariBou/GraphicsLabor/tree/main/Assets/Documentation)
 
 > [!IMPORTANT]
 > DISCLAIMER: This package was made using Unity 2022.3.12f1.
