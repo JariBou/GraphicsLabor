@@ -13,7 +13,7 @@
     {
       "displayName": "Test Samples",
       "description": "Contains samples to test out Drawing and ScriptableObject features",
-      "path": "Samples"
+      "path": "Samples~"
     }
   ]
   

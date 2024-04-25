@@ -379,9 +379,6 @@ MonoBehaviour:
   _sceneInt: 0
   _uneditable: You can't edit this
   _showProp3: 0
-  <AutoProp1>k__BackingField: 0
-  <AutoProp2>k__BackingField: 0
-  <AutoProp3>k__BackingField: 0
   _invalidTab: {fileID: 0}
   _invalidScene: {fileID: 0}
   _enableButton: 0
@@ -414,28 +411,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _drawQuad: 0
   _quad:
-    _color:
-      r: 0.8867924
-      g: 0.4224813
-      b: 0.4224813
-      a: 1
+    _color: {r: 0.8867924, g: 0.4224813, b: 0.4224813, a: 1}
     _pointA: {x: -1, y: 1}
     _pointB: {x: 1, y: 1}
     _pointC: {x: 1, y: -1}
     _pointD: {x: -1, y: -1}
-  _quadBorderColor:
-    r: 0.6415094
-    g: 0
-    b: 0
-    a: 1
+  _quadBorderColor: {r: 0.6415094, g: 0, b: 0, a: 1}
   _quadLaborerDrawMode: 0
   _drawCube: 1
   _cube:
-    _color:
-      r: 0.2924528
-      g: 0
-      b: 0.29030246
-      a: 1
+    _color: {r: 0.2924528, g: 0, b: 0.29030246, a: 1}
     _pointA: {x: 1, y: 1, z: 1}
     _pointB: {x: 1, y: -1, z: 1}
     _pointC: {x: -1, y: -1, z: 1}
@@ -445,43 +430,23 @@ MonoBehaviour:
     _pointG: {x: -1, y: -1, z: -1}
     _pointH: {x: -1, y: 1, z: -1}
     _faces: []
-  _cubeBorderColor:
-    r: 0.1552063
-    g: 0.9716981
-    b: 0
-    a: 1
+  _cubeBorderColor: {r: 0.1552063, g: 0.9716981, b: 0, a: 1}
   _cubeLaborerDrawMode: 0
   _drawCircle: 0
   _circle:
-    _color:
-      r: 0.7264151
-      g: 0.6040372
-      b: 0.0034264945
-      a: 1
+    _color: {r: 0.7264151, g: 0.6040372, b: 0.0034264945, a: 1}
     _center: {x: 0, y: 0}
     _radius: 2
     _precision: 1
-  _circleBorderColor:
-    r: 0.11527586
-    g: 0.7169812
-    b: 0
-    a: 1
+  _circleBorderColor: {r: 0.11527586, g: 0.7169812, b: 0, a: 1}
   _circleLaborerDrawMode: 0
   _drawTriangle: 0
   _triangle:
-    _color:
-      r: 0
-      g: 0.4339623
-      b: 0.4339623
-      a: 1
+    _color: {r: 0, g: 0.4339623, b: 0.4339623, a: 1}
     _pointA: {x: 0, y: 1}
     _pointB: {x: -1, y: -1}
     _pointC: {x: 1, y: -1}
-  _triangleBorderColor:
-    r: 0
-    g: 0.7735849
-    b: 0.6143866
-    a: 1
+  _triangleBorderColor: {r: 0, g: 0.7735849, b: 0.6143866, a: 1}
   _triangleLaborerDrawMode: 0
   _drawPolygon: 0
   _polygonPoints:
@@ -494,11 +459,7 @@ MonoBehaviour:
   - {fileID: 4045760994267826557}
   - {fileID: 3234027138200674475}
   _polygon:
-    _color:
-      r: 0.65398544
-      g: 0.754717
-      b: 0.08187969
-      a: 1
+    _color: {r: 0.65398544, g: 0.754717, b: 0.08187969, a: 1}
     _points:
     - {x: -1.5906045, y: 0.91954124}
     - {x: -1.13, y: 2.19}
@@ -508,11 +469,7 @@ MonoBehaviour:
     - {x: -4.3106046, y: 0.34954125}
     - {x: -4.7906046, y: 0.91954124}
     - {x: -3.6606045, y: 1.4295412}
-  _polygonBorderColor:
-    r: 0
-    g: 0.044265814
-    b: 0.735849
-    a: 1
+  _polygonBorderColor: {r: 0, g: 0.044265814, b: 0.735849, a: 1}
   _polygonLaborerDrawMode: 0
 --- !u!4 &839026049232829200
 Transform:
