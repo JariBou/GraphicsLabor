@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [UNRELEASED] - 2024-??-??
 
 
+## [4.0.4] - 2024-04-25
+
+### Added
+
+- Samples folder in package.json so they should not be undeletable from you project when importing via github
+
 
 ## [4.0.3] - 2024-03-15
 
@@ -194,6 +200,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [UNRELEASED]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.3...HEAD
+[4.0.4]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.3...v4.0.4
 [4.0.3]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.2...v4.0.3
 [4.0.2]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/JariBou/GraphicsLabor/compare/v4.0.0...v4.0.1

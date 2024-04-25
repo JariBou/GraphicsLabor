@@ -1,6 +1,6 @@
 # Graphics Labor 
 
-![version](https://img.shields.io/badge/Version-4.0.3-blue)
+![version](https://img.shields.io/badge/Version-4.0.4-blue)
 [![license](https://img.shields.io/badge/License-GNU-green)](https://github.com/KSXGitHub/GPL-3.0)
 [![author](https://img.shields.io/badge/Author-JariBou-orange)](https://jaribou.github.io/)  
 ![unity](https://img.shields.io/badge/Unity-2022.3-blue)  
@@ -17,6 +17,24 @@ It's main goal is to help Game Programmers and Game Designers to make a game.
 > It has been tested from version 2022.3.8f1 up and there is no guarantee that it will work for any lower version.
 > Tests show compatibility with unity 2021.
 > Package under Review for publishing on the Unity Asset Store
+
+## Installation
+
+1. You can install the package in unity via the package manager by using this link:
+```
+https://github.com/JariBou/GraphicsLabor.git?path=/Assets/GraphicsLabor#main
+```
+2. You can choose the version you want to use by changing the target branch (also works with tags):
+```
+https://github.com/JariBou/GraphicsLabor.git?path=/Assets/GraphicsLabor#v4.0.3
+```
+3. You can download the last package version uploaded to github and manually import it:
+```
+https://github.com/JariBou/GraphicsLabor/releases/latest
+```
+
+
+## Overview
 
 ### GraphicLaborer:
 Provides simple solutions to draw shapes on the screen while in play mode. Works in both the editor and the build.  
@@ -54,6 +72,5 @@ Provides User-defined tags via the GL Settings window that can be used with a IT
 As well as a MonoBehaviour subclass that natively implements LaborTags:
 - LaborBehaviour
 
-## Overview
-*Coming Soon...*
+*Rest Coming Soon...*
 
