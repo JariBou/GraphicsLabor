@@ -15,20 +15,23 @@ It's main goal is to help Game Programmers and Game Designers to make a game.
 > [!IMPORTANT]
 > DISCLAIMER: This package was made using Unity 2022.3.12f1.
 > It has been tested from version 2022.3.8f1 up and there is no guarantee that it will work for any lower version.
-> Tests show compatibility with unity 2021.
-> Package under Review for publishing on the Unity Asset Store
+> Tests show compatibility with Unity 2021 and Unity 2023.
 
 ## Installation
 
-1. You can install the package in unity via the package manager by using this link:
+1. You can add the package to your assets from the Unity Asset Store:
+```
+https://assetstore.unity.com/packages/tools/utilities/graphicslabor-274494
+```
+2. You can install the package in unity via the package manager by using this link:
 ```
 https://github.com/JariBou/GraphicsLabor.git?path=/Assets/GraphicsLabor#main
 ```
-2. You can choose the version you want to use by changing the target branch (also works with tags):
+3. You can choose the version you want to use by changing the target branch (also works with tags):
 ```
 https://github.com/JariBou/GraphicsLabor.git?path=/Assets/GraphicsLabor#v4.0.3
 ```
-3. You can download the last package version uploaded to github and manually import it:
+4. You can download the last package version uploaded to github and manually import it:
 ```
 https://github.com/JariBou/GraphicsLabor/releases/latest
 ```
