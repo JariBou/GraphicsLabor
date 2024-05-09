@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED] - 2024-??-??
 
+### Added
+
+- SO Creator window: Vertical separator between SO Selection buttons and the editing space
+
+### Changed
+
+- Upgraded project's Unity version to 2023.2.10f1
+- "Save As" button is now anchored to the bottom of the SO Creator Window
+
+### Fixed
+
+- Label Attribute now properly works with ShowProperty Attribute
+- ShowIf and EnableIf Attributes now properly work with ShowProperty Attribute
+
+
 
 ## [4.0.4] - 2024-04-25
 

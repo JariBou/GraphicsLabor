@@ -3,7 +3,8 @@
 ![version](https://img.shields.io/badge/Version-4.0.4-blue)
 [![license](https://img.shields.io/badge/License-GNU-green)](https://github.com/KSXGitHub/GPL-3.0)
 [![author](https://img.shields.io/badge/Author-JariBou-orange)](https://jaribou.github.io/)  
-![unity](https://img.shields.io/badge/Unity-2022.3-blue)  
+![unity](https://img.shields.io/badge/Unity-2023.2-darkgreen)
+![unity](https://img.shields.io/badge/Unity-2022.3-darkgreen)   
 Graphics labor is a unity package composed as of **v4.0.0** of 4 main parts:
 - GraphicLaborer
 - LaborerAttributes
