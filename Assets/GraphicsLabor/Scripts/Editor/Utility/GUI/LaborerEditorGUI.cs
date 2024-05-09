@@ -309,7 +309,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             using (new EditorGUI.DisabledScope(disabled: !enabled))
             {
                 bool isDrawn = true;
-                string label = ObjectNames.NicifyVariableName(property.Name);
+                //string label = ObjectNames.NicifyVariableName(property.Name);
+                GUIContent label = PropertyUtility.GetLabel(property);
                 object value = property.GetValue(targetObject, null);
 
                 if (value == null)

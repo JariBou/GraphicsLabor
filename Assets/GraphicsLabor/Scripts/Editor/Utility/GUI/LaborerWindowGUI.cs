@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
+using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility.Reflection;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -388,7 +389,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
         {
             using (new EditorGUI.DisabledScope(disabled: !enabled))
             {
-                string label = ObjectNames.NicifyVariableName(property.Name);
+                //string label = ObjectNames.NicifyVariableName(property.Name);
+                GUIContent label = PropertyUtility.GetLabel(property);
                 bool isDrawn = true;
                 object value = property.GetValue(targetObject, null);
                 
@@ -511,7 +513,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             using (new EditorGUI.DisabledScope(disabled: !enabled))
             {
                 bool isDrawn = true;
-                string label = ObjectNames.NicifyVariableName(property.Name);
+                //string label = ObjectNames.NicifyVariableName(property.Name);
+                GUIContent label = PropertyUtility.GetLabel(property);
                 object value = property.GetValue(targetObject, null);
 
                 if (value == null)
