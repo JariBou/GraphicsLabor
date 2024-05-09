@@ -89,29 +89,63 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 Rect selectionTabRect = currentRect;
 
                 int tabSelectionWidth = 150;
-                selectionTabRect.width = tabSelectionWidth - 10;
-            
+                selectionTabRect.width = tabSelectionWidth - LaborerGUIUtility.VerticalSeparatorWidth;
+                selectionTabRect.y += CreateSoSelectionButtons(selectionTabRect);
+
                 currentRect.x = tabSelectionWidth;
-                currentRect.width -= tabSelectionWidth;
+
+                DrawVerticalSeparator(currentRect);
+
+                currentRect.width -= tabSelectionWidth - LaborerGUIUtility.VerticalSeparatorWidth*2;
+                currentRect.x += LaborerGUIUtility.VerticalSeparatorWidth*2;
             
                 Rect scrollViewRect = currentRect;
                 currentRect.width -= LaborerGUIUtility.ScrollBarWidth;
                 Rect viewRect = currentRect;
                 viewRect.height = _totalDrawnHeight;
-                scrollViewRect.height = position.height;
                 
-                selectionTabRect.y += CreateSoSelectionButtons(selectionTabRect);
+                Rect saveAsButtonRect = currentRect;
+                saveAsButtonRect.height = LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing*5;
+                saveAsButtonRect.y = position.height - saveAsButtonRect.height;
+                
+                scrollViewRect.height = saveAsButtonRect.y;
+                
             
                 // SO display
             
                 _scrollPos = GUI.BeginScrollView(scrollViewRect, _scrollPos, viewRect, alwaysShowVertical:true, alwaysShowHorizontal:false);
             
                 _totalDrawnHeight = DrawWithRect(currentRect);
-                _totalDrawnHeight += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing;
+                _totalDrawnHeight += LaborerGUIUtility.PropertyHeightSpacing*2;
             
                 GUI.EndScrollView();
+                
+                if (GUI.Button(saveAsButtonRect, "Save As"))
+                {
+                    //String tempPath = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
+                    string tempPath =
+                        EditorUtility.SaveFilePanelInProject("Save Asset", GetTempSoName(_selectedSoTab), "asset", "Enter the new SO Name");
+                    if (tempPath.StartsWith("Assets")) {
+                        //GetSettings()._tempScriptableObjectsPath = tempPath;
+                        ScriptableObject obj = Instantiate(_soNameAssetDic[_selectedSoTab]);
+                        string objName = tempPath.Split('/')[^1].Replace(".asset", "");
+                        obj.name = objName;
+                        IOHelper.CreateAssetAndOverride(obj, tempPath);
+                    }
+                }
+                saveAsButtonRect.y += LaborerGUIUtility.SingleLineHeight;
             }
             
+        }
+
+        private void DrawVerticalSeparator(Rect currentRect)
+        {
+            Rect verticalSeparatorRect = currentRect;
+            verticalSeparatorRect.width = LaborerGUIUtility.VerticalSeparatorWidth;
+            verticalSeparatorRect.height = position.height;
+            GUI.color = LaborerGUIUtility.VerticalSeparatorColor;
+            GUI.Box(verticalSeparatorRect, GUIContent.none);
+            GUI.color = LaborerGUIUtility.BaseBackgroundColor;
         }
 
         /// <summary>
@@ -249,20 +283,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
                 currentRect.y += DrawScriptableObjectWithRect(currentRect, _selectedScriptableObject);
             }
             
-            if (GUI.Button(currentRect, "Save As"))
-            {
-                //String tempPath = EditorUtility.OpenFolderPanel("Save ScriptableObject at:", "", "");
-                string tempPath =
-                    EditorUtility.SaveFilePanelInProject("Save Asset", GetTempSoName(_selectedSoTab), "asset", "Enter the new SO Name");
-                if (tempPath.StartsWith("Assets")) {
-                    //GetSettings()._tempScriptableObjectsPath = tempPath;
-                    ScriptableObject obj = Instantiate(_soNameAssetDic[_selectedSoTab]);
-                    string objName = tempPath.Split('/')[^1].Replace(".asset", "");
-                    obj.name = objName;
-                    IOHelper.CreateAssetAndOverride(obj, tempPath);
-                }
-            }
-            currentRect.y += LaborerGUIUtility.SingleLineHeight;
+            
             
             return currentRect.y;
         }

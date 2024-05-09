@@ -9,6 +9,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
     public static class LaborerGUIUtility
     {
         public static float ScrollBarWidth => 16;
+        public static float VerticalSeparatorWidth => 4;
         public static float SingleLineHeight => EditorGUIUtility.singleLineHeight;
         public static float PropertyHeightSpacing => SingleLineHeight * 0.1f;
         public static float LineSeparatorSpacing => SingleLineHeight / 3f;
@@ -21,6 +22,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             public static Color SelectedTabColor => new (0.5f, 0.5f, 0.5f, 1f);
             public static Color SelectedSoTabColor => new (0.7f, 0.7f, 0.7f, 1f);
             public static Color BaseBackgroundColor => new(0.9f, 0.9f, 0.9f);
+            public static Color VerticalSeparatorColor => new(0.4f, 0.4f, 0.4f);
         #endregion
     }
 }
