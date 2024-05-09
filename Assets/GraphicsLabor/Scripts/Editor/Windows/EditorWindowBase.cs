@@ -158,6 +158,8 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             }
             yOffset += LaborerGUIUtility.PropertyHeightSpacing;
             
+            if (tabs.Any()) yOffset += LaborerGUIUtility.SingleLineHeight + LaborerGUIUtility.PropertyHeightSpacing*2;
+
             serializedObject.ApplyModifiedProperties();
             return yOffset;
         }
