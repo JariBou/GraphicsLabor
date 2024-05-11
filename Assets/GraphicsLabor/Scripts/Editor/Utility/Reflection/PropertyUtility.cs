@@ -370,6 +370,10 @@ namespace GraphicsLabor.Scripts.Editor.Utility.Reflection
                     enabled |= isVisible;
                 }
             }
+            else
+            {
+                enabled = true;
+            }
 
             ShowPropertyAttribute showPropertyAttribute = GetAttribute<ShowPropertyAttribute>(methodInfo);
 
