@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text;
 using GraphicsLabor.Scripts.Core.Settings;
-using GraphicsLabor.Scripts.Core.Utility;
 using UnityEditor;
 
 namespace GraphicsLabor.Scripts.Editor.Utility

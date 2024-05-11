@@ -14,6 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tempScriptableObjectsPath: Assets/GraphicsLabor/Generated/ScriptableObjects
   _tagsPath: Assets/GraphicsLabor/Scripts/Core/Tags
+  _defaultEnumsPath: Assets/GraphicsLabor/Generated/Enums
   _tags:
   - Entity
   - Player
+  _enums:
+  - _enumNames: []
+    _enumClassName: 
+    _isFlag: 0
+    _enumSpace: 
