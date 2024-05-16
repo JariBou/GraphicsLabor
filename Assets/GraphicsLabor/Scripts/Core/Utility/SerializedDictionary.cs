@@ -10,7 +10,7 @@ namespace GraphicsLabor.Scripts.Core.Utility
     {
         [SerializeField] internal List<SerializedKeyValuePair<TKey, TValue>> SerializedKeyValues = new();
 #if UNITY_EDITOR
-        [SerializeField] internal bool _drawElementsAsFoldout;
+        [SerializeField] internal DictionaryDrawStyle _drawElementsAsFoldout;
 #endif
         
         
@@ -166,4 +166,11 @@ namespace GraphicsLabor.Scripts.Core.Utility
             Value = value;
         }
     }
+    
+    #if UNITY_EDITOR
+    internal enum DictionaryDrawStyle
+    {
+        Element, Foldout
+    }
+    #endif
 }

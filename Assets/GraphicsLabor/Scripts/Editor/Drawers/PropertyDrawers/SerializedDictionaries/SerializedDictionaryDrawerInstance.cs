@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility.GUI;
 using GraphicsLabor.Scripts.Editor.Utility.Reflection;
 using UnityEditor;
@@ -64,26 +65,34 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
 
         private void OnDrawHeader(Rect rect)
         {
-            EditorGUI.LabelField(rect, _cachedLabel);
+            
+            Rect labelRect = new()
+            {
+                x = rect.x,
+                y = rect.y,
+                width = rect.width*0.7f,
+                height = LaborerGUIUtility.SingleLineHeight
+            };
+            
+            EditorGUI.LabelField(labelRect, _cachedLabel);
+            
+            Rect optionRect = new()
+            {
+                x = rect.width*0.7f,
+                y = rect.y,
+                width = rect.width*0.35f,
+                height = LaborerGUIUtility.SingleLineHeight
+            };
+            
+            GUIContent enumPopupTooltip = GUIContent.none;
+            enumPopupTooltip.tooltip = "How to draw this Dictionary's elements";
+            
+            _drawAsFoldout.enumValueIndex = (int)(DictionaryDrawStyle)EditorGUI.EnumPopup(optionRect, (DictionaryDrawStyle)_drawAsFoldout.enumValueIndex);
+
         }
 
         private void OnDrawFooter(Rect rect)
         {
-            Rect optionRect = new()
-            {
-                x = rect.x,
-                y = rect.y,
-                width = rect.width * 0.7f,
-                height = LaborerGUIUtility.SingleLineHeight
-            };
-
-            GUIContent optionContent = new ("Draw Elements as foldout")
-            {
-                tooltip = "Whether or not to draw this dictionary's elements as foldouts"
-            };
-
-            _drawAsFoldout.boolValue = EditorGUI.Toggle(optionRect, optionContent, _drawAsFoldout.boolValue);
-            
             ReorderableList.defaultBehaviours.DrawFooter(rect, _reorderableList);
         }
 
@@ -122,6 +131,8 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             int length = _propertyList.arraySize;
             _propertyList.InsertArrayElementAtIndex(length);
         }
+        
+        
         
     }
 }
