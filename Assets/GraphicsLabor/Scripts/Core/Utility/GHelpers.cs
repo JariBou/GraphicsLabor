@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Core.Utility
 {
@@ -33,6 +34,24 @@ namespace GraphicsLabor.Scripts.Core.Utility
             }
 
             return concatenatedList;
+        }
+        
+        public static bool AreKeysEqual<TKey>(TKey key, object otherKey)
+        {
+            return (object)key == otherKey || key.Equals(otherKey);
+        }
+        
+        public static bool IsKeyValid(object key)
+        {
+            // we catch this error if we are not on the main thread and simply return false as we assume the object is null
+            try
+            {
+                return !(key == null || (key is Object unityObject && unityObject == null));
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

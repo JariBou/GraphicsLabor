@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
+using GraphicsLabor.Scripts.Core.Utility;
 using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Core.Settings
@@ -29,16 +30,24 @@ namespace GraphicsLabor.Scripts.Core.Settings
         [SerializeField] private string _enumClassName;
         [SerializeField, Tooltip("Leave blank for no namespace")] private string _enumSpace;
         [SerializeField] private bool _isFlag;
-        [SerializeField] private List<string> _enumNames;
+        [SerializeField] private SerializedDictionary<string, int> _enumNamesAndValues;
             
         public string EnumClassName => _enumClassName;
         public string EnumSpace => _enumSpace;
         public bool IsFlag => _isFlag;
-        public List<string> EnumNames => _enumNames;
+        public SerializedDictionary<string, int> EnumNames => _enumNamesAndValues;
             
-        public EnumSettings(List<string> enumNames, string enumClassName, bool isFlag = false, string enumSpace = null)
+        public EnumSettings(SerializedDictionary<string, int> enumNames, string enumClassName, bool isFlag = false, string enumSpace = null)
         {
-            _enumNames = enumNames;
+            _enumNamesAndValues = enumNames;
+            _enumClassName = enumClassName;
+            _isFlag = isFlag;
+            _enumSpace = enumSpace;
+        }
+        
+        public EnumSettings(Dictionary<string, int> enumNames, string enumClassName, bool isFlag = false, string enumSpace = null)
+        {
+            _enumNamesAndValues = new SerializedDictionary<string, int>(enumNames);
             _enumClassName = enumClassName;
             _isFlag = isFlag;
             _enumSpace = enumSpace;

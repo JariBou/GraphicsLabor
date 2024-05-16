@@ -19,7 +19,17 @@ MonoBehaviour:
   - Entity
   - Player
   _enums:
-  - _enumNames: []
-    _enumClassName: 
-    _isFlag: 0
+  - _enumClassName: 
     _enumSpace: 
+    _isFlag: 0
+    _enumNamesAndValues:
+      SerializedKeyValues:
+      - Key: 
+        Value: 0
+      - Key: 
+        Value: 0
+  - _enumClassName: 
+    _enumSpace: 
+    _isFlag: 0
+    _enumNamesAndValues:
+      SerializedKeyValues: []
