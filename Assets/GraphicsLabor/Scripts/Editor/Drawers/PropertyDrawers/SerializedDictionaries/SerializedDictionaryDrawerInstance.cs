@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using GraphicsLabor.Scripts.Core.Settings;
 using GraphicsLabor.Scripts.Editor.Utility.GUI;
 using GraphicsLabor.Scripts.Editor.Utility.Reflection;
 using UnityEditor;
@@ -12,23 +11,26 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
     public class SerializedDictionaryDrawerInstance
     {
         private ReorderableList _reorderableList;
-        private SerializedProperty _listProperty;
         private readonly SerializedProperty _property;
-        private SerializedProperty _propertyList;
+        private readonly SerializedProperty _propertyList;
+        private readonly SerializedProperty _drawAsFoldout;
+        private readonly GUIContent _cachedLabel;
+        
         private Dictionary<int, bool> _foldoutStates = new ();
-        private SerializedProperty _drawAsFoldout;
+
 
         public SerializedDictionaryDrawerInstance(SerializedProperty property)
         {
             _property = property;
             _propertyList = property.FindPropertyRelative("SerializedKeyValues");
             _drawAsFoldout = property.FindPropertyRelative("_drawElementsAsFoldout");
+            _cachedLabel = PropertyUtility.GetLabel(property);
         }
         
-        public void DoGUI(Rect rect, GUIContent label)
+        public void DoGUI(Rect rect)
         {
             rect.height = LaborerGUIUtility.SingleLineHeight;
-            EditorGUI.BeginProperty(rect, PropertyUtility.GetLabel(_property), _property);
+            EditorGUI.BeginProperty(rect, _cachedLabel, _property);
             
             GetReorderableList(_property).DoList(rect);
             
@@ -41,17 +43,15 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             return GetReorderableList(_property).GetHeight();
         }
 
-        protected ReorderableList GetReorderableList(SerializedProperty property)
+        private ReorderableList GetReorderableList(SerializedProperty property)
         {
             if (_reorderableList != null) return _reorderableList;
             
             _reorderableList = new ReorderableList(property.serializedObject, _propertyList);
-            _reorderableList.onAddCallback += OnAdd;
             
-            _reorderableList.drawHeaderCallback = (Rect rect) =>
-            {
-                EditorGUI.LabelField(rect, PropertyUtility.GetLabel(property));
-            };
+            _reorderableList.onAddCallback += OnAdd;
+
+            _reorderableList.drawHeaderCallback = OnDrawHeader;
             
             _reorderableList.drawElementCallback += OnDrawElement;
 
@@ -62,9 +62,13 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             return _reorderableList;
         }
 
+        private void OnDrawHeader(Rect rect)
+        {
+            EditorGUI.LabelField(rect, _cachedLabel);
+        }
+
         private void OnDrawFooter(Rect rect)
         {
-
             Rect optionRect = new()
             {
                 x = rect.x,
@@ -73,7 +77,12 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
                 height = LaborerGUIUtility.SingleLineHeight
             };
 
-            _drawAsFoldout.boolValue = EditorGUI.Toggle(optionRect, "Draw Elements as foldout", _drawAsFoldout.boolValue);
+            GUIContent optionContent = new ("Draw Elements as foldout")
+            {
+                tooltip = "Whether or not to draw this dictionary's elements as foldouts"
+            };
+
+            _drawAsFoldout.boolValue = EditorGUI.Toggle(optionRect, optionContent, _drawAsFoldout.boolValue);
             
             ReorderableList.defaultBehaviours.DrawFooter(rect, _reorderableList);
         }

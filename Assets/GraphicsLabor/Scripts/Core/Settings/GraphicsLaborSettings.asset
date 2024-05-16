@@ -18,7 +18,6 @@ MonoBehaviour:
   _tags:
   - Entity
   - Player
-  _drawDictionariesAsFoldouts: 0
   _enums:
   - _enumClassName: 
     _enumSpace: 

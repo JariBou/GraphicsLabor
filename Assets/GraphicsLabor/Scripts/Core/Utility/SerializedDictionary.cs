@@ -9,7 +9,9 @@ namespace GraphicsLabor.Scripts.Core.Utility
     public class SerializedDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
         [SerializeField] internal List<SerializedKeyValuePair<TKey, TValue>> SerializedKeyValues = new();
+#if UNITY_EDITOR
         [SerializeField] internal bool _drawElementsAsFoldout;
+#endif
         
         
         public SerializedDictionary(SerializedDictionary<TKey, TValue> serializedDictionary) : base(serializedDictionary)

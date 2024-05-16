@@ -8,20 +8,20 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
     [CustomPropertyDrawer(typeof(SerializedDictionary<,>))]
     public class SerializedDictionaryDrawer : PropertyDrawerBase
     {
-        private Dictionary<string, SerializedDictionaryDrawerInstance> _drawers = new ();
+        private readonly Dictionary<string, SerializedDictionaryDrawerInstance> _drawers = new ();
         
         protected override void OnSelfGUI(Rect rect, SerializedProperty property, GUIContent label)
         {
-            GetInstanceFor(property).DoGUI(rect, label);
+            GetDrawerInstanceFor(property).DoGUI(rect);
         }
 
         protected override float GetSelfPropertyHeight(SerializedProperty property, GUIContent label)
         {
            
-            return GetInstanceFor(property).GetHeight();
+            return GetDrawerInstanceFor(property).GetHeight();
         }
 
-        private SerializedDictionaryDrawerInstance GetInstanceFor(SerializedProperty property)
+        private SerializedDictionaryDrawerInstance GetDrawerInstanceFor(SerializedProperty property)
         {
             if (!_drawers.ContainsKey(property.propertyPath))
             {
