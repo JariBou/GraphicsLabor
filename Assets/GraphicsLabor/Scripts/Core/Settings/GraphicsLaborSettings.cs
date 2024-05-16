@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.ScriptableObjectAttributes;
 using GraphicsLabor.Scripts.Core.Utility;
+using UnityEditor;
 using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Core.Settings
 {
     public class GraphicsLaborSettings : ScriptableObject
     {
+        public static readonly string DrawDictionariesAsFoldouts = "Dictionaries:draw_as_foldout";
+        
         [Label("Buffer SO Path"), ReadOnly] public string _tempScriptableObjectsPath = "Assets/GraphicsLabor/Generated/ScriptableObjects"; 
         [Label("Tags Path"), ReadOnly] public string _tagsPath = "Assets/GraphicsLabor/Scripts/Core/Tags"; // For now let it be default, will see if there is any use to modifying its location
         [Label("Default Enum Path")] public string _defaultEnumsPath = "Assets/GraphicsLabor/Generated/Enums"; 
         [Tooltip("Can contain up to 31 custom tags, an object can hold multiple LaborerTags")] public List<string> _tags;
+        [Tooltip("Whether or not to draw SerializedDictionaries elements as foldouts")] public bool _drawDictionariesAsFoldouts;
         public List<EnumSettings> _enums;
         
         private void OnValidate()
@@ -21,6 +25,8 @@ namespace GraphicsLabor.Scripts.Core.Settings
             {
                 _tags.RemoveAt(_tags.Count-1);
             }
+            
+            EditorPrefs.SetBool(DrawDictionariesAsFoldouts, _drawDictionariesAsFoldouts);
         }
     }
     

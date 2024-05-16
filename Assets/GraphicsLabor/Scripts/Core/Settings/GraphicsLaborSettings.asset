@@ -18,7 +18,18 @@ MonoBehaviour:
   _tags:
   - Entity
   - Player
+  _drawDictionariesAsFoldouts: 0
   _enums:
+  - _enumClassName: 
+    _enumSpace: 
+    _isFlag: 0
+    _enumNamesAndValues:
+      SerializedKeyValues:
+      - Key: d
+        Value: 25
+      - Key: 
+        Value: 0
+      _drawElementsAsFoldout: 1
   - _enumClassName: 
     _enumSpace: 
     _isFlag: 0
@@ -28,8 +39,6 @@ MonoBehaviour:
         Value: 0
       - Key: 
         Value: 0
-  - _enumClassName: 
-    _enumSpace: 
-    _isFlag: 0
-    _enumNamesAndValues:
-      SerializedKeyValues: []
+      - Key: 
+        Value: 0
+      _drawElementsAsFoldout: 0

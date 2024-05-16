@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
@@ -418,6 +419,78 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
         }
 
         #endregion
+
+        #region Dictionaries
+
+        public static void DictionaryPropertyField(Rect rect, SerializedProperty property, bool includeChildren)
+        {
+            Rect labelRect = new()
+            {
+                x = rect.x,
+                y = rect.y,
+                width = rect.width * 0.3f,
+                height = rect.height
+            };
+            
+            Rect inputRect = new()
+            {
+                x = rect.x + labelRect.width,
+                y = rect.y,
+                width = rect.width * 0.7f,
+                height = rect.height
+            };
+            
+            EditorGUI.LabelField(labelRect, PropertyUtility.GetLabel(property));
+            EditorGUI.PropertyField(inputRect, property, GUIContent.none, includeChildren);
+        }
+
+        public static void DrawKeyValuePairField(Rect rect, SerializedProperty key, SerializedProperty value)
+        {
+            Rect keyRect = new()
+            {
+                x = rect.x,
+                y = rect.y,
+                width = rect.width * 0.49f,
+                height = rect.height
+            };
+
+            Rect valueRect = new()
+            {
+                x = rect.x + keyRect.width + rect.width * 0.02f,
+                y = rect.y,
+                width = rect.width * 0.49f,
+                height = rect.height
+            };
+
+            DictionaryPropertyField(keyRect, key, true);
+            DictionaryPropertyField(valueRect, value, true);
+        }
+        
+        public static void DrawDictionaryElement(Rect rect, SerializedProperty key, SerializedProperty value, int index)
+        {
+            GUIContent label = new($"Element {index.ToString()}");
+            EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), label);
+            rect.y += LaborerGUIUtility.SingleLineHeight;
+            rect.height = LaborerGUIUtility.SingleLineHeight;
+            DrawKeyValuePairField(rect, key, value);
+        }
+
+        public static void DrawDictionaryElementAsFoldout(Rect rect, SerializedProperty key, SerializedProperty value,
+            int index, ref Dictionary<int, bool> foldoutStates)
+        {
+            GUIContent label = new($"Element {index.ToString()}");
+            
+            foldoutStates[index] = EditorGUI.BeginFoldoutHeaderGroup(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), foldoutStates.GetValueOrDefault(index, false), label, EditorStyles.foldout);
+            EditorGUI.EndFoldoutHeaderGroup();
+
+            if (!foldoutStates[index]) return;
+            
+            rect.y += LaborerGUIUtility.SingleLineHeight;
+            rect.height = LaborerGUIUtility.SingleLineHeight;
+            DrawKeyValuePairField(rect, key, value);
+        }
+
+        #endregion
         
         /// <summary>
         /// Draws an horizontal line in the editor
@@ -474,5 +547,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
 
             return indentLength;
         }
+
+       
     }
 }
