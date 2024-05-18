@@ -490,6 +490,19 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             DrawKeyValuePairField(rect, key, value);
         }
 
+        public static TEnum DrawEnumPopup<TEnum>(Rect rect, TEnum enumValue, string tooltipText = null) where TEnum : Enum
+        {
+            TEnum value = (TEnum)EditorGUI.EnumPopup(rect, enumValue);
+
+            if (tooltipText != null)
+            {
+                EditorGUI.LabelField(rect, new GUIContent("", tooltipText));
+            }
+
+            return value;
+
+        }
+
         #endregion
         
         /// <summary>

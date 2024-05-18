@@ -84,11 +84,9 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
                 height = LaborerGUIUtility.SingleLineHeight
             };
             
-            GUIContent enumPopupTooltip = GUIContent.none;
-            enumPopupTooltip.tooltip = "How to draw this Dictionary's elements";
+            string tooltipText = "How to draw this Dictionary's elements";
             
-            _drawAsFoldout.enumValueIndex = (int)(DictionaryDrawStyle)EditorGUI.EnumPopup(optionRect, (DictionaryDrawStyle)_drawAsFoldout.enumValueIndex);
-
+            _drawAsFoldout.enumValueIndex = (int)LaborerEditorGUI.DrawEnumPopup(optionRect, (DictionaryDrawStyle)_drawAsFoldout.enumValueIndex, tooltipText);
         }
 
         private void OnDrawFooter(Rect rect)
