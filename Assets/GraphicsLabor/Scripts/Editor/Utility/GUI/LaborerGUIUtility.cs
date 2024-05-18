@@ -17,12 +17,17 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
         public static float MinHelpBoxHeight => SingleLineHeight;
         public static float CurrentViewWidth => EditorGUIUtility.currentViewWidth;
         public static float SoSelectionButtonHeight => SingleLineHeight + PropertyHeightSpacing*3;
+        public static float DictionaryHandleWidth => 20;
+        public static float DictionaryElementTrailingWidth => 6;
 
         #region Colors
             public static Color SelectedTabColor => new (0.5f, 0.5f, 0.5f, 1f);
             public static Color SelectedSoTabColor => new (0.7f, 0.7f, 0.7f, 1f);
             public static Color BaseBackgroundColor => new(0.9f, 0.9f, 0.9f);
             public static Color VerticalSeparatorColor => new(0.4f, 0.4f, 0.4f);
+            public static Color EvenDictionaryElementBackgroundColor => new(1f, 1f, 1f, 0f);
+            public static Color OddDictionaryElementBackgroundColor => new(0.8f, 0.8f, 0.8f, 1f);
+            public static Color DictionarySelectedElementBackgroundColor => new(0f, 0f, 1f, 1f);
         #endregion
     }
 }

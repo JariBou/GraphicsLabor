@@ -128,6 +128,7 @@ namespace GraphicsLabor.Scripts.Core.Utility
         public void OnBeforeSerialize()
         {
 #if UNITY_EDITOR
+            SerializedKeyValues ??= new List<SerializedKeyValuePair<TKey, TValue>>();
             if (SerializedKeyValues.Count == 0 && Count > 0) GenerateSerializedList();
 #else
             SerializedKeyValues.Clear();

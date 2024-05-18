@@ -56,6 +56,8 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             
             _reorderableList.drawElementCallback += OnDrawElement;
 
+            _reorderableList.drawElementBackgroundCallback += OnDrawElementBackground;
+            
             _reorderableList.elementHeightCallback += OnElementHeight;
 
             _reorderableList.drawFooterCallback += OnDrawFooter;
@@ -63,9 +65,22 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             return _reorderableList;
         }
 
+        private void OnDrawElementBackground(Rect rect, int index, bool isactive, bool isfocused)
+        {
+            Color prevColor = GUI.color;
+            if (isfocused)
+            {
+                GUI.color = LaborerGUIUtility.DictionarySelectedElementBackgroundColor;
+            }
+            
+            GUI.Box(rect, GUIContent.none);
+
+            GUI.color = prevColor;
+            // ReorderableList.defaultBehaviours.DrawElementBackground(rect, index, isactive, isfocused, true);
+        }
+
         private void OnDrawHeader(Rect rect)
         {
-            
             Rect labelRect = new()
             {
                 x = rect.x,
@@ -115,6 +130,23 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             SerializedProperty key = _propertyList.GetArrayElementAtIndex(index).FindPropertyRelative("Key");
             SerializedProperty value = _propertyList.GetArrayElementAtIndex(index).FindPropertyRelative("Value");
 
+            if (!isfocused)
+            {
+                Color prevColor = GUI.color;
+                GUI.color = index % 2 == 0
+                    ? LaborerGUIUtility.EvenDictionaryElementBackgroundColor
+                    : LaborerGUIUtility.OddDictionaryElementBackgroundColor;
+                Rect boxRect = new()
+                {
+                    x = rect.x - LaborerGUIUtility.DictionaryHandleWidth,
+                    y = rect.y,
+                    width = rect.width + LaborerGUIUtility.DictionaryHandleWidth + LaborerGUIUtility.DictionaryElementTrailingWidth,
+                    height = OnElementHeight(index) + LaborerGUIUtility.PropertyHeightSpacing
+                };
+                GUI.Box(boxRect, GUIContent.none);
+                GUI.color = prevColor;
+            }
+            
             if (_drawAsFoldout.boolValue)
             {
                 LaborerEditorGUI.DrawDictionaryElementAsFoldout(rect, key, value, index, ref _foldoutStates);

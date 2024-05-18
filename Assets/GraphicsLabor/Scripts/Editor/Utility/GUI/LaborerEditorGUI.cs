@@ -428,7 +428,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             {
                 x = rect.x,
                 y = rect.y,
-                width = rect.width * 0.3f,
+                width = rect.width * 0.2f,
                 height = rect.height
             };
             
@@ -436,12 +436,52 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             {
                 x = rect.x + labelRect.width,
                 y = rect.y,
-                width = rect.width * 0.7f,
+                width = rect.width * 0.8f,
                 height = rect.height
             };
             
             EditorGUI.LabelField(labelRect, PropertyUtility.GetLabel(property));
-            EditorGUI.PropertyField(inputRect, property, GUIContent.none, includeChildren);
+            if (property.hasVisibleChildren)
+            {
+                EditorGUI.PropertyField(inputRect, property, new GUIContent(property.type), includeChildren);
+                return;
+                float totalHeight = 0; // = EditorGUI.GetPropertyHeight(property, includeChildren: true) - LaborerGUIUtility.SingleLineHeight;
+                
+                var enumerator = property.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    SerializedProperty prop = enumerator.Current as SerializedProperty;
+                    totalHeight += EditorGUI.GetPropertyHeight(prop);
+                }
+                
+                GLogger.Log(totalHeight.ToString());
+                Rect totalRect = new()
+                {
+                    x = inputRect.x,
+                    y = inputRect.y,
+                    width = inputRect.width,
+                    height = totalHeight
+                };
+                //EditorGUI.BeginProperty(totalRect, GUIContent.none, property);
+                var enumerator2 = property.GetEnumerator();
+                
+                while (enumerator2.MoveNext())
+                {
+                    SerializedProperty prop = enumerator2.Current as SerializedProperty;
+                    //Debug.Log(prop.propertyPath + " : " + prop.floatValue);
+                    
+                    GLogger.Log($"{prop.name} | {prop.depth}");
+                    EditorGUI.PropertyField(inputRect, prop, PropertyUtility.GetLabel(prop), includeChildren);
+                    inputRect.y += LaborerGUIUtility.SingleLineHeight;
+                }
+                //EditorGUI.EndProperty();
+                
+                // GLogger.Log($"{property.type} | {property.hasVisibleChildren}");
+            }
+            else
+            {
+                EditorGUI.PropertyField(inputRect, property, GUIContent.none, includeChildren);
+            }
         }
 
         public static void DrawKeyValuePairField(Rect rect, SerializedProperty key, SerializedProperty value)
@@ -469,7 +509,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
         public static void DrawDictionaryElement(Rect rect, SerializedProperty key, SerializedProperty value, int index)
         {
             GUIContent label = new($"Element {index.ToString()}");
-            EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), label);
+            EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, LaborerGUIUtility.SingleLineHeight), label);
             rect.y += LaborerGUIUtility.SingleLineHeight;
             rect.height = LaborerGUIUtility.SingleLineHeight;
             DrawKeyValuePairField(rect, key, value);
@@ -480,7 +520,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
         {
             GUIContent label = new($"Element {index.ToString()}");
             
-            foldoutStates[index] = EditorGUI.BeginFoldoutHeaderGroup(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), foldoutStates.GetValueOrDefault(index, false), label, EditorStyles.foldout);
+            foldoutStates[index] = EditorGUI.BeginFoldoutHeaderGroup(new Rect(rect.x, rect.y, rect.width, LaborerGUIUtility.SingleLineHeight), foldoutStates.GetValueOrDefault(index, false), label, EditorStyles.foldout);
             EditorGUI.EndFoldoutHeaderGroup();
 
             if (!foldoutStates[index]) return;
