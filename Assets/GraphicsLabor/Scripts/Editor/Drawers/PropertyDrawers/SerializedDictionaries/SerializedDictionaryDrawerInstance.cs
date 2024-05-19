@@ -102,6 +102,8 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             string tooltipText = "How to draw this Dictionary's elements";
             
             _drawStyleProperty.enumValueIndex = (int)LaborerEditorGUI.DrawEnumPopup(optionRect, (DictionaryDrawStyle)_drawStyleProperty.enumValueIndex, tooltipText);
+            // _drawStyleProperty.enumValueIndex = GEditorHelpers.GetEnumIndex(_drawStyleProperty, LaborerEditorGUI.DrawEnumPopup(optionRect,
+            //     (DictionaryDrawStyle)_drawStyleProperty.enumValueIndex, tooltipText));
         }
 
         private void OnDrawFooter(Rect rect)
@@ -151,13 +153,21 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
                 GUI.color = prevColor;
             }
             
-            if (GEditorHelpers.IsEnumEqual(_drawStyleProperty, DictionaryDrawStyle.Foldout))
+            if (_drawStyleProperty.IsEnumValue(DictionaryDrawStyle.Foldout))
             {
                 LaborerEditorGUI.DrawDictionaryElementAsFoldout(rect, key, value, index, ref _foldoutStates);
             } else
             {
                 LaborerEditorGUI.DrawDictionaryElement(rect, key, value, index);
             }
+            
+            // if (GEditorHelpers.IsEnumEqual(_drawStyleProperty, DictionaryDrawStyle.Foldout))
+            // {
+            //     LaborerEditorGUI.DrawDictionaryElementAsFoldout(rect, key, value, index, ref _foldoutStates);
+            // } else
+            // {
+            //     LaborerEditorGUI.DrawDictionaryElement(rect, key, value, index);
+            // }
             
             // if ((DictionaryDrawStyle)_drawAsFoldout.enumValueIndex == DictionaryDrawStyle.Foldout)
             // {
@@ -173,8 +183,5 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             int length = _propertyList.arraySize;
             _propertyList.InsertArrayElementAtIndex(length);
         }
-        
-        
-        
     }
 }
