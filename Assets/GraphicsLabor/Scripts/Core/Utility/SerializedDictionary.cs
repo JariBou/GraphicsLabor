@@ -2,24 +2,25 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GraphicsLabor.Scripts.Core.Utility
 {
     [Serializable]
     public class SerializedDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
-        [SerializeField] internal List<SerializedKeyValuePair<TKey, TValue>> SerializedKeyValues = new();
+        [SerializeField] internal List<SerializedKeyValuePair<TKey, TValue>> _serializedKeyValues = new();
 #if UNITY_EDITOR
-        [SerializeField] internal DictionaryDrawStyle _drawElementsAsFoldout;
+        [SerializeField] internal DictionaryDrawStyle _drawStyle = DictionaryDrawStyle.Foldout;
 #endif
         
         
         public SerializedDictionary(SerializedDictionary<TKey, TValue> serializedDictionary) : base(serializedDictionary)
         {
         #if UNITY_EDITOR
-            foreach (var kvp in serializedDictionary.SerializedKeyValues)
+            foreach (var kvp in serializedDictionary._serializedKeyValues)
             {
-                SerializedKeyValues.Add(new SerializedKeyValuePair<TKey, TValue>(kvp.Key, kvp.Value));
+                _serializedKeyValues.Add(new SerializedKeyValuePair<TKey, TValue>(kvp.Key, kvp.Value));
             }
         #endif
         }
@@ -58,19 +59,19 @@ namespace GraphicsLabor.Scripts.Core.Utility
             {
                 base[key] = value;
                 bool entryFound = false;
-                for (int i = 0; i < SerializedKeyValues.Count; i++)
+                for (int i = 0; i < _serializedKeyValues.Count; i++)
                 {
-                    SerializedKeyValuePair<TKey, TValue> keyValue = SerializedKeyValues[i];
+                    SerializedKeyValuePair<TKey, TValue> keyValue = _serializedKeyValues[i];
                     if (!GHelpers.AreKeysEqual(key, keyValue.Key))
                         continue;
                     entryFound = true;
                     keyValue.Value = value;
-                    SerializedKeyValues[i] = keyValue;
+                    _serializedKeyValues[i] = keyValue;
                 }
                 
                 if (!entryFound)
                 {
-                    SerializedKeyValues.Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
+                    _serializedKeyValues.Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
                 }
             }
         }
@@ -78,13 +79,13 @@ namespace GraphicsLabor.Scripts.Core.Utility
         public new void Add(TKey key, TValue value)
         {
             base.Add(key, value);
-            SerializedKeyValues.Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
+            _serializedKeyValues.Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
         }
 
         public new void Clear()
         {
             base.Clear();
-            SerializedKeyValues.Clear();
+            _serializedKeyValues.Clear();
         }
 
         public new bool Remove(TKey key)
@@ -92,7 +93,7 @@ namespace GraphicsLabor.Scripts.Core.Utility
             if (!TryGetValue(key, out TValue value)) return false;
             
             base.Remove(key);
-            SerializedKeyValues.Remove(new SerializedKeyValuePair<TKey, TValue>(key, value));
+            _serializedKeyValues.Remove(new SerializedKeyValuePair<TKey, TValue>(key, value));
             return true;
         }
 
@@ -100,7 +101,7 @@ namespace GraphicsLabor.Scripts.Core.Utility
         {
             if (!base.TryAdd(key, value)) return false;
             
-            SerializedKeyValues.Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
+            _serializedKeyValues.Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
             return true;
 
         }
@@ -108,7 +109,7 @@ namespace GraphicsLabor.Scripts.Core.Utility
         
         public void GLog()
         {
-            foreach (SerializedKeyValuePair<TKey,TValue> keyValue in SerializedKeyValues)
+            foreach (SerializedKeyValuePair<TKey,TValue> keyValue in _serializedKeyValues)
             {
                 GLogger.Log($"{keyValue.Key} - {keyValue.Value}");
             }
@@ -120,16 +121,16 @@ namespace GraphicsLabor.Scripts.Core.Utility
         {
             foreach (KeyValuePair<TKey, TValue> kvp in this)
             {
-                SerializedKeyValues.Add(new SerializedKeyValuePair<TKey, TValue>(kvp.Key, kvp.Value));
+                _serializedKeyValues.Add(new SerializedKeyValuePair<TKey, TValue>(kvp.Key, kvp.Value));
             }
         }
 
         // From Dictionary to "json"
         public void OnBeforeSerialize()
         {
+            _serializedKeyValues ??= new List<SerializedKeyValuePair<TKey, TValue>>();
 #if UNITY_EDITOR
-            SerializedKeyValues ??= new List<SerializedKeyValuePair<TKey, TValue>>();
-            if (SerializedKeyValues.Count == 0 && Count > 0) GenerateSerializedList();
+            if (_serializedKeyValues.Count == 0 && Count > 0) GenerateSerializedList();
 #else
             SerializedKeyValues.Clear();
             GenerateSerializedList();
@@ -141,7 +142,7 @@ namespace GraphicsLabor.Scripts.Core.Utility
         {
             base.Clear();
 
-            foreach (SerializedKeyValuePair<TKey, TValue> keyValue in SerializedKeyValues)
+            foreach (SerializedKeyValuePair<TKey, TValue> keyValue in _serializedKeyValues)
             {
 #if UNITY_EDITOR
                 if (GHelpers.IsKeyValid(keyValue.Key) && !ContainsKey(keyValue.Key))
@@ -155,6 +156,12 @@ namespace GraphicsLabor.Scripts.Core.Utility
         }
     }
 
+    public static class SerializedDictionary
+    {
+        public const string SerializedListPropName = nameof(SerializedDictionary<int, int>._serializedKeyValues);
+        public const string DrawStylePropName = nameof(SerializedDictionary<int, int>._drawStyle);
+    }
+    
     [Serializable]
     public class SerializedKeyValuePair<TKey, TValue>
     {
@@ -166,6 +173,12 @@ namespace GraphicsLabor.Scripts.Core.Utility
             Key = key;
             Value = value;
         }
+    }
+    
+    public static class SerializedKeyValuePair
+    {
+        public const string KeyPropName = nameof(SerializedKeyValuePair<int, int>.Key);
+        public const string ValuePropName = nameof(SerializedKeyValuePair<int, int>.Value);
     }
     
     #if UNITY_EDITOR

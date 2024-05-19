@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GraphicsLabor.Scripts.Core.Utility;
+using GraphicsLabor.Scripts.Editor.Utility;
 using GraphicsLabor.Scripts.Editor.Utility.GUI;
 using GraphicsLabor.Scripts.Editor.Utility.Reflection;
 using UnityEditor;
@@ -14,7 +14,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
         private ReorderableList _reorderableList;
         private readonly SerializedProperty _property;
         private readonly SerializedProperty _propertyList;
-        private readonly SerializedProperty _drawAsFoldout;
+        private readonly SerializedProperty _drawStyleProperty;
         private readonly GUIContent _cachedLabel;
         
         private Dictionary<int, bool> _foldoutStates = new ();
@@ -23,8 +23,8 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
         public SerializedDictionaryDrawerInstance(SerializedProperty property)
         {
             _property = property;
-            _propertyList = property.FindPropertyRelative("SerializedKeyValues");
-            _drawAsFoldout = property.FindPropertyRelative("_drawElementsAsFoldout");
+            _propertyList = property.FindPropertyRelative(SerializedDictionary.SerializedListPropName);
+            _drawStyleProperty = property.FindPropertyRelative(SerializedDictionary.DrawStylePropName);
             _cachedLabel = PropertyUtility.GetLabel(property);
         }
         
@@ -65,10 +65,10 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             return _reorderableList;
         }
 
-        private void OnDrawElementBackground(Rect rect, int index, bool isactive, bool isfocused)
+        private void OnDrawElementBackground(Rect rect, int index, bool isActive, bool isFocused)
         {
             Color prevColor = GUI.color;
-            if (isfocused)
+            if (isFocused)
             {
                 GUI.color = LaborerGUIUtility.DictionarySelectedElementBackgroundColor;
             }
@@ -76,7 +76,7 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             GUI.Box(rect, GUIContent.none);
 
             GUI.color = prevColor;
-            // ReorderableList.defaultBehaviours.DrawElementBackground(rect, index, isactive, isfocused, true);
+            // ReorderableList.defaultBehaviours.DrawElementBackground(rect, index, isActive, isFocused, true);
         }
 
         private void OnDrawHeader(Rect rect)
@@ -95,13 +95,13 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             {
                 x = rect.width*0.7f,
                 y = rect.y,
-                width = rect.width*0.35f,
+                width = rect.width*0.25f,
                 height = LaborerGUIUtility.SingleLineHeight
             };
             
             string tooltipText = "How to draw this Dictionary's elements";
             
-            _drawAsFoldout.enumValueIndex = (int)LaborerEditorGUI.DrawEnumPopup(optionRect, (DictionaryDrawStyle)_drawAsFoldout.enumValueIndex, tooltipText);
+            _drawStyleProperty.enumValueIndex = (int)LaborerEditorGUI.DrawEnumPopup(optionRect, (DictionaryDrawStyle)_drawStyleProperty.enumValueIndex, tooltipText);
         }
 
         private void OnDrawFooter(Rect rect)
@@ -113,24 +113,28 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
         {
             float height = LaborerGUIUtility.SingleLineHeight;
             
-            SerializedProperty key = _propertyList.GetArrayElementAtIndex(index).FindPropertyRelative("Key");
-            SerializedProperty value = _propertyList.GetArrayElementAtIndex(index).FindPropertyRelative("Value");
+            SerializedProperty key = _propertyList.GetArrayElementAtIndex(index).FindPropertyRelative(SerializedKeyValuePair.KeyPropName);
+            SerializedProperty value = _propertyList.GetArrayElementAtIndex(index).FindPropertyRelative(SerializedKeyValuePair.ValuePropName);
 
-            if (_drawAsFoldout.boolValue){
+            if (GEditorHelpers.IsEnumEqual(_drawStyleProperty, DictionaryDrawStyle.Foldout)){
                 if (!_foldoutStates.GetValueOrDefault(index, false)) return height;
             }
             
-            height += Math.Max(EditorGUI.GetPropertyHeight(key), EditorGUI.GetPropertyHeight(value));
+            // if ((DictionaryDrawStyle)_drawStyleProperty.enumValueIndex == DictionaryDrawStyle.Foldout){
+            //     if (!_foldoutStates.GetValueOrDefault(index, false)) return height;
+            // }
+            
+            height += LaborerEditorGUI.GetDictionaryElementHeight(key, value);
             
             return height;
         }
 
-        private void OnDrawElement(Rect rect, int index, bool isactive, bool isfocused)
+        private void OnDrawElement(Rect rect, int index, bool isActive, bool isFocused)
         {
-            SerializedProperty key = _propertyList.GetArrayElementAtIndex(index).FindPropertyRelative("Key");
-            SerializedProperty value = _propertyList.GetArrayElementAtIndex(index).FindPropertyRelative("Value");
+            SerializedProperty key = _propertyList.GetArrayElementAtIndex(index).FindPropertyRelative(SerializedKeyValuePair.KeyPropName);
+            SerializedProperty value = _propertyList.GetArrayElementAtIndex(index).FindPropertyRelative(SerializedKeyValuePair.ValuePropName);
 
-            if (!isfocused)
+            if (!isFocused)
             {
                 Color prevColor = GUI.color;
                 GUI.color = index % 2 == 0
@@ -147,13 +151,21 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
                 GUI.color = prevColor;
             }
             
-            if (_drawAsFoldout.boolValue)
+            if (GEditorHelpers.IsEnumEqual(_drawStyleProperty, DictionaryDrawStyle.Foldout))
             {
                 LaborerEditorGUI.DrawDictionaryElementAsFoldout(rect, key, value, index, ref _foldoutStates);
             } else
             {
                 LaborerEditorGUI.DrawDictionaryElement(rect, key, value, index);
             }
+            
+            // if ((DictionaryDrawStyle)_drawAsFoldout.enumValueIndex == DictionaryDrawStyle.Foldout)
+            // {
+            //     LaborerEditorGUI.DrawDictionaryElementAsFoldout(rect, key, value, index, ref _foldoutStates);
+            // } else
+            // {
+            //     LaborerEditorGUI.DrawDictionaryElement(rect, key, value, index);
+            // }
         }
         
         private void OnAdd(ReorderableList list)

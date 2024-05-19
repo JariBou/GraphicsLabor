@@ -1,8 +1,13 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEditor;
+using Object = UnityEngine.Object;
 
 namespace GraphicsLabor.Scripts.Core.Utility
 {
+    /// <summary>
+    /// Collection of helper methods
+    /// </summary>
     public static class GHelpers
     {
         /// <summary>
@@ -43,7 +48,6 @@ namespace GraphicsLabor.Scripts.Core.Utility
         
         public static bool IsKeyValid(object key)
         {
-            // we catch this error if we are not on the main thread and simply return false as we assume the object is null
             try
             {
                 return !(key == null || (key is Object unityObject && unityObject == null));
@@ -53,5 +57,6 @@ namespace GraphicsLabor.Scripts.Core.Utility
                 return false;
             }
         }
+      
     }
 }
