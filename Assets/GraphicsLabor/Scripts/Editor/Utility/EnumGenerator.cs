@@ -5,13 +5,14 @@ using System.Linq;
 using System.Text;
 using GraphicsLabor.Scripts.Core.Settings;
 using UnityEditor;
+using UnityEngine;
 
 namespace GraphicsLabor.Scripts.Editor.Utility
 {
     public static class EnumGenerator
     {
         public static void GenerateEnum(Dictionary<string, int> enumAndValuesDictionary, string enumClassName,
-            bool isFlag = false, string enumNamespace = null)
+            bool isFlag = false, string enumNamespace = null, string filepath = null)
         {
             StringBuilder content = new();
             
@@ -47,13 +48,22 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             
             GraphicsLaborSettings settings = AssetDatabase.LoadAssetAtPath<GraphicsLaborSettings>("Assets/GraphicsLabor/Scripts/Core/Settings/GraphicsLaborSettings.asset");
 
-            IOHelper.CreateFolder(settings._defaultEnumsPath); // Just in case
-            File.WriteAllText(settings._defaultEnumsPath + $"/{enumClassName}.cs", content.ToString());
+            IOHelper.CreateFolder(filepath ?? settings._defaultEnumsPath); // Just in case
+            try
+            {
+                File.WriteAllText(filepath ?? settings._defaultEnumsPath + $"/{enumClassName}.cs", content.ToString());
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Debug.Log(e);
+                Debug.Log(e.StackTrace);
+                throw;
+            }
             
             AssetDatabase.Refresh();
         }
         
-        public static void GenerateEnum(IEnumerable<string> enumNames, string enumClassName, bool isFlag = false, string enumNamespace = null)
+        public static void GenerateEnum(IEnumerable<string> enumNames, string enumClassName, bool isFlag = false, string enumNamespace = null, string filepath = null)
         {
             StringBuilder content = new();
             
@@ -91,8 +101,8 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             
             GraphicsLaborSettings settings = AssetDatabase.LoadAssetAtPath<GraphicsLaborSettings>("Assets/GraphicsLabor/Scripts/Core/Settings/GraphicsLaborSettings.asset");
 
-            IOHelper.CreateFolder(settings._defaultEnumsPath); // Just in case
-            File.WriteAllText(settings._defaultEnumsPath + $"/{enumClassName}.cs", content.ToString());
+            IOHelper.CreateFolder(filepath ?? settings._defaultEnumsPath); // Just in case
+            File.WriteAllText(filepath ?? settings._defaultEnumsPath + $"/{enumClassName}.cs", content.ToString());
             
             AssetDatabase.Refresh();
         }
