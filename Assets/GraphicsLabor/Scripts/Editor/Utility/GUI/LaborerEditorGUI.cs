@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Core.Utility;
+using GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDictionaries;
 using GraphicsLabor.Scripts.Editor.Utility.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -434,7 +435,12 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
 
         #region Dictionaries
 
-        public static void DictionaryPropertyField(Rect rect, SerializedProperty property, bool includeChildren)
+        public static void DictionaryPropertyField(Rect rect, SerializedProperty property, bool includeChildren, string displayName = null)
+        {
+            DictionaryPropertyField(rect, property, includeChildren, displayName != null ? new GUIContent(displayName) : PropertyUtility.GetLabel(property));
+        }
+        
+        private static void DictionaryPropertyField(Rect rect, SerializedProperty property, bool includeChildren, GUIContent propertyDisplayName)
         {
             Rect labelRect = new()
             {
@@ -452,7 +458,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
                 height = rect.height
             };
             
-            EditorGUI.LabelField(labelRect, PropertyUtility.GetLabel(property));
+            EditorGUI.LabelField(labelRect, propertyDisplayName);
             if (property.hasVisibleChildren)
             {
                 EditorGUI.PropertyField(inputRect, property, new GUIContent(property.type), includeChildren);
@@ -496,7 +502,12 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             }
         }
 
-        public static void DrawKeyValuePairField(Rect rect, SerializedProperty key, SerializedProperty value)
+        public static void DrawKeyValuePairField(Rect rect, SerializedProperty key, SerializedProperty value, string keyDisplayName = null, string valueDisplayName = null)
+        {
+            DrawKeyValuePairField(rect, new DictionaryElementInfo(key, value, keyDisplayName, valueDisplayName));
+        }
+        
+        public static void DrawKeyValuePairField(Rect rect, DictionaryElementInfo elementInfo)
         {
             Rect keyRect = new()
             {
@@ -514,20 +525,31 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
                 height = rect.height
             };
 
-            DictionaryPropertyField(keyRect, key, true);
-            DictionaryPropertyField(valueRect, value, true);
+            DictionaryPropertyField(keyRect, elementInfo.Key, true, elementInfo.KeyDisplayName);
+            DictionaryPropertyField(valueRect, elementInfo.Value, true, elementInfo.ValueDisplayName);
         }
         
-        public static void DrawDictionaryElement(Rect rect, SerializedProperty key, SerializedProperty value, int index)
+        public static void DrawDictionaryElement(Rect rect, SerializedProperty key, SerializedProperty value, int index, string keyDisplayName = null, string valueDisplayName = null)
+        {
+            DrawDictionaryElement(rect, new DictionaryElementInfo(key, value, keyDisplayName, valueDisplayName), index);
+        }
+        
+        public static void DrawDictionaryElement(Rect rect, DictionaryElementInfo elementInfo, int index)
         {
             GUIContent label = new($"Element {index.ToString()}");
             EditorGUI.LabelField(new Rect(rect.x, rect.y, rect.width, LaborerGUIUtility.SingleLineHeight), label);
             rect.y += LaborerGUIUtility.SingleLineHeight;
             rect.height = LaborerGUIUtility.SingleLineHeight;
-            DrawKeyValuePairField(rect, key, value);
+            DrawKeyValuePairField(rect, elementInfo);
         }
 
         public static void DrawDictionaryElementAsFoldout(Rect rect, SerializedProperty key, SerializedProperty value,
+            int index, ref Dictionary<int, bool> foldoutStates, string keyDisplayName = null, string valueDisplayName = null)
+        {
+            DrawDictionaryElementAsFoldout(rect, new DictionaryElementInfo(key, value, keyDisplayName, valueDisplayName), index, ref foldoutStates);
+        }
+        
+        public static void DrawDictionaryElementAsFoldout(Rect rect, DictionaryElementInfo elementInfo,
             int index, ref Dictionary<int, bool> foldoutStates)
         {
             GUIContent label = new($"Element {index.ToString()}");
@@ -539,12 +561,17 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             
             rect.y += LaborerGUIUtility.SingleLineHeight;
             rect.height = LaborerGUIUtility.SingleLineHeight;
-            DrawKeyValuePairField(rect, key, value);
+            DrawKeyValuePairField(rect, elementInfo);
         }
 
         public static float GetDictionaryElementHeight(SerializedProperty key, SerializedProperty value)
         {
             return Math.Max(EditorGUI.GetPropertyHeight(key), EditorGUI.GetPropertyHeight(value));
+        }
+        
+        public static float GetDictionaryElementHeight(DictionaryElementInfo elementInfo)
+        {
+            return Math.Max(EditorGUI.GetPropertyHeight(elementInfo.Key), EditorGUI.GetPropertyHeight(elementInfo.Value));
         }
 
        

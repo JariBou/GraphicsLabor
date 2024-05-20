@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Core.Utility;
 using GraphicsLabor.Scripts.Editor.Utility;
 using GraphicsLabor.Scripts.Editor.Utility.GUI;
@@ -16,6 +17,9 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
         private readonly SerializedProperty _propertyList;
         private readonly SerializedProperty _drawStyleProperty;
         private readonly GUIContent _cachedLabel;
+
+        private readonly string _keyDisplayName = SerializedKeyValuePair.KeyPropName;
+        private readonly string _valueDisplayName = SerializedKeyValuePair.ValuePropName;
         
         private Dictionary<int, bool> _foldoutStates = new ();
 
@@ -25,6 +29,14 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             _property = property;
             _propertyList = property.FindPropertyRelative(SerializedDictionary.SerializedListPropName);
             _drawStyleProperty = property.FindPropertyRelative(SerializedDictionary.DrawStylePropName);
+
+            SerializedDictionarySettingsAttribute sdSettingsAttribute = PropertyUtility.GetAttribute<SerializedDictionarySettingsAttribute>(_property);
+            if (sdSettingsAttribute != null)
+            {
+                if (sdSettingsAttribute.KeyName != null) _keyDisplayName = sdSettingsAttribute.KeyName;
+                if (sdSettingsAttribute.ValueName != null) _valueDisplayName = sdSettingsAttribute.ValueName;
+            }
+
             _cachedLabel = PropertyUtility.GetLabel(property);
         }
         
@@ -152,13 +164,15 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
                 GUI.Box(boxRect, GUIContent.none);
                 GUI.color = prevColor;
             }
+
+            DictionaryElementInfo elementInfo = new(key, value, _keyDisplayName, _valueDisplayName);
             
             if (_drawStyleProperty.IsEnumValue(DictionaryDrawStyle.Foldout))
             {
-                LaborerEditorGUI.DrawDictionaryElementAsFoldout(rect, key, value, index, ref _foldoutStates);
+                LaborerEditorGUI.DrawDictionaryElementAsFoldout(rect, elementInfo, index, ref _foldoutStates);
             } else
             {
-                LaborerEditorGUI.DrawDictionaryElement(rect, key, value, index);
+                LaborerEditorGUI.DrawDictionaryElement(rect, elementInfo, index);
             }
             
             // if (GEditorHelpers.IsEnumEqual(_drawStyleProperty, DictionaryDrawStyle.Foldout))
@@ -182,6 +196,23 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
         {
             int length = _propertyList.arraySize;
             _propertyList.InsertArrayElementAtIndex(length);
+        }
+    }
+
+    public class DictionaryElementInfo
+    {
+        public SerializedProperty Key { get; private set; }
+        public SerializedProperty Value { get; private set; }
+        public GUIContent KeyDisplayName { get; private set; }
+        public GUIContent ValueDisplayName { get; private set; }
+        
+        
+        public DictionaryElementInfo(SerializedProperty key, SerializedProperty value, string keyDisplayName = null, string valueDisplayName = null)
+        {
+            Key = key;
+            Value = value;
+            KeyDisplayName = keyDisplayName != null ? new GUIContent(keyDisplayName) : PropertyUtility.GetLabel(key);
+            ValueDisplayName = valueDisplayName != null ? new GUIContent(valueDisplayName) : PropertyUtility.GetLabel(value);
         }
     }
 }
