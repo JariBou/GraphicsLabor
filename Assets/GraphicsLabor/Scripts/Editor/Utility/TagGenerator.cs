@@ -63,7 +63,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             {
                 dict[enumName] = 1;
             }
-            // Raises an error: access to file is denied (maybe not in main thread?)
+            
             EnumGenerator.GenerateEnum(dict, "LaborTags", true, "GraphicsLabor.Scripts.Core.Tags", settings._tagsPath);
         }
     }
