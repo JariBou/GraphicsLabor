@@ -22,7 +22,6 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             _totalDrawnHeight = DrawWithRect(currentRect);
             _totalDrawnHeight += LaborerGUIUtility.PropertyHeightSpacing;
 
-            // TODO: goes out of the screen when pushed and doesn't enter the scrollable thing
             currentRect.y = _totalDrawnHeight;
             if (GUI.Button(currentRect, "Save Tags"))
             {
@@ -31,21 +30,10 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             currentRect.y += LaborerGUIUtility.SingleLineHeight;
             if (GUI.Button(currentRect, "Save Tags2"))
             {
-                GraphicsLaborSettings settings = AssetDatabase.LoadAssetAtPath<GraphicsLaborSettings>("Assets/GraphicsLabor/Scripts/Core/Settings/GraphicsLaborSettings.asset");
-
-                List<string> enumNames = settings._tags;
-            
-                Dictionary<string, int> dict = new()
-                {
-                    ["Null"] = 0
-                };
-                foreach (string enumName in enumNames)
-                {
-                    dict[enumName] = 1;
-                }
-                // Raises an error: access to file is denied (maybe not in main thread?)
-                EnumGenerator.GenerateEnum(dict, "LaborTags", true, "GraphicsLabor.Scripts.Core.Tags", settings._tagsPath);
+                TagGenerator.CreateTagEnumFile();
             }
+
+            _totalDrawnHeight += LaborerGUIUtility.SingleLineHeight * 2.5f;
         }
     }
 }

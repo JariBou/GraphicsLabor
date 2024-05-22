@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GraphicsLabor.Scripts.Core.Settings;
+using GraphicsLabor.Scripts.Core.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -51,7 +52,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             IOHelper.CreateFolder(filepath ?? settings._defaultEnumsPath); // Just in case
             try
             {
-                File.WriteAllText(filepath ?? settings._defaultEnumsPath + $"/{enumClassName}.cs", content.ToString());
+                File.WriteAllText((filepath ?? settings._defaultEnumsPath) + $"/{enumClassName}.cs", content.ToString());
             }
             catch (UnauthorizedAccessException e)
             {
@@ -102,7 +103,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
             GraphicsLaborSettings settings = AssetDatabase.LoadAssetAtPath<GraphicsLaborSettings>("Assets/GraphicsLabor/Scripts/Core/Settings/GraphicsLaborSettings.asset");
 
             IOHelper.CreateFolder(filepath ?? settings._defaultEnumsPath); // Just in case
-            File.WriteAllText(filepath ?? settings._defaultEnumsPath + $"/{enumClassName}.cs", content.ToString());
+            File.WriteAllText((filepath ?? settings._defaultEnumsPath) + $"/{enumClassName}.cs", content.ToString());
             
             AssetDatabase.Refresh();
         }
