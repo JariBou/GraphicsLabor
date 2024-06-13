@@ -11,7 +11,7 @@ namespace GraphicsLabor.Scripts.Core.Utility
     {
         [SerializeField] internal List<SerializedKeyValuePair<TKey, TValue>> _serializedKeyValues = new();
 #if UNITY_EDITOR
-        [SerializeField] internal DictionaryDrawStyle _drawStyle = DictionaryDrawStyle.Foldout;
+        [SerializeField, HideInInspector] internal DictionaryDrawStyle _drawStyle = DictionaryDrawStyle.Foldout;
 #endif
         
         
