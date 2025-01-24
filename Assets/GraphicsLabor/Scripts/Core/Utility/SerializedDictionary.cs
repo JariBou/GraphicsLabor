@@ -48,6 +48,7 @@ namespace GraphicsLabor.Scripts.Core.Utility
         }
         public SerializedDictionary(IEqualityComparer<TKey> comparer) : base(comparer) { }
         public SerializedDictionary(int capacity) : base(capacity) { }
+        public SerializedDictionary() : base(8) { }
         public SerializedDictionary(int capacity, IEqualityComparer<TKey> comparer) : base(capacity, comparer) { }
         
         

@@ -1,0 +1,223 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2892175d8a24d80418dfbf7c18a1a156, type: 3}
+  m_Name: NS_Tests2
+  m_EditorClassIdentifier: 
+  _graphId: 4b5907b2-ef54-4b62-8633-a65485280c04
+  m_nodes:
+  - rid: 1550498865169563761
+  - rid: 1550498865169563762
+  - rid: 1550498865169563962
+  - rid: 1550498865169563965
+  - rid: 1550498865169563967
+  - rid: 1550498865169563969
+  - rid: 1550498865169563972
+  - rid: 1550498865169563973
+  m_connections:
+  - inputPort:
+      nodeId: 00a711e5-f4a3-4f8e-99ca-dbe126e6ec45
+      portIndex: 1
+    outputPort:
+      nodeId: 64d70a27-7801-4a25-931e-af9d77aabc49
+      portIndex: 0
+  - inputPort:
+      nodeId: 3f0abecd-c5f3-4f88-a4cb-74fa964ba93c
+      portIndex: 1
+    outputPort:
+      nodeId: 00a711e5-f4a3-4f8e-99ca-dbe126e6ec45
+      portIndex: 0
+  - inputPort:
+      nodeId: e85eea39-27f5-4332-93e9-413100ff3898
+      portIndex: 1
+    outputPort:
+      nodeId: 3b049efb-e508-4923-9c69-71f9ea107930
+      portIndex: 0
+  - inputPort:
+      nodeId: fbc6b342-0085-4f99-9b73-f9ab85f90fb6
+      portIndex: 1
+    outputPort:
+      nodeId: e85eea39-27f5-4332-93e9-413100ff3898
+      portIndex: 0
+  - inputPort:
+      nodeId: fbc6b342-0085-4f99-9b73-f9ab85f90fb6
+      portIndex: 2
+    outputPort:
+      nodeId: fa55c13f-5182-499a-b31f-ba3744c71829
+      portIndex: 1
+  m_exposedProperties:
+  - PropertyName: glouglou
+    PropertyValue: New Value
+  references:
+    version: 2
+    RefIds:
+    - rid: 1550498865169563761
+      type: {class: StartNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
+      data:
+        m_guid: 13adaeb8-f8c3-4053-a104-77da7084917f
+        m_position:
+          serializedVersion: 2
+          x: -56
+          y: -166
+          width: 74
+          height: 77
+        m_isPure: 0
+        typename: NodeSystem.Runtime.Nodes.StartNode, NodeSystem, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports: []
+        m_pureExecutionDone: 1
+    - rid: 1550498865169563762
+      type: {class: GameObjectSourceNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
+      data:
+        m_guid: 64d70a27-7801-4a25-931e-af9d77aabc49
+        m_position:
+          serializedVersion: 2
+          x: -105
+          y: 412
+          width: 194
+          height: 98
+        m_isPure: 0
+        typename: NodeSystem.Runtime.Nodes.GameObjectSourceNode, NodeSystem, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports: []
+        m_pureExecutionDone: 1
+        Source: f5256318-241b-4c0d-8e36-324320803656
+    - rid: 1550498865169563962
+      type: {class: GameObjectSourceNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
+      data:
+        m_guid: 3b049efb-e508-4923-9c69-71f9ea107930
+        m_position:
+          serializedVersion: 2
+          x: -105
+          y: 157
+          width: 194
+          height: 98
+        m_isPure: 0
+        typename: NodeSystem.Runtime.Nodes.GameObjectSourceNode, NodeSystem, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports: []
+        m_pureExecutionDone: 1
+        Source: e30b7a83-19ce-437e-b13e-5334bf04214f
+    - rid: 1550498865169563965
+      type: {class: SetExposedVariableNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
+      data:
+        m_guid: 3f0abecd-c5f3-4f88-a4cb-74fa964ba93c
+        m_position:
+          serializedVersion: 2
+          x: 529
+          y: 385
+          width: 394
+          height: 125
+        m_isPure: 0
+        typename: NodeSystem.Runtime.Nodes.SetExposedVariableNode, NodeSystem, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: m_Name
+          _ownerId: 3f0abecd-c5f3-4f88-a4cb-74fa964ba93c
+          _portIndex: 2
+          _portType: 0
+        - _exposedPropertyName: m_NewValue
+          _ownerId: 3f0abecd-c5f3-4f88-a4cb-74fa964ba93c
+          _portIndex: 3
+          _portType: 0
+        - _exposedPropertyName: m_Value
+          _ownerId: 3f0abecd-c5f3-4f88-a4cb-74fa964ba93c
+          _portIndex: 4
+          _portType: 1
+        m_pureExecutionDone: 1
+        m_Name: glouglou
+        m_NewValue: aaaa
+        m_Value: 
+    - rid: 1550498865169563967
+      type: {class: DebugLogNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
+      data:
+        m_guid: 00a711e5-f4a3-4f8e-99ca-dbe126e6ec45
+        m_position:
+          serializedVersion: 2
+          x: 153
+          y: 422
+          width: 314
+          height: 101
+        m_isPure: 0
+        typename: NodeSystem.Runtime.Nodes.DebugLogNode, NodeSystem, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: logMessage
+          _ownerId: 00a711e5-f4a3-4f8e-99ca-dbe126e6ec45
+          _portIndex: 2
+          _portType: 0
+        m_pureExecutionDone: 1
+        logMessage: premier boutton
+    - rid: 1550498865169563969
+      type: {class: DebugLogNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
+      data:
+        m_guid: e85eea39-27f5-4332-93e9-413100ff3898
+        m_position:
+          serializedVersion: 2
+          x: 239
+          y: 157
+          width: 257
+          height: 101
+        m_isPure: 0
+        typename: NodeSystem.Runtime.Nodes.DebugLogNode, NodeSystem, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: logMessage
+          _ownerId: e85eea39-27f5-4332-93e9-413100ff3898
+          _portIndex: 2
+          _portType: 0
+        m_pureExecutionDone: 1
+        logMessage: deuxieme boutton
+    - rid: 1550498865169563972
+      type: {class: ExposedVariableNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
+      data:
+        m_guid: fa55c13f-5182-499a-b31f-ba3744c71829
+        m_position:
+          serializedVersion: 2
+          x: 215
+          y: 267
+          width: 349
+          height: 77
+        m_isPure: 1
+        typename: NodeSystem.Runtime.Nodes.ExposedVariableNode, NodeSystem, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: m_Name
+          _ownerId: fa55c13f-5182-499a-b31f-ba3744c71829
+          _portIndex: 0
+          _portType: 0
+        - _exposedPropertyName: m_Value
+          _ownerId: fa55c13f-5182-499a-b31f-ba3744c71829
+          _portIndex: 1
+          _portType: 1
+        m_pureExecutionDone: 1
+        m_Name: glouglou
+        m_Value: 
+    - rid: 1550498865169563973
+      type: {class: DebugLogNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
+      data:
+        m_guid: fbc6b342-0085-4f99-9b73-f9ab85f90fb6
+        m_position:
+          serializedVersion: 2
+          x: 652
+          y: 212
+          width: 0
+          height: 0
+        m_isPure: 0
+        typename: NodeSystem.Runtime.Nodes.DebugLogNode, NodeSystem, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: logMessage
+          _ownerId: fbc6b342-0085-4f99-9b73-f9ab85f90fb6
+          _portIndex: 2
+          _portType: 0
+        m_pureExecutionDone: 1
+        logMessage: 

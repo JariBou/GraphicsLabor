@@ -333,7 +333,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
             
             // Remove unused SOs
             string[] folders = { GetSettings()._tempScriptableObjectsPath };
-            IOHelper.DeleteAssets(folders, soPaths);
+            if(AssetDatabase.IsValidFolder(GetSettings()._tempScriptableObjectsPath)) IOHelper.DeleteAssets(folders, soPaths);
 
             if (_soNameAssetDic.Keys.Count == 0) return new List<ScriptableObject>();
             

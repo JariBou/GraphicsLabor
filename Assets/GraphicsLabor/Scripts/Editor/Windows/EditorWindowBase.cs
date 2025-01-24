@@ -90,6 +90,7 @@ namespace GraphicsLabor.Scripts.Editor.Windows
         private static void OnScriptReloadSelf()
         {
             WindowSettings settings = GetWindowSettings();
+            if (settings == null) return;
             if (settings.OpenedCustomWindows.Count == 0)
             {
                 settings.OpenedCustomWindows.AddRange(Resources.FindObjectsOfTypeAll<WindowBase>());
