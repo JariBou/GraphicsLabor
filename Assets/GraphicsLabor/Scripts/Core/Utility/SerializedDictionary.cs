@@ -17,12 +17,12 @@ namespace GraphicsLabor.Scripts.Core.Utility
         
         public SerializedDictionary(SerializedDictionary<TKey, TValue> serializedDictionary) : base(serializedDictionary)
         {
-        #if UNITY_EDITOR
+        // #if UNITY_EDITOR
             foreach (var kvp in serializedDictionary._serializedKeyValues)
             {
                 _serializedKeyValues.Add(new SerializedKeyValuePair<TKey, TValue>(kvp.Key, kvp.Value));
             }
-        #endif
+        // #endif
         }
         
         public SerializedDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary)
@@ -133,7 +133,7 @@ namespace GraphicsLabor.Scripts.Core.Utility
 #if UNITY_EDITOR
             if (_serializedKeyValues.Count == 0 && Count > 0) GenerateSerializedList();
 #else
-            SerializedKeyValues.Clear();
+            _serializedKeyValues.Clear();
             GenerateSerializedList();
 #endif
         }
@@ -151,17 +151,19 @@ namespace GraphicsLabor.Scripts.Core.Utility
                     base.Add(keyValue.Key, keyValue.Value);
                 }
 #else
-                Add(kvp.Key, kvp.Value);
+                Add(keyValue.Key, keyValue.Value);
 #endif
             }
         }
     }
 
+    #if UNITY_EDITOR
     public static class SerializedDictionary
     {
         public const string SerializedListPropName = nameof(SerializedDictionary<int, int>._serializedKeyValues);
         public const string DrawStylePropName = nameof(SerializedDictionary<int, int>._drawStyle);
     }
+    #endif
     
     [Serializable]
     public class SerializedKeyValuePair<TKey, TValue>
@@ -176,13 +178,13 @@ namespace GraphicsLabor.Scripts.Core.Utility
         }
     }
     
+    #if UNITY_EDITOR
     public static class SerializedKeyValuePair
     {
         public const string KeyPropName = nameof(SerializedKeyValuePair<int, int>.Key);
         public const string ValuePropName = nameof(SerializedKeyValuePair<int, int>.Value);
     }
     
-    #if UNITY_EDITOR
     internal enum DictionaryDrawStyle
     {
         Element, Foldout

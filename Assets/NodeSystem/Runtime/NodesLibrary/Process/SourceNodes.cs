@@ -1,6 +1,5 @@
 ﻿using NodeSystem.Runtime.Attributes;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.Nodes
 {

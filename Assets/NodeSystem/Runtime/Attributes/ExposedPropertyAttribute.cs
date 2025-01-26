@@ -1,6 +1,4 @@
 ﻿using System;
-using UnityEditor.Experimental.GraphView;
-using Object = UnityEngine.Object;
 
 namespace NodeSystem.Runtime.Attributes
 {

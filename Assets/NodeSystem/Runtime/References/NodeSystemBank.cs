@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NodeSystem.Runtime.References
 {
@@ -11,8 +10,9 @@ namespace NodeSystem.Runtime.References
         
         private void Awake()
         {
-            DontDestroyOnLoad(this);
             _instance = this;
+            DontDestroyOnLoad(gameObject);
+            _bank.Initialize();
         }
 
         public static NodeSystemAsset GetGraphInstance(string guid)
@@ -31,6 +31,7 @@ namespace NodeSystem.Runtime.References
             if (_instance._bank.TryGetGraph(guid, out NodeSystemAsset graph)) return graph;
             else
             {
+                Debug.Log("Registering graph");
                 return _instance._bank.RegisterGraph(baseGraph);
             }
         }

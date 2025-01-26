@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class ReferenceManager : MonoBehaviour
 {
@@ -19,9 +18,9 @@ public class ReferenceManager : MonoBehaviour
             if (m_instance == null)
             {
                 m_instance = new GameObject("ReferenceManager").AddComponent<ReferenceManager>();
-                #if !UNITY_EDITOR
+                // #if !UNITY_EDITOR
                 DontDestroyOnLoad(m_instance.gameObject);
-                #endif          
+                // #endif          
             }
             m_instance.Initialize();
             return m_instance;
@@ -40,6 +39,11 @@ public class ReferenceManager : MonoBehaviour
         foreach (ReferenceDataBank referenceDataBank in GetAvailableDataBanks())
         {
             m_instance.RecordHolder(referenceDataBank);
+        }
+
+        if (m_referenceDataBanks.Count == 0)
+        {
+            m_instance.RecordHolder(m_instance.gameObject.AddComponent<ReferenceDataBank>());
         }
     }
     

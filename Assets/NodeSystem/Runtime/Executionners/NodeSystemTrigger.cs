@@ -18,8 +18,10 @@ namespace NodeSystem.Runtime
         private void Start()
         {
             _graphInstance = NodeSystemBank.GetGraphInstance(_graph);
+            Debug.Log(_graphInstance.GraphId);
             if (_gameObjectToTrigger == null) _gameObjectToTrigger = gameObject;
             _nodeToPlay = _graphInstance.GetNodeToPlay(_gameObjectToTrigger);
+            Debug.Log(_nodeToPlay.id);
             if (_nodeToPlay == null) return;
             m_currentExecNodeId = _nodeToPlay.id;
         }
@@ -39,6 +41,7 @@ namespace NodeSystem.Runtime
         {
             if (_graphInstance == null || m_currentExecNodeId == "") return;
             ProcessInfo processInfo = GetCurrentNode().OnProcess(new ExecInfo(_graphInstance, this));
+            Debug.Log("Ticking!");
             switch (processInfo.FlowType)
             {
                 case ProcessInfo.ExecutionFlowType.ExecuteNext:

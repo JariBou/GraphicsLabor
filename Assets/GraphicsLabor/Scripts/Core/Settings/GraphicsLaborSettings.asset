@@ -23,21 +23,71 @@ MonoBehaviour:
     _enumSpace: 
     _isFlag: 0
     _enumNamesAndValues:
-      SerializedKeyValues:
-      - Key: HAAAAAAAAAAAAAAAAAAAAAAA
-        Value: 25
-      - Key: 
-        Value: 0
-      _drawElementsAsFoldout: 1
+      _serializedKeyValues: []
+      _drawStyle: 0
   - _enumClassName: 
     _enumSpace: 
     _isFlag: 0
     _enumNamesAndValues:
-      SerializedKeyValues:
+      _serializedKeyValues:
       - Key: 
         Value: 0
       - Key: 
         Value: 0
+      _drawStyle: 0
+  _test2:
+    _serializedKeyValues:
+    - Key: 
+      Value:
+        _test: 
+        _test2: 0
+        _test3: 0
+    - Key: 
+      Value:
+        _test: 
+        _test2: 0
+        _test3: 0
+    - Key: 
+      Value:
+        _test: 
+        _test2: 0
+        _test3: 0
+    _drawStyle: 1
+  _test21:
+    _serializedKeyValues:
+    - Key: 
+      Value:
+      - 
+      - 
+    - Key: 
+      Value:
+      - 
+      - 
+      - 
+    - Key: 
+      Value: []
+    _drawStyle: 0
+  _test3:
+  - _serializedKeyValues:
+    - Key: 
+      Value:
+        _test: 
+        _test2: 0
+        _test3: 0
+    - Key: 
+      Value:
+        _test: 
+        _test2: 0
+        _test3: 0
+    _drawStyle: 0
+  - _serializedKeyValues: []
+    _drawStyle: 0
+  _test4:
+    _test:
+      _serializedKeyValues:
       - Key: 
-        Value: 0
-      _drawElementsAsFoldout: 0
+        Value:
+          _test: 
+          _test2: 0
+          _test3: 0
+      _drawStyle: 0

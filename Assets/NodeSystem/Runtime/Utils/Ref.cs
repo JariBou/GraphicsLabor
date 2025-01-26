@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Unity.VisualScripting.YamlDotNet.Serialization;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -71,7 +69,7 @@ namespace NodeSystem.Runtime.Utils
             #if UNITY_EDITOR
             set => _refTypename = value; 
             #else
-            private set => _refType = value;
+            private set => _refTypename = value;
             #endif
         }
 

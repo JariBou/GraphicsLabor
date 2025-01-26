@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using NodeSystem.Runtime.Utils;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ReferenceDataBank : MonoBehaviour
 {
@@ -56,12 +53,28 @@ public class ReferenceDataBank : MonoBehaviour
 
     public T GetGameObject<T>(string guid) where T : UnityEngine.Object
     {
-        return m_references.Find(goRef => goRef.Guid == guid).Object as T;
+        try
+        {
+            return m_references.Find(goRef => goRef.Guid == guid)?.Object as T;
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("Object  with guid '" + guid + "' could not be found. ");
+            return null;
+        }
     }
     
     public string GetGuidOf<T>(T obj) where T : UnityEngine.Object
     {
-        return m_references.Find(goRef => goRef.Object == obj).Guid ?? "";
+        try
+        {
+            return m_references.Find(goRef => goRef.Object == obj).Guid ?? "";
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("Object  '" + obj + "' could not be found. ");
+            return null;
+        }
     }
 
     [Serializable]

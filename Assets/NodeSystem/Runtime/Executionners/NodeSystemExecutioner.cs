@@ -17,7 +17,7 @@ namespace NodeSystem.Runtime
 
         private string m_currentExecNodeId;
 
-        private void OnEnable()
+        private void Start()
         {
             StartAsset();
             //ExecuteAsset(graphInstance);

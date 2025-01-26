@@ -1,6 +1,4 @@
-﻿using System;
-using NodeSystem.Runtime.Attributes;
-using UnityEngine;
+﻿using NodeSystem.Runtime.Attributes;
 
 namespace NodeSystem.Runtime.Nodes
 {

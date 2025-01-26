@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
+﻿using System.Collections.Generic;
 using GraphicsLabor.Scripts.Core.Utility;
-using UnityEditor;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.References
@@ -10,7 +7,7 @@ namespace NodeSystem.Runtime.References
     [CreateAssetMenu(menuName = "NodeSystem/New Graph Bank")]
     public class GraphBankAsset : ScriptableObject
     {
-        [SerializeField] private SerializedDictionary<string, NodeSystemAsset> _graphBank;
+        private Dictionary<string, NodeSystemAsset> _graphBank;
 
         [SerializeField] private List<NodeSystemAsset> _nodeSystems;
 
@@ -25,16 +22,32 @@ namespace NodeSystem.Runtime.References
 
         public bool TryGetGraph(string graphId, out NodeSystemAsset graph)
         {
+            Debug.Log(_graphBank);
             return _graphBank.TryGetValue(graphId, out graph);
+        }
+
+        public void Initialize()
+        {
+            _graphBank = new Dictionary<string, NodeSystemAsset>(_nodeSystems.Count);
+            foreach (NodeSystemAsset graph in _nodeSystems)
+            {
+                if (graph != null)
+                {
+                    RegisterGraph(graph);
+                }
+            }
         }
 
         private void OnValidate()
         {
-            _graphBank = new SerializedDictionary<string, NodeSystemAsset>(_nodeSystems.Count);
-            foreach (NodeSystemAsset graph in _nodeSystems)
-            {
-                RegisterGraph(graph);
-            }
+            // _graphBank = new Dictionary<string, NodeSystemAsset>(_nodeSystems.Count);
+            // foreach (NodeSystemAsset graph in _nodeSystems)
+            // {
+            //     if (graph != null)
+            //     {
+            //         RegisterGraph(graph);
+            //     }
+            // }
         }
     }
 }

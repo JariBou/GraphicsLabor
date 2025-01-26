@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Utils;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime
 {
@@ -164,7 +164,7 @@ namespace NodeSystem.Runtime
         [SerializeField] private string _exposedPropertyName;
         [SerializeField] private string _ownerId;
         [SerializeField] private int _portIndex;
-        [SerializeField] private Direction _portType;
+        [FormerlySerializedAs("_flowType")] [FormerlySerializedAs("_portType")] [SerializeField] private PropPortDirection _portDirection;
 
         public readonly string ExposedPropertyName => _exposedPropertyName;
 
@@ -172,14 +172,14 @@ namespace NodeSystem.Runtime
 
         public readonly int PortIndex => _portIndex;
 
-        public readonly Direction PortType => _portType;
+        public readonly PropPortDirection PortDirection => _portDirection;
 
-        public PortInfo(string exposedPropertyName, string ownerId, int portIndex, Direction portType)
+        public PortInfo(string exposedPropertyName, string ownerId, int portIndex, PropPortDirection portDirection)
         {
             _exposedPropertyName = exposedPropertyName;
             _ownerId = ownerId;
             _portIndex = portIndex;
-            _portType = portType;
+            _portDirection = portDirection;
         }
     }
 

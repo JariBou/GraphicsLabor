@@ -446,7 +446,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             {
                 x = rect.x,
                 y = rect.y,
-                width = rect.width * 0.2f,
+                width = rect.width * 0.19f,
                 height = rect.height
             };
             
@@ -454,14 +454,17 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
             {
                 x = rect.x + labelRect.width,
                 y = rect.y,
-                width = rect.width * 0.8f,
+                width = rect.width * 0.79f,
                 height = rect.height
             };
             
             EditorGUI.LabelField(labelRect, propertyDisplayName);
+
             if (property.hasVisibleChildren)
             {
-                EditorGUI.PropertyField(inputRect, property, new GUIContent(property.type), includeChildren);
+                // Guicontent fuck things up for Vector3
+                // EditorGUI.PropertyField(inputRect, property, new GUIContent(propertyDisplayName), includeChildren);
+                EditorGUI.PropertyField(inputRect, property, GUIContent.none, includeChildren);
                 return;
                 float totalHeight = 0; // = EditorGUI.GetPropertyHeight(property, includeChildren: true) - LaborerGUIUtility.SingleLineHeight;
                 
@@ -554,7 +557,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility.GUI
         {
             GUIContent label = new($"Element {index.ToString()}");
             
-            foldoutStates[index] = EditorGUI.BeginFoldoutHeaderGroup(new Rect(rect.x, rect.y, rect.width, LaborerGUIUtility.SingleLineHeight), foldoutStates.GetValueOrDefault(index, false), label, EditorStyles.foldout);
+            foldoutStates[index] = EditorGUI.BeginFoldoutHeaderGroup(new Rect(rect.x + 10, rect.y, rect.width, LaborerGUIUtility.SingleLineHeight), foldoutStates.GetValueOrDefault(index, false), label, EditorStyles.foldout);
             EditorGUI.EndFoldoutHeaderGroup();
 
             if (!foldoutStates[index]) return;

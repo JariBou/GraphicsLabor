@@ -73,8 +73,15 @@ namespace GraphicsLabor.Scripts.Editor.Drawers.PropertyDrawers.SerializedDiction
             _reorderableList.elementHeightCallback += OnElementHeight;
 
             _reorderableList.drawFooterCallback += OnDrawFooter;
+
+            _reorderableList.onReorderCallbackWithDetails += OnReorderElement;
             
             return _reorderableList;
+        }
+
+        private void OnReorderElement(ReorderableList list, int oldindex, int newindex)
+        {
+            (_foldoutStates[oldindex], _foldoutStates[newindex]) = (_foldoutStates[newindex], _foldoutStates[oldindex]);
         }
 
         private void OnDrawElementBackground(Rect rect, int index, bool isActive, bool isFocused)

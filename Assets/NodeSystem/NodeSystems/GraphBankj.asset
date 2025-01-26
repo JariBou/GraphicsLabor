@@ -12,10 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e60ed3ba28a459a8bcebbb889bb8b8d, type: 3}
   m_Name: GraphBankj
   m_EditorClassIdentifier: 
-  _graphBank:
-    _serializedKeyValues:
-    - Key: 4b5907b2-ef54-4b62-8633-a65485280c04
-      Value: {fileID: 11400000, guid: 0bc2ed8a4b753d8448ae92e72c37bfdc, type: 2}
-    _drawStyle: 1
   _nodeSystems:
   - {fileID: 11400000, guid: 0bc2ed8a4b753d8448ae92e72c37bfdc, type: 2}

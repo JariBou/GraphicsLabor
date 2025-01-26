@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.DrawerAttributes;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using GraphicsLabor.Scripts.Core.Utility;
 using UnityEngine;
@@ -13,6 +14,10 @@ namespace GraphicsLabor.Scripts.Core.Settings
         [Label("Default Enum Path")] public string _defaultEnumsPath = "Assets/GraphicsLabor/Generated/Enums"; 
         [Tooltip("Can contain up to 31 custom tags, an object can hold multiple LaborerTags")] public List<string> _tags;
         public List<EnumSettings> _enums;
+        public SerializedDictionary<string, Test> _test2;
+        [SerializedDictionarySettings(keyName: "Zuckerberg", valueName: "This a value")]public SerializedDictionary<string, List<string>> _test21;
+        public List<SerializedDictionary<string, Test>> _test3;
+        public TestWrapper _test4;
         
         private void OnValidate()
         {
@@ -21,6 +26,20 @@ namespace GraphicsLabor.Scripts.Core.Settings
                 _tags.RemoveAt(_tags.Count-1);
             }
         }
+    }
+
+    [Serializable]
+    public class TestWrapper
+    {
+        public SerializedDictionary<string, Test> _test;
+    }
+
+    [Serializable]
+    public class Test
+    {
+        public string _test;
+        public int _test2;
+        public bool _test3;
     }
     
     [Serializable]

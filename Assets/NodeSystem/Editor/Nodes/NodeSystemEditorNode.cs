@@ -131,7 +131,7 @@ namespace NodeSystem.Editor
                         fieldInfo.Name,
                         m_graphNode.id,
                         m_ports.IndexOf(port),
-                        portDirection
+                        propertyAttribute.PortDirection
                     ));
                         
                     if (propertyType == typeof(SerializableRef))
