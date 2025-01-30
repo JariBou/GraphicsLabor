@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NodeSystem.Editor.Nodes;
 using NodeSystem.Runtime;
-using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Nodes;
+using NodeSystem.Runtime.BlackBoard;
+using NodeSystem.Runtime.NodesLibrary.Process;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NodeSystem.Editor
+namespace NodeSystem.Editor.Graph
 {
     public class NodeSystemView : GraphView
     {
@@ -45,7 +46,7 @@ namespace NodeSystem.Editor
             
             m_searchProvider = ScriptableObject.CreateInstance<NodeSystemWindowSearchProvider>();
             m_searchProvider.graph = this;
-            this.nodeCreationRequest = ShowSearchWindow;
+            nodeCreationRequest = ShowSearchWindow;
             
             StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/NodeSystem/Editor/USS/NodeSystemEditor.uss");
             styleSheets.Add(styleSheet);
@@ -66,6 +67,14 @@ namespace NodeSystem.Editor
             graphViewChanged += OnGraphViewChangedEvent;
             Undo.undoRedoEvent += OnUndoRedo;
 
+            
+            // Neither work smh
+            // EditorApplication.delayCall += () =>
+            // {
+            //     FrameAll();
+            // };
+            // schedule.Execute(() => { FrameAll(); });
+            
             // canPasteSerializedData += CanPasteCallback;
             // unserializeAndPaste += PasteCallback;
             // serializeGraphElements += CopyCutCallback;
@@ -195,6 +204,7 @@ namespace NodeSystem.Editor
                     CreateConnection(edge);
                 }
             }
+
             SerializedObject.Update();
 
             // foreach (Port port in changedPorts)
@@ -365,7 +375,9 @@ namespace NodeSystem.Editor
 
             if (m_nodeSystem.Nodes.Count == 0)
             {
-                Add(new StartNode());
+                StartNode startNode = new StartNode();
+                //startNode.SetPosition();
+                Add(startNode);
             }
             
             BindToSerializedObject();
@@ -379,7 +391,6 @@ namespace NodeSystem.Editor
             {
                 DrawConnection(connection);
             }
-            
         }
 
         private void DrawConnection(NodeSystemConnection connection)

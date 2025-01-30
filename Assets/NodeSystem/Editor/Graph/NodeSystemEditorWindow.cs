@@ -1,11 +1,11 @@
-using System;
 using System.Linq;
 using NodeSystem.Runtime;
+using NodeSystem.Runtime.BlackBoard;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace NodeSystem.Editor
+namespace NodeSystem.Editor.Graph
 {
     public class NodeSystemEditorWindow : EditorWindow
     {

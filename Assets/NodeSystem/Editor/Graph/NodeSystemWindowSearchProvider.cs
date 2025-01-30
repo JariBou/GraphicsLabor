@@ -8,7 +8,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NodeSystem.Editor
+namespace NodeSystem.Editor.Graph
 {
     public struct SearchContextElement
     {
@@ -117,8 +117,9 @@ namespace NodeSystem.Editor
 
         public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
         {
-            var windowMousePosition = graph.ChangeCoordinatesTo(graph, context.screenMousePosition - graph.window.position.position);
-            var graphMousePosition = graph.contentViewContainer.WorldToLocal(windowMousePosition);
+            Vector2 windowMousePosition = graph.ChangeCoordinatesTo(graph, context.screenMousePosition - graph.window.position.position);
+            Vector2 graphMousePosition = graph.contentViewContainer.WorldToLocal(windowMousePosition);
+            Debug.Log(graphMousePosition);
             
             SearchContextElement element = (SearchContextElement)searchTreeEntry.userData;
             

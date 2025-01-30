@@ -2,10 +2,10 @@
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary
 {
     // I have no clue how to tackle this
-    [NodeInfo("Object Ref", "Object Ref", FlowDirection.None, isPure: true)]
+    [NodeInfo("Object Ref", "WIP/Object Ref", FlowDirection.None, isPure: true)]
     public class ObjectRefNode : NodeSystemNode
     {
         [ExposedProperty(PropPortDirection.Output, portType: typeof(GameObject), preferredLocation: PropContainerLocation.OutputContainer)]

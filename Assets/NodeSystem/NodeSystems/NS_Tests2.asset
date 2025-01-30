@@ -14,210 +14,108 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _graphId: 4b5907b2-ef54-4b62-8633-a65485280c04
   m_nodes:
-  - rid: 1550498865169563761
-  - rid: 1550498865169563762
-  - rid: 1550498865169563962
-  - rid: 1550498865169563965
-  - rid: 1550498865169563967
-  - rid: 1550498865169563969
-  - rid: 1550498865169563972
-  - rid: 1550498865169563973
+  - rid: 3507076650591584337
+  - rid: 3507076650591584340
+  - rid: 3507076650591584341
+  - rid: 3507076650591584342
+  - rid: -2
   m_connections:
   - inputPort:
-      nodeId: 3f0abecd-c5f3-4f88-a4cb-74fa964ba93c
+      nodeId: b4bf99db-d70d-4d28-b9b6-8278eb6e7fa9
       portIndex: 1
     outputPort:
-      nodeId: 00a711e5-f4a3-4f8e-99ca-dbe126e6ec45
+      nodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
       portIndex: 0
   - inputPort:
-      nodeId: fbc6b342-0085-4f99-9b73-f9ab85f90fb6
+      nodeId: 5daad72a-febd-4b89-ae37-fe47d1551168
       portIndex: 1
     outputPort:
-      nodeId: e85eea39-27f5-4332-93e9-413100ff3898
-      portIndex: 0
+      nodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
+      portIndex: 1
   - inputPort:
-      nodeId: fbc6b342-0085-4f99-9b73-f9ab85f90fb6
+      nodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
       portIndex: 2
     outputPort:
-      nodeId: fa55c13f-5182-499a-b31f-ba3744c71829
-      portIndex: 1
-  - inputPort:
-      nodeId: 00a711e5-f4a3-4f8e-99ca-dbe126e6ec45
-      portIndex: 1
-    outputPort:
-      nodeId: 3b049efb-e508-4923-9c69-71f9ea107930
+      nodeId: f8fa534a-f0ca-45c1-a922-93dc6bd3f120
       portIndex: 0
-  - inputPort:
-      nodeId: e85eea39-27f5-4332-93e9-413100ff3898
-      portIndex: 1
-    outputPort:
-      nodeId: 64d70a27-7801-4a25-931e-af9d77aabc49
-      portIndex: 0
-  m_exposedProperties:
-  - PropertyName: glouglou
-    PropertyValue: New Value
+  m_exposedProperties: []
   references:
     version: 2
     RefIds:
-    - rid: 1550498865169563761
-      type: {class: StartNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3507076650591584337
+      type: {class: StartNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
       data:
-        m_guid: 13adaeb8-f8c3-4053-a104-77da7084917f
+        m_guid: f8fa534a-f0ca-45c1-a922-93dc6bd3f120
         m_position:
           serializedVersion: 2
-          x: -56
-          y: -166
+          x: 120
+          y: -32
           width: 74
           height: 77
         m_isPure: 0
-        typename: NodeSystem.Runtime.Nodes.StartNode, NodeSystem, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
+        typename: NodeSystem.Runtime.NodesLibrary.Process.StartNode, NodeSystem,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         m_ports: []
         m_pureExecutionDone: 1
-    - rid: 1550498865169563762
-      type: {class: GameObjectSourceNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
+    - rid: 3507076650591584340
+      type: {class: DebugLogNode, ns: NodeSystem.Runtime.NodesLibrary, asm: NodeSystem}
       data:
-        m_guid: 64d70a27-7801-4a25-931e-af9d77aabc49
+        m_guid: b4bf99db-d70d-4d28-b9b6-8278eb6e7fa9
         m_position:
           serializedVersion: 2
-          x: -107
-          y: 200
-          width: 194
-          height: 98
+          x: 655
+          y: -186
+          width: 268
+          height: 101
         m_isPure: 0
-        typename: NodeSystem.Runtime.Nodes.GameObjectSourceNode, NodeSystem, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-        m_ports: []
-        m_pureExecutionDone: 1
-        Source: d3463705-c692-4146-b3c0-739b56f67bf4
-    - rid: 1550498865169563962
-      type: {class: GameObjectSourceNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
-      data:
-        m_guid: 3b049efb-e508-4923-9c69-71f9ea107930
-        m_position:
-          serializedVersion: 2
-          x: -127
-          y: 401
-          width: 194
-          height: 98
-        m_isPure: 0
-        typename: NodeSystem.Runtime.Nodes.GameObjectSourceNode, NodeSystem, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-        m_ports: []
-        m_pureExecutionDone: 1
-        Source: 77d51b4d-32ea-4382-a80b-8753c5f7cf26
-    - rid: 1550498865169563965
-      type: {class: SetExposedVariableNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
-      data:
-        m_guid: 3f0abecd-c5f3-4f88-a4cb-74fa964ba93c
-        m_position:
-          serializedVersion: 2
-          x: 529
-          y: 385
-          width: 394
-          height: 125
-        m_isPure: 0
-        typename: NodeSystem.Runtime.Nodes.SetExposedVariableNode, NodeSystem, Version=0.0.0.0,
+        typename: NodeSystem.Runtime.NodesLibrary.DebugLogNode, NodeSystem, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
         m_ports:
-        - _exposedPropertyName: m_Name
-          _ownerId: 3f0abecd-c5f3-4f88-a4cb-74fa964ba93c
+        - _exposedPropertyName: logMessage
+          _ownerId: b4bf99db-d70d-4d28-b9b6-8278eb6e7fa9
           _portIndex: 2
           _portDirection: 1
-        - _exposedPropertyName: m_NewValue
-          _ownerId: 3f0abecd-c5f3-4f88-a4cb-74fa964ba93c
+        m_pureExecutionDone: 1
+        logMessage: True
+    - rid: 3507076650591584341
+      type: {class: DebugLogNode, ns: NodeSystem.Runtime.NodesLibrary, asm: NodeSystem}
+      data:
+        m_guid: 5daad72a-febd-4b89-ae37-fe47d1551168
+        m_position:
+          serializedVersion: 2
+          x: 655
+          y: -64
+          width: 268
+          height: 101
+        m_isPure: 0
+        typename: NodeSystem.Runtime.NodesLibrary.DebugLogNode, NodeSystem, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: logMessage
+          _ownerId: 5daad72a-febd-4b89-ae37-fe47d1551168
+          _portIndex: 2
+          _portDirection: 1
+        m_pureExecutionDone: 1
+        logMessage: True
+    - rid: 3507076650591584342
+      type: {class: BranchNode, ns: NodeSystem.Runtime.NodesLibrary.Logic, asm: NodeSystem}
+      data:
+        m_guid: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
+        m_position:
+          serializedVersion: 2
+          x: 269
+          y: -85
+          width: 243
+          height: 101
+        m_isPure: 0
+        typename: NodeSystem.Runtime.NodesLibrary.Logic.BranchNode, NodeSystem, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: condition
+          _ownerId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
           _portIndex: 3
           _portDirection: 1
-        - _exposedPropertyName: m_Value
-          _ownerId: 3f0abecd-c5f3-4f88-a4cb-74fa964ba93c
-          _portIndex: 4
-          _portDirection: 2
         m_pureExecutionDone: 1
-        m_Name: glouglou
-        m_NewValue: aaaa
-        m_Value: 
-    - rid: 1550498865169563967
-      type: {class: DebugLogNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
-      data:
-        m_guid: 00a711e5-f4a3-4f8e-99ca-dbe126e6ec45
-        m_position:
-          serializedVersion: 2
-          x: 153
-          y: 422
-          width: 314
-          height: 101
-        m_isPure: 0
-        typename: NodeSystem.Runtime.Nodes.DebugLogNode, NodeSystem, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-        m_ports:
-        - _exposedPropertyName: logMessage
-          _ownerId: 00a711e5-f4a3-4f8e-99ca-dbe126e6ec45
-          _portIndex: 2
-          _portDirection: 1
-        m_pureExecutionDone: 1
-        logMessage: deuxieme boutton
-    - rid: 1550498865169563969
-      type: {class: DebugLogNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
-      data:
-        m_guid: e85eea39-27f5-4332-93e9-413100ff3898
-        m_position:
-          serializedVersion: 2
-          x: 239
-          y: 157
-          width: 257
-          height: 101
-        m_isPure: 0
-        typename: NodeSystem.Runtime.Nodes.DebugLogNode, NodeSystem, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-        m_ports:
-        - _exposedPropertyName: logMessage
-          _ownerId: e85eea39-27f5-4332-93e9-413100ff3898
-          _portIndex: 2
-          _portDirection: 1
-        m_pureExecutionDone: 1
-        logMessage: premier boutton
-    - rid: 1550498865169563972
-      type: {class: ExposedVariableNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
-      data:
-        m_guid: fa55c13f-5182-499a-b31f-ba3744c71829
-        m_position:
-          serializedVersion: 2
-          x: 215
-          y: 267
-          width: 349
-          height: 77
-        m_isPure: 1
-        typename: NodeSystem.Runtime.Nodes.ExposedVariableNode, NodeSystem, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-        m_ports:
-        - _exposedPropertyName: m_Name
-          _ownerId: fa55c13f-5182-499a-b31f-ba3744c71829
-          _portIndex: 0
-          _portDirection: 1
-        - _exposedPropertyName: m_Value
-          _ownerId: fa55c13f-5182-499a-b31f-ba3744c71829
-          _portIndex: 1
-          _portDirection: 2
-        m_pureExecutionDone: 1
-        m_Name: glouglou
-        m_Value: 
-    - rid: 1550498865169563973
-      type: {class: DebugLogNode, ns: NodeSystem.Runtime.Nodes, asm: NodeSystem}
-      data:
-        m_guid: fbc6b342-0085-4f99-9b73-f9ab85f90fb6
-        m_position:
-          serializedVersion: 2
-          x: 652
-          y: 212
-          width: 0
-          height: 0
-        m_isPure: 0
-        typename: NodeSystem.Runtime.Nodes.DebugLogNode, NodeSystem, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-        m_ports:
-        - _exposedPropertyName: logMessage
-          _ownerId: fbc6b342-0085-4f99-9b73-f9ab85f90fb6
-          _portIndex: 2
-          _portDirection: 1
-        m_pureExecutionDone: 1
-        logMessage: 
+        condition: 0

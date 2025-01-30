@@ -1,6 +1,6 @@
 ﻿using NodeSystem.Runtime.Attributes;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary.Utils
 {
     [NodeInfo("TextOutput", "Utils/TextOutput")]
     public class TextOutputNode : NodeSystemNode

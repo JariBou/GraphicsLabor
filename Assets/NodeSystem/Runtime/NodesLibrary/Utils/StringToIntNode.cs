@@ -1,6 +1,6 @@
 ﻿using NodeSystem.Runtime.Attributes;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary.Utils
 {
     [NodeInfo("String to Int", "Utils/String to Int", isPure: true)]
     public class StringToIntNode : NodeSystemNode

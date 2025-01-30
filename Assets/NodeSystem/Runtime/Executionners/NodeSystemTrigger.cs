@@ -2,7 +2,7 @@
 using NodeSystem.Runtime.References;
 using UnityEngine;
 
-namespace NodeSystem.Runtime
+namespace NodeSystem.Runtime.Executionners
 {
     public class NodeSystemTrigger : MonoBehaviour, INodeSystemExecutioner
     {
@@ -18,10 +18,8 @@ namespace NodeSystem.Runtime
         private void Start()
         {
             _graphInstance = NodeSystemBank.GetGraphInstance(_graph);
-            Debug.Log(_graphInstance.GraphId);
             if (_gameObjectToTrigger == null) _gameObjectToTrigger = gameObject;
             _nodeToPlay = _graphInstance.GetNodeToPlay(_gameObjectToTrigger);
-            Debug.Log(_nodeToPlay.id);
             if (_nodeToPlay == null) return;
             m_currentExecNodeId = _nodeToPlay.id;
         }

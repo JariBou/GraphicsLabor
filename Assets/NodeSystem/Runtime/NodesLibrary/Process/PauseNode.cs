@@ -1,6 +1,6 @@
 ﻿using NodeSystem.Runtime.Attributes;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary.Process
 {
     [NodeInfo("Pause Exec", "Process/Pause Execution")]
     public class PauseNode : NodeSystemNode

@@ -1,8 +1,4 @@
-﻿using NodeSystem.Runtime.Utils;
-using UnityEditor;
-using UnityEngine;
-
-namespace NodeSystem.Editor
+﻿namespace NodeSystem.Editor.Editors
 {
     // [CustomPropertyDrawer(typeof(Ref<>))]
     // public class RefEditor : PropertyDrawer

@@ -1,7 +1,7 @@
 ﻿using System;
 using NodeSystem.Runtime.Attributes;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary.Utils
 {
     [NodeInfo("Int to String Node", "Utils/Int to String Node", flowDirection: FlowDirection.None, isPure: true)]
     public class IntToStringNode : NodeSystemNode

@@ -1,6 +1,6 @@
 ﻿using NodeSystem.Runtime.Attributes;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary.Math
 {
     [NodeInfo("Addition Node", "Math/Addition", FlowDirection.None, isPure: true)]
     public class AdditionNode : NodeSystemNode

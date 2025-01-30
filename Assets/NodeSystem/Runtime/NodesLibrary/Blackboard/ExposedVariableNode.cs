@@ -1,6 +1,6 @@
 ﻿using NodeSystem.Runtime.Attributes;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary.Blackboard
 {
     [NodeInfo("Exposed Variable", "Blackboard/Exposed Variable", FlowDirection.None, isPure: true)]
     public class ExposedVariableNode : NodeSystemNode

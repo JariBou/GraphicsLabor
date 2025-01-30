@@ -1,6 +1,6 @@
 ﻿using NodeSystem.Runtime.Attributes;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary.Process
 {
     [NodeInfo("End Execution", "Process/End Execution",flowDirection: FlowDirection.Input)]
     public class EndExecutionNode : NodeSystemNode

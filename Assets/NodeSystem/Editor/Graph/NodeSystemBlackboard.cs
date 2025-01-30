@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
-using NodeSystem.Runtime;
-using UnityEditor;
+using NodeSystem.Runtime.BlackBoard;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NodeSystem.Editor
+namespace NodeSystem.Editor.Graph
 {
     public class NodeSystemBlackboard : Blackboard
     {

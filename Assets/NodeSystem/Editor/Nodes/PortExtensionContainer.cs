@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace NodeSystem.Editor
+namespace NodeSystem.Editor.Nodes
 {
     public class PortExtensionContainer : VisualElement
     {

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
-using NodeSystem.Editor.Utils;
+using NodeSystem.Editor.Editors.NodeEditors;
 using NodeSystem.Runtime;
 using NodeSystem.Runtime.Attributes;
+using NodeSystem.Runtime.References;
 using NodeSystem.Runtime.Utils;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -12,12 +13,12 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
-using Object = UnityEngine.Object;
 
-namespace NodeSystem.Editor
+namespace NodeSystem.Editor.Nodes
 {
     public class NodeSystemEditorNode : Node
     {
+        private static List<Assembly> _assemblies = new ();
         private NodeSystemNode m_graphNode;
         
         private Port m_outputPort;
@@ -54,17 +55,53 @@ namespace NodeSystem.Editor
             }
 
             name = typeInfo.Name;
+
+            NodeEditorBase nodeEditor = null;
+            if (!_assemblies.Any())
+            {
+                _assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(assembly => !assembly.GetName().ToString().StartsWith("Unity")).ToList();
+            }
             
+            IEnumerable<Type> editors = _assemblies
+                .SelectMany(a => a.GetTypes().Where(t => t.IsDefined(typeof(CustomNodeEditorAttribute)) && !t.IsAbstract && t.GetCustomAttribute<CustomNodeEditorAttribute>().TargetType == node.GetType()));
+                /*
+                Assembly.GetAssembly(node.GetType()).GetTypes()
+                .Where(t => t.IsDefined(typeof(CustomNodeEditorAttribute)) && !t.IsAbstract && t.GetCustomAttribute<CustomNodeEditorAttribute>().TargetType == node.GetType()); */
+            IEnumerable<Type> customEditors = editors as Type[] ?? editors.ToArray();
+            
+            if (customEditors.Any())
+            {
+                nodeEditor = Activator.CreateInstance(customEditors.First()) as NodeEditorBase;
+            }
+
             // Output first so always index 0
             if (info.hasFlowOutput)
             {
-                // TODO:  use a number instead
-                CreateFlowOutputPort();
+                if (nodeEditor != null && nodeEditor.AddOutputPorts(this))
+                {
+                    Debug.Log("Node of type '"+node.GetType()+"' Drawn with custom Editor");
+                    // nodeEditor.AddOutputPorts(this);
+                }
+                else
+                {
+                    for (int i = 0; i < info.OutputPortCount; i++)
+                    {
+                        CreateFlowOutputPort();
+                    }
+                }
             }
             
             if (info.hasFlowInput)
             {
-                CreateFlowInputPort();
+                if (nodeEditor != null && nodeEditor.AddInputPorts(this))
+                {
+                    // nodeEditor.AddInputPorts(this);
+                }
+                else
+                {
+                    CreateFlowInputPort();
+                }
             }
 
             CreateExposedVariables(typeInfo);
@@ -295,8 +332,9 @@ namespace NodeSystem.Editor
             Port inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(PortTypes.FlowPort));
             inputPort.portName = "In";
             inputPort.tooltip = "The flow input";
-            m_ports.Add(inputPort);
-            inputContainer.Add(inputPort);
+            RegisterPort(inputPort, PropContainerLocation.InputContainer);
+            // m_ports.Add(inputPort);
+            // inputContainer.Add(inputPort);
         }
 
         private void CreateFlowOutputPort()
@@ -304,8 +342,28 @@ namespace NodeSystem.Editor
             m_outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(PortTypes.FlowPort));
             m_outputPort.portName = "Out";
             m_outputPort.tooltip = "The flow output";
-            m_ports.Add(m_outputPort);
-            outputContainer.Add(m_outputPort);
+            RegisterPort(m_outputPort, PropContainerLocation.OutputContainer);
+            // m_ports.Add(m_outputPort);
+            // outputContainer.Add(m_outputPort);
+        }
+
+        public void RegisterPort(Port port, PropContainerLocation propContainerLocation)
+        {
+            m_ports.Add(port);
+            switch (propContainerLocation)
+            {
+                case PropContainerLocation.InputContainer:
+                    inputContainer.Add(port);
+                    break;
+                case PropContainerLocation.OutputContainer:
+                    outputContainer.Add(port);
+                    break;
+                case PropContainerLocation.ExtensionContainer:
+                    extensionContainer.Add(port);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(propContainerLocation), propContainerLocation, null);
+            }
         }
         
         public void UpdatePosition()
@@ -313,15 +371,16 @@ namespace NodeSystem.Editor
             m_graphNode.SetPosition(GetPosition());
         }
 
-        public virtual Port GetInputPort()
-        {
-            return m_ports[1];
-        } 
-        
-        public virtual List<Port> GetOutputPorts()
-        {
-            return new List<Port> { m_ports[0] };
-        }
+        // SHOULD NOT BE USED!!!
+        // public virtual Port GetInputPort()
+        // {
+        //     return m_ports[1];
+        // } 
+        //
+        // public virtual List<Port> GetOutputPorts()
+        // {
+        //     return new List<Port> { m_ports[0] };
+        // }
 
         public SerializedProperty GetSerializedPropertyOf(string linkedPropertyName)
         {

@@ -1,6 +1,6 @@
 ﻿using NodeSystem.Runtime.Attributes;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary.Utils
 {
     [NodeInfo("Int Node", "Utils/Int Node", flowDirection: FlowDirection.None)]
     public class IntNode : NodeSystemNode

@@ -1,7 +1,7 @@
 ﻿using NodeSystem.Runtime.Attributes;
 using UnityEngine;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary.Process
 {
     [NodeInfo("Start", "Process/Start", flowDirection: FlowDirection.Output)]
     public class StartNode : NodeSystemNode

@@ -1,6 +1,6 @@
 ﻿using NodeSystem.Runtime.Attributes;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary.Blackboard
 {
     // So for some reason this node breaks serialization?
     [NodeInfo("Set Exposed Variable", "Blackboard/Set Exposed Variable", FlowDirection.Both)]

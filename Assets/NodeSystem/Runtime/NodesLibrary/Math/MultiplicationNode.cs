@@ -1,6 +1,6 @@
 ﻿using NodeSystem.Runtime.Attributes;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary.Math
 {
     [NodeInfo("Multiply", "Math/Multiply", FlowDirection.None, isPure: true)]
     public class MultiplicationNode : NodeSystemNode

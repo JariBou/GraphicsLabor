@@ -1,19 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+using NodeSystem.Runtime.References;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(ReferenceDataBank))]
-public class ReferenceManagerEditor : Editor
+namespace NodeSystem.Editor.Editors
 {
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(ReferenceDataBank))]
+    public class ReferenceManagerEditor : UnityEditor.Editor
     {
-        ReferenceDataBank referenceDataBank = (ReferenceDataBank)target;
-        base.OnInspectorGUI();
-        
-        if (GUILayout.Button("Add Reference"))
+        public override void OnInspectorGUI()
         {
-            referenceDataBank.LoadReferences();
+            ReferenceDataBank referenceDataBank = (ReferenceDataBank)target;
+            base.OnInspectorGUI();
+        
+            if (GUILayout.Button("Add Reference"))
+            {
+                referenceDataBank.LoadReferences();
+            }
         }
     }
 }

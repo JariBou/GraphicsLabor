@@ -1,9 +1,10 @@
+using NodeSystem.Editor.Graph;
 using NodeSystem.Runtime;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace NodeSystem.Editor
+namespace NodeSystem.Editor.Editors
 {
     [CustomEditor(typeof(NodeSystemAsset))]
     public class NodeSystemAssetEditor : UnityEditor.Editor

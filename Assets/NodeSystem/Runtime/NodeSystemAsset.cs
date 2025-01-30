@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using NodeSystem.Runtime.Nodes;
+using NodeSystem.Runtime.BlackBoard;
+using NodeSystem.Runtime.NodesLibrary.Process;
+using NodeSystem.Runtime.References;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
 
@@ -39,6 +41,7 @@ namespace NodeSystem.Runtime
         {
             foreach (NodeSystemNode node in Nodes)
             {
+                Debug.Log(node.id);
                 m_nodeLookup.Add(node.id, node);
             }
         }
@@ -49,7 +52,7 @@ namespace NodeSystem.Runtime
         /// <param name="portInfo"></param>
         /// <param name="outConnection"></param>
         /// <returns></returns>
-        public bool GetConnectionToInputPort(PortInfo portInfo, out NodeSystemConnection outConnection)
+        public bool GetConnectionToPort(PortInfo portInfo, out NodeSystemConnection outConnection)
         {
             foreach (NodeSystemConnection connection in Connections)
             {
@@ -82,11 +85,12 @@ namespace NodeSystem.Runtime
             return m_nodeLookup.GetValueOrDefault(nextNodeId);
         }
 
-        public NodeSystemNode GetNodeFromOutputConnection(string outputNodeId, int outputPortIndex)
+        public NodeSystemNode GetNodeFromOutputConnection(string startingNodeId, int outputPortIndex)
         {
+            
             foreach (NodeSystemConnection connection in Connections)
             {
-                if (connection.outputPort.nodeId == outputNodeId && connection.outputPort.portIndex == outputPortIndex)
+                if (connection.outputPort.nodeId == startingNodeId && connection.outputPort.portIndex == outputPortIndex)
                 {
                     string nodeId = connection.inputPort.nodeId;
                     NodeSystemNode node = m_nodeLookup[nodeId];

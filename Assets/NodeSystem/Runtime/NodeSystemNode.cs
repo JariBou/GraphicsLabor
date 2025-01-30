@@ -58,7 +58,7 @@ namespace NodeSystem.Runtime
         
         protected NodeSystemNode GetNodeConnectedToInputPort(NodeSystemAsset graph, PortInfo exposedPropInfo, out int connectedPortIndex)
         {
-            bool found = graph.GetConnectionToInputPort(exposedPropInfo, out NodeSystemConnection connectionToInputPort);
+            bool found = graph.GetConnectionToPort(exposedPropInfo, out NodeSystemConnection connectionToInputPort);
             connectedPortIndex = found ? connectionToInputPort.outputPort.portIndex : -1;
             return !found ? null : graph.GetNode(connectionToInputPort.outputPort.nodeId);
         }
@@ -117,7 +117,12 @@ namespace NodeSystem.Runtime
 
         public NodeSystemNode GetNextNode(NodeSystemAsset graph)
         {
-            return graph.GetNodeFromOutputConnection(m_guid, 0);
+            return GetNodeConnectedToPort(graph, 0);
+        }
+        
+        public NodeSystemNode GetNodeConnectedToPort(NodeSystemAsset graph, int portIndex)
+        {
+            return graph.GetNodeFromOutputConnection(m_guid, portIndex);
         }
 
         public bool Equals(NodeSystemNode obj)

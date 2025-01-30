@@ -1,7 +1,7 @@
 ﻿using NodeSystem.Runtime.Attributes;
 using UnityEngine;
 
-namespace NodeSystem.Runtime.Nodes
+namespace NodeSystem.Runtime.NodesLibrary
 {
     [NodeInfo("Debug Log", "Debug/Debug Log Console")]
     public class DebugLogNode : NodeSystemNode

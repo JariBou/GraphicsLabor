@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using NodeSystem.Runtime.References;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
