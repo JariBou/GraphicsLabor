@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.References
 {
     public class ReferenceDataBank : MonoBehaviour
     {
-        [SerializeField] private List<GameObjectReference> m_references;
+        [FormerlySerializedAs("m_references")] [SerializeField] private List<GameObjectReference> _references;
 
         private void OnEnable()
         {
@@ -32,23 +33,23 @@ namespace NodeSystem.Runtime.References
         {
             // Scene activeScene = SceneManager.GetActiveScene();
             List<GameObject> objectsInScene = new List<GameObject>(FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None));
-            List<GameObjectReference> prevRefList = new List<GameObjectReference>(m_references);
+            List<GameObjectReference> refsToRemove = new List<GameObjectReference>(_references);
             // m_references = new List<GameObjectReference>(objectsInScene.Count);
             foreach (GameObject go in objectsInScene)
             {
-                if (m_references.Find(goRef => goRef.Object == go) == null)
+                if (_references.Find(goRef => goRef.Object == go) == null)
                 {
-                    m_references.Add(new GameObjectReference(go));
+                    _references.Add(new GameObjectReference(go));
                 }
                 else
                 {
-                    prevRefList.Remove(prevRefList.Find(goRef => goRef.Object == go));
+                    refsToRemove.Remove(refsToRemove.Find(goRef => goRef.Object == go));
                 }
             }
 
-            foreach (GameObjectReference t in prevRefList)
+            foreach (GameObjectReference t in refsToRemove)
             {
-                m_references.Remove(t);
+                _references.Remove(t);
             }
             Debug.Log("Load References");
         }
@@ -57,7 +58,7 @@ namespace NodeSystem.Runtime.References
         {
             try
             {
-                return m_references.Find(goRef => goRef.Guid == guid)?.Object as T;
+                return _references.Find(goRef => goRef.Guid == guid)?.Object as T;
             }
             catch (Exception e)
             {
@@ -70,7 +71,7 @@ namespace NodeSystem.Runtime.References
         {
             try
             {
-                return m_references.Find(goRef => goRef.Object == obj).Guid ?? "";
+                return _references.Find(goRef => goRef.Object == obj).Guid ?? "";
             }
             catch (Exception e)
             {
@@ -82,16 +83,16 @@ namespace NodeSystem.Runtime.References
         [Serializable]
         public class GameObjectReference
         {
-            [SerializeField] private GameObject m_go;
-            [SerializeField] private string m_guid;
+            [FormerlySerializedAs("m_go")] [SerializeField] private GameObject _go;
+            [FormerlySerializedAs("m_guid")] [SerializeField] private string _guid;
 
-            public GameObject Object => m_go;
-            public string Guid => m_guid;
+            public GameObject Object => _go;
+            public string Guid => _guid;
 
             public GameObjectReference(GameObject go)
             {
-                m_go = go;
-                m_guid = GuidSystem.NewGuid();
+                _go = go;
+                _guid = GuidSystem.NewGuid();
             }
         }
     

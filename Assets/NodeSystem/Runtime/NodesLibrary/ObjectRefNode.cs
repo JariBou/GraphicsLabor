@@ -11,6 +11,9 @@ namespace NodeSystem.Runtime.NodesLibrary
         [ExposedProperty(PropPortDirection.Output, portType: typeof(GameObject), preferredLocation: PropContainerLocation.OutputContainer)]
         public SerializableRef Source = new();
         
+        [ExposedProperty(PropPortDirection.Output, portType: typeof(GameObject), preferredLocation: PropContainerLocation.OutputContainer)]
+        public GameObject Source2 = new();
+        
         public override ProcessInfo OnProcess(ExecInfo info)
         {
             GetValueOfProp<SerializableRef>(info, nameof(Source));

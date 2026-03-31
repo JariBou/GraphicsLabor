@@ -1,28 +1,29 @@
 ﻿using System;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime
 {
     [Serializable]
     public struct NodeSystemConnection : IEquatable<NodeSystemConnection>
     {
-        public NodeSystemConnectionPort inputPort;
-        public NodeSystemConnectionPort outputPort;
+        [FormerlySerializedAs("inputPort")] public NodeSystemConnectionPort InputPort;
+        [FormerlySerializedAs("outputPort")] public NodeSystemConnectionPort OutputPort;
 
         public NodeSystemConnection(NodeSystemConnectionPort inputPort, NodeSystemConnectionPort outputPort)
         {
-            this.inputPort = inputPort;
-            this.outputPort = outputPort;
+            this.InputPort = inputPort;
+            this.OutputPort = outputPort;
         }
 
         public NodeSystemConnection(string inputNodeId, int inputPortIndex, string outputNodeId, int outputPortIndex)
         {
-            inputPort = new NodeSystemConnectionPort(inputNodeId, inputPortIndex);
-            outputPort = new NodeSystemConnectionPort(outputNodeId, outputPortIndex);
+            InputPort = new NodeSystemConnectionPort(inputNodeId, inputPortIndex);
+            OutputPort = new NodeSystemConnectionPort(outputNodeId, outputPortIndex);
         }
 
         public bool Equals(NodeSystemConnection other)
         {
-            return inputPort.Equals(other.inputPort) && outputPort.Equals(other.outputPort);
+            return InputPort.Equals(other.InputPort) && OutputPort.Equals(other.OutputPort);
         }
 
         public override bool Equals(object obj)
@@ -32,7 +33,7 @@ namespace NodeSystem.Runtime
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(inputPort, outputPort);
+            return HashCode.Combine(InputPort, OutputPort);
         }
 
     }
@@ -40,18 +41,18 @@ namespace NodeSystem.Runtime
     [Serializable]
     public struct NodeSystemConnectionPort : IEquatable<NodeSystemConnectionPort>
     {
-        public string nodeId;
-        public int portIndex;
+        [FormerlySerializedAs("nodeId")] public string NodeId;
+        [FormerlySerializedAs("portIndex")] public int PortIndex;
 
         public NodeSystemConnectionPort(string nodeId, int portIndex)
         {
-            this.nodeId = nodeId;
-            this.portIndex = portIndex;
+            this.NodeId = nodeId;
+            this.PortIndex = portIndex;
         }
 
         public bool Equals(NodeSystemConnectionPort other)
         {
-            return nodeId == other.nodeId && portIndex == other.portIndex;
+            return NodeId == other.NodeId && PortIndex == other.PortIndex;
         }
 
         public override bool Equals(object obj)
@@ -61,7 +62,7 @@ namespace NodeSystem.Runtime
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(nodeId, portIndex);
+            return HashCode.Combine(NodeId, PortIndex);
         }
     }
 }

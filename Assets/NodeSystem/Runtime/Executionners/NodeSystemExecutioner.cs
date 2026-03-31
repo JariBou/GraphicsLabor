@@ -1,4 +1,5 @@
 ﻿using System;
+using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using NodeSystem.Runtime.References;
 using UnityEngine;
 

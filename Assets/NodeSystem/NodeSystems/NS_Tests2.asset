@@ -18,37 +18,150 @@ MonoBehaviour:
   - rid: 3507076650591584340
   - rid: 3507076650591584341
   - rid: 3507076650591584342
+  - rid: 7492779362624733188
+  - rid: 1463373045728018440
+  - rid: 1463373045728018441
+  - rid: 1463373045728018443
+  - rid: 1463373045728018515
   m_connections:
-  - inputPort:
-      nodeId: b4bf99db-d70d-4d28-b9b6-8278eb6e7fa9
-      portIndex: 1
-    outputPort:
-      nodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
-      portIndex: 0
-  - inputPort:
-      nodeId: 5daad72a-febd-4b89-ae37-fe47d1551168
-      portIndex: 1
-    outputPort:
-      nodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
-      portIndex: 1
-  - inputPort:
-      nodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
-      portIndex: 2
-    outputPort:
-      nodeId: f8fa534a-f0ca-45c1-a922-93dc6bd3f120
-      portIndex: 0
-  m_exposedProperties: []
+  - InputPort:
+      NodeId: b4bf99db-d70d-4d28-b9b6-8278eb6e7fa9
+      PortIndex: 1
+    OutputPort:
+      NodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
+      PortIndex: 0
+  - InputPort:
+      NodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
+      PortIndex: 2
+    OutputPort:
+      NodeId: f8fa534a-f0ca-45c1-a922-93dc6bd3f120
+      PortIndex: 0
+  - InputPort:
+      NodeId: 30fefa51-210b-4826-920f-295844fa2ea8
+      PortIndex: 1
+    OutputPort:
+      NodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
+      PortIndex: 1
+  - InputPort:
+      NodeId: 5daad72a-febd-4b89-ae37-fe47d1551168
+      PortIndex: 1
+    OutputPort:
+      NodeId: 30fefa51-210b-4826-920f-295844fa2ea8
+      PortIndex: 0
+  - InputPort:
+      NodeId: 30fefa51-210b-4826-920f-295844fa2ea8
+      PortIndex: 3
+    OutputPort:
+      NodeId: 74879ebe-6c8a-47b3-adcf-af3391160e5d
+      PortIndex: 1
+  m_exposedProperties:
+  - PropertyName: Lol
+    PropertyValue: New Value
+  - PropertyName: New String
+    PropertyValue: New Value
   references:
     version: 2
     RefIds:
+    - rid: 1463373045728018440
+      type: {class: ExposedVariableNode, ns: NodeSystem.Runtime.NodesLibrary.Blackboard, asm: NodeSystem}
+      data:
+        m_guid: 74879ebe-6c8a-47b3-adcf-af3391160e5d
+        m_position:
+          serializedVersion: 2
+          x: 121
+          y: 27
+          width: 441
+          height: 77
+        m_isPure: 1
+        typename: NodeSystem.Runtime.NodesLibrary.Blackboard.ExposedVariableNode,
+          NodeSystem, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: m_Name
+          _ownerId: 74879ebe-6c8a-47b3-adcf-af3391160e5d
+          _portIndex: 0
+          _portDirection: 1
+        - _exposedPropertyName: m_Value
+          _ownerId: 74879ebe-6c8a-47b3-adcf-af3391160e5d
+          _portIndex: 1
+          _portDirection: 2
+        m_pureExecutionDone: 1
+        m_Name: Lol
+        m_Value: Hello c'est moi
+    - rid: 1463373045728018441
+      type: {class: SetExposedVariableNode, ns: NodeSystem.Runtime.NodesLibrary.Blackboard, asm: NodeSystem}
+      data:
+        m_guid: 30fefa51-210b-4826-920f-295844fa2ea8
+        m_position:
+          serializedVersion: 2
+          x: 583
+          y: -21
+          width: 365
+          height: 125
+        m_isPure: 0
+        typename: NodeSystem.Runtime.NodesLibrary.Blackboard.SetExposedVariableNode,
+          NodeSystem, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: m_Name
+          _ownerId: 30fefa51-210b-4826-920f-295844fa2ea8
+          _portIndex: 2
+          _portDirection: 1
+        - _exposedPropertyName: m_NewValue
+          _ownerId: 30fefa51-210b-4826-920f-295844fa2ea8
+          _portIndex: 3
+          _portDirection: 1
+        - _exposedPropertyName: m_Value
+          _ownerId: 30fefa51-210b-4826-920f-295844fa2ea8
+          _portIndex: 4
+          _portDirection: 2
+        m_pureExecutionDone: 1
+        m_Name: Lol
+        m_NewValue: 
+        m_Value: 
+    - rid: 1463373045728018443
+      type: {class: GameObjectSourceNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
+      data:
+        m_guid: 9d1e0bd6-5498-4039-912e-3b85a7ba9cc0
+        m_position:
+          serializedVersion: 2
+          x: 40
+          y: 176
+          width: 194
+          height: 98
+        m_isPure: 0
+        typename: NodeSystem.Runtime.NodesLibrary.Process.GameObjectSourceNode, NodeSystem,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        m_ports: []
+        m_pureExecutionDone: 1
+        Source: fbe6d3ae-ad8f-4c3b-b112-8ec9bc1efbe2
+    - rid: 1463373045728018515
+      type: {class: TestStartDiffNode, ns: NodeSystem.Runtime.NodesLibrary, asm: NodeSystem}
+      data:
+        m_guid: d08a9b6c-dc75-41f0-a4ff-31c42cbf9cbe
+        m_position:
+          serializedVersion: 2
+          x: -24
+          y: 360
+          width: 375
+          height: 98
+        m_isPure: 0
+        typename: NodeSystem.Runtime.NodesLibrary.TestStartDiffNode, NodeSystem,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: TestIn2
+          _ownerId: d08a9b6c-dc75-41f0-a4ff-31c42cbf9cbe
+          _portIndex: 1
+          _portDirection: 2
+        m_pureExecutionDone: 1
+        Source: 
+        TestIn2: {fileID: 11400000, guid: a6bd2147504027345aa975657be9b8fa, type: 2}
     - rid: 3507076650591584337
       type: {class: StartNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
       data:
         m_guid: f8fa534a-f0ca-45c1-a922-93dc6bd3f120
         m_position:
           serializedVersion: 2
-          x: 120
-          y: -32
+          x: 102
+          y: -85
           width: 74
           height: 77
         m_isPure: 0
@@ -62,40 +175,40 @@ MonoBehaviour:
         m_guid: b4bf99db-d70d-4d28-b9b6-8278eb6e7fa9
         m_position:
           serializedVersion: 2
-          x: 655
-          y: -186
-          width: 268
+          x: 583
+          y: -122
+          width: 254
           height: 101
         m_isPure: 0
         typename: NodeSystem.Runtime.NodesLibrary.DebugLogNode, NodeSystem, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
         m_ports:
-        - _exposedPropertyName: logMessage
+        - _exposedPropertyName: LogMessage
           _ownerId: b4bf99db-d70d-4d28-b9b6-8278eb6e7fa9
           _portIndex: 2
           _portDirection: 1
         m_pureExecutionDone: 1
-        logMessage: True
+        LogMessage: True
     - rid: 3507076650591584341
       type: {class: DebugLogNode, ns: NodeSystem.Runtime.NodesLibrary, asm: NodeSystem}
       data:
         m_guid: 5daad72a-febd-4b89-ae37-fe47d1551168
         m_position:
           serializedVersion: 2
-          x: 655
-          y: -64
-          width: 268
+          x: 977
+          y: 16
+          width: 258
           height: 101
         m_isPure: 0
         typename: NodeSystem.Runtime.NodesLibrary.DebugLogNode, NodeSystem, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
         m_ports:
-        - _exposedPropertyName: logMessage
+        - _exposedPropertyName: LogMessage
           _ownerId: 5daad72a-febd-4b89-ae37-fe47d1551168
           _portIndex: 2
           _portDirection: 1
         m_pureExecutionDone: 1
-        logMessage: True
+        LogMessage: False
     - rid: 3507076650591584342
       type: {class: BranchNode, ns: NodeSystem.Runtime.NodesLibrary.Logic, asm: NodeSystem}
       data:
@@ -116,3 +229,23 @@ MonoBehaviour:
           _portDirection: 1
         m_pureExecutionDone: 1
         condition: 0
+    - rid: 7492779362624733188
+      type: {class: TestNode, ns: NodeSystem.Runtime.NodesLibrary, asm: NodeSystem}
+      data:
+        m_guid: 37a30ed4-30a4-4ac1-8b2a-0f7921f09590
+        m_position:
+          serializedVersion: 2
+          x: 137
+          y: -334
+          width: 229
+          height: 77
+        m_isPure: 1
+        typename: NodeSystem.Runtime.NodesLibrary.TestNode, NodeSystem, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: TestFlags
+          _ownerId: 37a30ed4-30a4-4ac1-8b2a-0f7921f09590
+          _portIndex: 0
+          _portDirection: 2
+        m_pureExecutionDone: 1
+        TestFlags: 6

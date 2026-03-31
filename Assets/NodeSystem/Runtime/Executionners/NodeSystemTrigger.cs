@@ -19,7 +19,7 @@ namespace NodeSystem.Runtime.Executionners
         {
             _graphInstance = NodeSystemBank.GetGraphInstance(_graph);
             if (_gameObjectToTrigger == null) _gameObjectToTrigger = gameObject;
-            _nodeToPlay = _graphInstance.GetNodeToPlay(_gameObjectToTrigger);
+            _nodeToPlay = _graphInstance.GetNodeToPlayFromSource(_gameObjectToTrigger);
             if (_nodeToPlay == null) return;
             m_currentExecNodeId = _nodeToPlay.id;
         }

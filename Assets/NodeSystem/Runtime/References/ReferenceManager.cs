@@ -3,29 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.References
 {
     public class ReferenceManager : MonoBehaviour
     {
-        [SerializeField] private List<ReferenceDataBank> m_referenceDataBanks = new();
+        [FormerlySerializedAs("m_referenceDataBanks")] [SerializeField] private List<ReferenceDataBank> _referenceDataBanks = new();
 
-        private static ReferenceManager m_instance;
+        private static ReferenceManager _instance;
         public static ReferenceManager Instance
         {
             get {
-                if (m_instance != null) return m_instance;
+                if (_instance is not null) return _instance;
             
-                m_instance = FindAnyObjectByType<ReferenceManager>();
-                if (m_instance == null)
+                _instance = FindAnyObjectByType<ReferenceManager>();
+                if (_instance is null)
                 {
-                    m_instance = new GameObject("ReferenceManager").AddComponent<ReferenceManager>();
+                    _instance = new GameObject("ReferenceManager").AddComponent<ReferenceManager>();
                     // #if !UNITY_EDITOR
-                    DontDestroyOnLoad(m_instance.gameObject);
+                    DontDestroyOnLoad(_instance.gameObject);
                     // #endif          
                 }
-                m_instance.Initialize();
-                return m_instance;
+                _instance.Initialize();
+                return _instance;
             }
         }
 
@@ -36,23 +37,23 @@ namespace NodeSystem.Runtime.References
 
         public void Initialize()
         {
-            m_referenceDataBanks.Clear();
+            _referenceDataBanks.Clear();
         
             foreach (ReferenceDataBank referenceDataBank in GetAvailableDataBanks())
             {
-                m_instance.RecordHolder(referenceDataBank);
+                _instance.RecordHolder(referenceDataBank);
             }
 
-            if (m_referenceDataBanks.Count == 0)
+            if (_referenceDataBanks.Count == 0)
             {
-                m_instance.RecordHolder(m_instance.gameObject.AddComponent<ReferenceDataBank>());
+                _instance.RecordHolder(_instance.gameObject.AddComponent<ReferenceDataBank>());
             }
         }
     
         public void RecordHolder(ReferenceDataBank referenceDataBank)
         {
             Debug.Log("Recording " + referenceDataBank.name);
-            m_referenceDataBanks.Add(referenceDataBank);
+            _referenceDataBanks.Add(referenceDataBank);
         }
 
         public void UnrecordHolder(ReferenceDataBank referenceDataBank)
@@ -63,12 +64,12 @@ namespace NodeSystem.Runtime.References
         {
             if (guid == "") return null;
             // return GetAvailableDataBanks().Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
-            return Instance.m_referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
+            return Instance._referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
         }
     
         public static string GetGuidOf<T>(T obj) where T : UnityEngine.Object
         {
-            foreach (var guidOf in Instance.m_referenceDataBanks.Select(mHolder => mHolder.GetGuidOf(obj)).Where(guidOf => guidOf != ""))
+            foreach (var guidOf in Instance._referenceDataBanks.Select(mHolder => mHolder.GetGuidOf(obj)).Where(guidOf => guidOf != ""))
             {
                 return guidOf;
             }
@@ -78,7 +79,7 @@ namespace NodeSystem.Runtime.References
 
         public void TestPrint()
         {
-            Debug.Log(m_referenceDataBanks.Count);
+            Debug.Log(_referenceDataBanks.Count);
         }
     }
 

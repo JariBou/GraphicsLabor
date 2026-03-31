@@ -14,7 +14,7 @@ namespace GraphicsLabor.Scripts.Editor
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(Object), true)]
-    public sealed class GraphicsLaborInspector : UnityEditor.Editor
+    public class GraphicsLaborInspector : UnityEditor.Editor
     {
         private List<SerializedProperty> _serializedProperties = new();
         private IEnumerable<PropertyInfo> _properties;

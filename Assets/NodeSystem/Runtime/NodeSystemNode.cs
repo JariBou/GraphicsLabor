@@ -59,8 +59,8 @@ namespace NodeSystem.Runtime
         protected NodeSystemNode GetNodeConnectedToInputPort(NodeSystemAsset graph, PortInfo exposedPropInfo, out int connectedPortIndex)
         {
             bool found = graph.GetConnectionToPort(exposedPropInfo, out NodeSystemConnection connectionToInputPort);
-            connectedPortIndex = found ? connectionToInputPort.outputPort.portIndex : -1;
-            return !found ? null : graph.GetNode(connectionToInputPort.outputPort.nodeId);
+            connectedPortIndex = found ? connectionToInputPort.OutputPort.PortIndex : -1;
+            return !found ? null : graph.GetNode(connectionToInputPort.OutputPort.NodeId);
         }
         
         // Idealy this would be an extension on the prop

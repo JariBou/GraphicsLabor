@@ -56,8 +56,8 @@ namespace NodeSystem.Runtime
         {
             foreach (NodeSystemConnection connection in Connections)
             {
-                if (connection.inputPort.nodeId == portInfo.OwnerId &&
-                    connection.inputPort.portIndex == portInfo.PortIndex)
+                if (connection.InputPort.NodeId == portInfo.OwnerId &&
+                    connection.InputPort.PortIndex == portInfo.PortIndex)
                 {
                     outConnection = connection;
                     return true;
@@ -90,9 +90,9 @@ namespace NodeSystem.Runtime
             
             foreach (NodeSystemConnection connection in Connections)
             {
-                if (connection.outputPort.nodeId == startingNodeId && connection.outputPort.portIndex == outputPortIndex)
+                if (connection.OutputPort.NodeId == startingNodeId && connection.OutputPort.PortIndex == outputPortIndex)
                 {
-                    string nodeId = connection.inputPort.nodeId;
+                    string nodeId = connection.InputPort.NodeId;
                     NodeSystemNode node = m_nodeLookup[nodeId];
                     return node;
                 }
@@ -126,9 +126,13 @@ namespace NodeSystem.Runtime
             return blackboardProperty.PropertyValue;
         }
 
-        public NodeSystemNode GetNodeToPlay(GameObject gameObject)
+        public NodeSystemNode GetNodeToPlayFromSource(GameObject gameObject)
         {
             string guid = ReferenceManager.GetGuidOf(gameObject);
+            if (guid == "")
+            {
+                return null;
+            }
             foreach (NodeSystemNode node in m_nodes)  
             {
                 if (node is GameObjectSourceNode sourceNode)

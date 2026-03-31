@@ -49,8 +49,8 @@ namespace NodeSystem.Editor.Graph
                         if (attribute != null)
                         {
                             object node = Activator.CreateInstance(type);
-                            if (string.IsNullOrEmpty(attribute.menuItem)) continue;
-                            elements.Add(new SearchContextElement(node, attribute.menuItem));
+                            if (string.IsNullOrEmpty(attribute.MenuItem)) continue;
+                            elements.Add(new SearchContextElement(node, attribute.MenuItem));
                         }
                     }
                 }

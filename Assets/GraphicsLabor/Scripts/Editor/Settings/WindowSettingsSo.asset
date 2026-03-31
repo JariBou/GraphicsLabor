@@ -11,5 +11,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6c65bf177e54b358d46f05153af4200, type: 3}
   m_Name: WindowSettingsSo
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: GraphicsLabor.Editor::GraphicsLabor.Scripts.Editor.Settings.WindowSettings
   _openedCustomWindows: []

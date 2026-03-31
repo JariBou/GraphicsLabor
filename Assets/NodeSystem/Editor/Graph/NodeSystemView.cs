@@ -323,8 +323,8 @@ namespace NodeSystem.Editor.Graph
                 {
                     Edge edgeToCreate = new Edge
                     {
-                        input = GetNode(connection.inputPort.nodeId).Ports[connection.inputPort.portIndex],
-                        output = GetNode(connection.outputPort.nodeId).Ports[connection.outputPort.portIndex]
+                        input = GetNode(connection.InputPort.NodeId).Ports[connection.InputPort.PortIndex],
+                        output = GetNode(connection.OutputPort.NodeId).Ports[connection.OutputPort.PortIndex]
                     };
                     edgeToCreate.input.Connect(edgeToCreate);
                     edgeToCreate.output.Connect(edgeToCreate);
@@ -395,13 +395,13 @@ namespace NodeSystem.Editor.Graph
 
         private void DrawConnection(NodeSystemConnection connection)
         {
-            NodeSystemEditorNode inputNode = GetNode(connection.inputPort.nodeId);
+            NodeSystemEditorNode inputNode = GetNode(connection.InputPort.NodeId);
             if(inputNode == null) return;
-            NodeSystemEditorNode outputNode = GetNode(connection.outputPort.nodeId);
+            NodeSystemEditorNode outputNode = GetNode(connection.OutputPort.NodeId);
             if(outputNode == null) return;
             
-            Port inputPort = inputNode.Ports[connection.inputPort.portIndex]; 
-            Port outputPort = outputNode.Ports[connection.outputPort.portIndex];
+            Port inputPort = inputNode.Ports[connection.InputPort.PortIndex]; 
+            Port outputPort = outputNode.Ports[connection.OutputPort.PortIndex];
 
             Edge edge = inputPort.ConnectTo(outputPort);
             m_connectionsDictionary.Add(edge, connection);

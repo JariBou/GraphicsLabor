@@ -42,7 +42,6 @@ namespace NodeSystem.Runtime.Utils
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            
             info.AddValue("ObjectValue", _objectId);
         }
     }
@@ -72,6 +71,44 @@ namespace NodeSystem.Runtime.Utils
             #else
             private set => _refTypename = value;
             #endif
+        }
+
+        public Type GetRefType()
+        {
+            return Type.GetType(_refTypename);
+        }
+
+        public T Get<T>() where T : Object
+        {
+            return ReferenceManager.GetGameObject<T>(_objectId);
+        }
+    }
+    
+    [Serializable]
+    public class SerializableTypedRef<T> where T : MonoBehaviour
+    {
+        [SerializeField] private string _objectId = "";
+
+        public string ObjectId
+        {
+            get => _objectId; 
+#if UNITY_EDITOR
+            set => _objectId = value;
+#else
+            private set => _objectId = value;
+#endif
+        }
+        
+        [SerializeField] private string _refTypename = "";
+
+        public string RefTypename
+        {
+            get => _refTypename; 
+#if UNITY_EDITOR
+            set => _refTypename = value; 
+#else
+            private set => _refTypename = value;
+#endif
         }
 
         public Type GetRefType()

@@ -46,9 +46,9 @@ namespace NodeSystem.Editor.Nodes
             // m_graphNode.PureExecutionDone = !info.IsPure;
             m_graphNode.IsPure = info.IsPure;
 
-            title = info.title;
+            title = info.Title;
             
-            string[] depths = info.menuItem.Split('/');
+            string[] depths = info.MenuItem.Split('/');
             foreach (string depth in depths)
             {
                 AddToClassList(depth.ToLower().Replace(' ', '-'));
@@ -76,7 +76,7 @@ namespace NodeSystem.Editor.Nodes
             }
 
             // Output first so always index 0
-            if (info.hasFlowOutput)
+            if (info.HasFlowOutput)
             {
                 if (nodeEditor != null && nodeEditor.AddOutputPorts(this))
                 {
@@ -92,7 +92,7 @@ namespace NodeSystem.Editor.Nodes
                 }
             }
             
-            if (info.hasFlowInput)
+            if (info.HasFlowInput)
             {
                 if (nodeEditor != null && nodeEditor.AddInputPorts(this))
                 {
