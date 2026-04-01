@@ -1,6 +1,7 @@
 ﻿using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.NodesLibrary.Process;
 using NodeSystem.Runtime.References;
+using NodeSystem.Runtime.Utils;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary
@@ -17,6 +18,9 @@ namespace NodeSystem.Runtime.NodesLibrary
         //
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public ScriptableObject TestIn2;
+        
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
+        public SerializableSourceType TestIn;
         //
         //
         // [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]

@@ -151,9 +151,16 @@ MonoBehaviour:
           _ownerId: d08a9b6c-dc75-41f0-a4ff-31c42cbf9cbe
           _portIndex: 1
           _portDirection: 2
+        - _exposedPropertyName: TestIn
+          _ownerId: d08a9b6c-dc75-41f0-a4ff-31c42cbf9cbe
+          _portIndex: 2
+          _portDirection: 2
         m_pureExecutionDone: 1
         Source: 
         TestIn2: {fileID: 11400000, guid: a6bd2147504027345aa975657be9b8fa, type: 2}
+        TestIn:
+          _objectId: 
+          _refTypename: 
     - rid: 3507076650591584337
       type: {class: StartNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
       data:

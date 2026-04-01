@@ -10,6 +10,8 @@ namespace NodeSystem.Runtime.References
     public class ReferenceManager : MonoBehaviour
     {
         [FormerlySerializedAs("m_referenceDataBanks")] [SerializeField] private List<ReferenceDataBank> _referenceDataBanks = new();
+        
+        public const string NoneReference = "";
 
         private static ReferenceManager _instance;
         public static ReferenceManager Instance
