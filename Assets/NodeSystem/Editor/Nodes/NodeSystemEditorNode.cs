@@ -233,6 +233,7 @@ namespace NodeSystem.Editor.Nodes
                             bindingPath = prop.propertyPath,
                             style =
                             {
+                                height = Length.Percent(100),
                                 width = Length.Percent(100) // TODO: IMPORTANT
                             }
                         };

@@ -1,4 +1,5 @@
-﻿using NodeSystem.Runtime.Attributes;
+﻿using System.Collections.Generic;
+using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.NodesLibrary.Process;
 using NodeSystem.Runtime.References;
 using NodeSystem.Runtime.Utils;
@@ -24,6 +25,12 @@ namespace NodeSystem.Runtime.NodesLibrary
         
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer), Tooltip("HEEEEYAAAAA")]
         public SerializableCompRef<Canvas> TestCompRef;
+        
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer), Tooltip("HEEEEYAAAAA")]
+        public SerializableCompRef<Transform> TestCompRef2;
+        
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.ExtensionContainer), Tooltip("HEEEEYAAAAA")]
+        public List<string> testList;
         //
         //
         // [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
