@@ -86,7 +86,7 @@ namespace NodeSystem.Editor.Graph
 
         private void AddMinimap(NodeSystemEditorWindow window)
         {
-            var miniMap = new MiniMap
+            MiniMap miniMap = new()
             {
                 anchored = false,
             };

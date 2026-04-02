@@ -9,14 +9,15 @@ namespace NodeSystem.Editor.Nodes
 {
     public class EditorNodePort : Port
     {
-        private string m_propBindingPath;
         public bool HideWhenConnected = true;
-        public string LinkedPropertyName { get; set; }
+        private string m_propBindingPath;
 
-        protected EditorNodePort(Orientation portOrientation, Direction portDirection, Capacity portCapacity, Type type) : base(portOrientation, portDirection, portCapacity, type)
+        protected EditorNodePort(Orientation portOrientation, Direction portDirection, Capacity portCapacity, Type type)
+            : base(portOrientation, portDirection, portCapacity, type)
         {
         }
 
+        public string LinkedPropertyName { get; set; }
 
 
         public static EditorNodePort Create(
@@ -75,60 +76,6 @@ namespace NodeSystem.Editor.Nodes
             return ele;
         }
 
-        public class DefaultEdgeConnectorListener : IEdgeConnectorListener
-        {
-          private GraphViewChange m_GraphViewChange;
-          private List<Edge> m_EdgesToCreate;
-          private List<GraphElement> m_EdgesToDelete;
-    
-          public DefaultEdgeConnectorListener()
-          {
-            m_EdgesToCreate = new List<Edge>();
-            m_EdgesToDelete = new List<GraphElement>();
-            m_GraphViewChange.edgesToCreate = m_EdgesToCreate;
-          }
-    
-          public void OnDropOutsidePort(Edge edge, Vector2 position)
-          {
-          }
-    
-          public void OnDrop(GraphView graphView, Edge edge)
-          {
-            m_EdgesToCreate.Clear();
-            m_EdgesToCreate.Add(edge);
-            m_EdgesToDelete.Clear();
-            if (edge.input.capacity == Capacity.Single)
-            {
-              foreach (Edge connection in edge.input.connections)
-              {
-                if (connection != edge)
-                  m_EdgesToDelete.Add(connection);
-              }
-            }
-            if (edge.output.capacity == Capacity.Single)
-            {
-              foreach (Edge connection in edge.output.connections)
-              {
-                if (connection != edge)
-                  m_EdgesToDelete.Add(connection);
-              }
-            }
-            if (m_EdgesToDelete.Count > 0)
-              graphView.DeleteElements(m_EdgesToDelete);
-            List<Edge> edgesToCreate = m_EdgesToCreate;
-            if (graphView.graphViewChanged != null)
-              edgesToCreate = graphView.graphViewChanged(m_GraphViewChange).edgesToCreate;
-            foreach (Edge edge1 in edgesToCreate)
-            {
-              graphView.AddElement(edge1);
-              edge.input.Connect(edge1);
-              // ((EditorNodePort)edge.input).NotifyConnectionChanged(true);
-              edge.output.Connect(edge1);
-              // ((EditorNodePort)edge.output).NotifyConnectionChanged(true);
-            }
-          }
-        }
-
         // Does not work as intended smh
         private void NotifyConnectionChanged(bool connected)
         {
@@ -136,25 +83,21 @@ namespace NodeSystem.Editor.Nodes
             if (port.contentContainer == null) return;
             if (m_propBindingPath == null || !HideWhenConnected) return;
             if (port.contentContainer.childCount < 3) return;
-            List<VisualElement> portContentContainer = new List<VisualElement>();
-            for (int j = 0; j < port.contentContainer.childCount; j++)
-            {
+            var portContentContainer = new List<VisualElement>();
+            for (var j = 0; j < port.contentContainer.childCount; j++)
                 portContentContainer.Add(port.contentContainer[j]);
-            }
 
-            int i = 2;
+            var i = 2;
             if (connected)
             {
                 VisualElement element = port.contentContainer[i];
                 if (element is PropertyField propertyField)
-                {
                     // Label tempField = new Label()
                     // {
                     //     name = propertyField.name,
                     // };
                     // portContentContainer[i] = tempField;
                     propertyField.visible = false;
-                } 
             }
             else
             {
@@ -163,19 +106,17 @@ namespace NodeSystem.Editor.Nodes
                 {
                     // SerializedProperty serializedPropertyOf = ((NodeSystemEditorNode)node).GetSerializedPropertyOf(LinkedPropertyName);
                     // if (serializedPropertyOf == null) return;
-                    PropertyField tempField = new PropertyField(/*serializedPropertyOf*/)
+                    PropertyField tempField = new( /*serializedPropertyOf*/)
                     {
                         name = labelField.name,
-                        bindingPath = m_propBindingPath,
+                        bindingPath = m_propBindingPath
                     };
                     portContentContainer[i] = tempField;
                 }
 
-                if (element is PropertyField propertyField)
-                {
-                    propertyField.visible = true;
-                }
+                if (element is PropertyField propertyField) propertyField.visible = true;
             }
+
             /*for (int i = 0; i < port.contentContainer.childCount; i++)
             {
                 Debug.Log(port.contentContainer[i]);
@@ -208,10 +149,7 @@ namespace NodeSystem.Editor.Nodes
                 }
             }*/
             port.contentContainer.Clear();
-            foreach (VisualElement visualElement in portContentContainer)
-            {
-                port.contentContainer.Add(visualElement);
-            }
+            foreach (VisualElement visualElement in portContentContainer) port.contentContainer.Add(visualElement);
         }
 
         public void AddField<T>(T tempField) where T : VisualElement, IBindable
@@ -219,7 +157,67 @@ namespace NodeSystem.Editor.Nodes
             contentContainer.Add(tempField);
             m_propBindingPath = tempField.bindingPath;
         }
+
+        public class DefaultEdgeConnectorListener : IEdgeConnectorListener
+        {
+            private readonly List<Edge> m_EdgesToCreate;
+            private readonly List<GraphElement> m_EdgesToDelete;
+            private readonly GraphViewChange m_GraphViewChange;
+
+            public DefaultEdgeConnectorListener()
+            {
+                m_EdgesToCreate = new List<Edge>();
+                m_EdgesToDelete = new List<GraphElement>();
+                m_GraphViewChange.edgesToCreate = m_EdgesToCreate;
+            }
+
+            public void OnDropOutsidePort(Edge edge, Vector2 position)
+            {
+                GraphView firstAncestorOfType = edge.GetFirstAncestorOfType<GraphView>();
+                
+                // edge.candidatePosition
+                Vector4 viewTransformMatrix = firstAncestorOfType.viewTransform.matrix * new Vector4(position.x, position.y, 0, 1);
+
+                Vector2 localToWorld = firstAncestorOfType.contentViewContainer.LocalToWorld(position);
+                Vector2 guiToScreenPoint = GUIUtility.GUIToScreenPoint(localToWorld);
+
+                NodeCreationContext nodeCreationContext = new NodeCreationContext()
+                {
+                    screenMousePosition = guiToScreenPoint,
+                };
+                firstAncestorOfType.nodeCreationRequest(nodeCreationContext);
+                Debug.Log(firstAncestorOfType.name);
+            }
+
+            public void OnDrop(GraphView graphView, Edge edge)
+            {
+                m_EdgesToCreate.Clear();
+                m_EdgesToCreate.Add(edge);
+                m_EdgesToDelete.Clear();
+                if (edge.input.capacity == Capacity.Single)
+                    foreach (Edge connection in edge.input.connections)
+                        if (connection != edge)
+                            m_EdgesToDelete.Add(connection);
+
+                if (edge.output.capacity == Capacity.Single)
+                    foreach (Edge connection in edge.output.connections)
+                        if (connection != edge)
+                            m_EdgesToDelete.Add(connection);
+
+                if (m_EdgesToDelete.Count > 0)
+                    graphView.DeleteElements(m_EdgesToDelete);
+                var edgesToCreate = m_EdgesToCreate;
+                if (graphView.graphViewChanged != null)
+                    edgesToCreate = graphView.graphViewChanged(m_GraphViewChange).edgesToCreate;
+                foreach (Edge edge1 in edgesToCreate)
+                {
+                    graphView.AddElement(edge1);
+                    edge.input.Connect(edge1);
+                    // ((EditorNodePort)edge.input).NotifyConnectionChanged(true);
+                    edge.output.Connect(edge1);
+                    // ((EditorNodePort)edge.output).NotifyConnectionChanged(true);
+                }
+            }
+        }
     }
-    
-    
 }
