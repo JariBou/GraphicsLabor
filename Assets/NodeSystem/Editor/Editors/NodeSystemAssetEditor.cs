@@ -10,9 +10,9 @@ namespace NodeSystem.Editor.Editors
     public class NodeSystemAssetEditor : UnityEditor.Editor
     {
         [OnOpenAsset]
-        public static bool OnOpenAsset(int instanceID, int index)
+        public static bool OnOpenAsset(EntityId instanceID, int index)
         {
-            Object asset = EditorUtility.InstanceIDToObject(instanceID);
+            Object asset = EditorUtility.EntityIdToObject(instanceID);
             if (asset.GetType() == typeof(NodeSystemAsset))
             {
                 NodeSystemEditorWindow.Open((NodeSystemAsset)asset);

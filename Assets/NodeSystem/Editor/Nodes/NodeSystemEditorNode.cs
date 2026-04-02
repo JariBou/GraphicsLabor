@@ -152,7 +152,7 @@ namespace NodeSystem.Editor.Nodes
 
                     // port.style.height = EditorGUI.GetPropertyHeight(prop);
                     port.style.height = new StyleLength(StyleKeyword.Auto);
-                    port.style.width = new StyleLength(StyleKeyword.Auto);
+                    port.style.width = Length.Percent(100);
                     
                     switch (propertyAttribute.PreferredLocation)
                     {
@@ -231,6 +231,10 @@ namespace NodeSystem.Editor.Nodes
                         {
                             name = propertyAttribute.OverrideDisplayName != "" ? propertyAttribute.OverrideDisplayName : fieldInfo.Name,
                             bindingPath = prop.propertyPath,
+                            style =
+                            {
+                                width = Length.Percent(100) // TODO: IMPORTANT
+                            }
                         };
                         port.AddField(tempField);
                     }
