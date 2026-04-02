@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.References
 {
+    [AddComponentMenu("Reference Data Banks/Reference Manager")]
     public class ReferenceManager : MonoBehaviour
     {
         [FormerlySerializedAs("m_referenceDataBanks")] [SerializeField] private List<ReferenceDataBank> _referenceDataBanks = new();

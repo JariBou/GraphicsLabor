@@ -6,9 +6,11 @@ using UnityEngine;
 public class test : MonoBehaviour
 {
     public SerializedDictionary<Transform, Vector3> tt;
+    
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log($"id: {GetEntityId().ToString()}");
         
     }
 

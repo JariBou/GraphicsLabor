@@ -3,6 +3,8 @@ using System.Runtime.Serialization;
 using NodeSystem.Runtime.References;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
 namespace NodeSystem.Runtime.Utils
@@ -91,17 +93,28 @@ namespace NodeSystem.Runtime.Utils
     }
     
     [Serializable]
-    public class SerializableTypedRef<T> : ISerializableTypedRef where T : MonoBehaviour
+    public class SerializableCompRef<T> : ISerializableTypedRef where T : Component
     {
-        [SerializeField] private string _objectId = "";
+        [FormerlySerializedAs("_objectId")] [SerializeField] private string _compId = ReferenceManager.NoneReference;
+        [SerializeField] private string _ownerId = ReferenceManager.NoneReference;
 
-        public string ObjectId
+        public string CompId
         {
-            get => _objectId; 
+            get => _compId; 
 #if UNITY_EDITOR
-            set => _objectId = value;
+            set => _compId = value;
 #else
-            private set => _objectId = value;
+            private set => _compId = value;
+#endif
+        }
+        
+        public string OwnerId
+        {
+            get => _ownerId; 
+#if UNITY_EDITOR
+            set => _ownerId = value;
+#else
+            private set => _ownerId = value;
 #endif
         }
         
@@ -119,19 +132,33 @@ namespace NodeSystem.Runtime.Utils
 
         public Type GetRefType()
         {
+            return typeof(T);
             return Type.GetType(_refTypename);
         }
 
         public T Get()
         {
-            return ReferenceManager.GetGameObject<T>(_objectId);
+            GameObject owner = ReferenceManager.GetGameObject<GameObject>(_ownerId);
+            if (owner == null)
+            {
+                return null;
+            }
+
+            GameObjectComponentReferenceBank compRefBank = owner.GetComponent<GameObjectComponentReferenceBank>();
+            if (compRefBank == null)
+            {
+                Debug.LogError($"Missing GameObjectComponentReferenceBank on GameObject '{owner.name}'");
+                return null;
+            }
+
+            return compRefBank.GetComp<T>(_compId);
         }
     }
     
     [Serializable]
     public class SerializableSourceType
     {
-        [SerializeField] private string _objectId = "";
+        [SerializeField] private string _objectId = ReferenceManager.NoneReference;
 
         public string ObjectId
         {
@@ -200,29 +227,74 @@ namespace NodeSystem.Runtime.Utils
         }
     }
     
-    [CustomPropertyDrawer(typeof(SerializableTypedRef<>))]
-    public class SerializableTypedRefEditor : PropertyDrawer
+    [CustomPropertyDrawer(typeof(SerializableCompRef<>))]
+    public class SerializableCompRefEditor : PropertyDrawer
     {
+        private float _cellHeight;
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             property.serializedObject.Update();
-
             ISerializableTypedRef typedRef = (ISerializableTypedRef)property.boxedValue;
-
+    
             EditorGUI.BeginProperty(position, label, property);
-            SerializedProperty objIdProp = property.FindPropertyRelative("_objectId");
+            SerializedProperty ownerIdProp = property.FindPropertyRelative("_ownerId");
+            SerializedProperty compIdProp = property.FindPropertyRelative("_compId");
             EditorGUI.BeginChangeCheck();
-            GameObject gameObject =  objIdProp.stringValue == ReferenceManager.NoneReference ? null : ReferenceManager.GetGameObject<Object>(objIdProp.stringValue);
-            Object obj = EditorGUI.ObjectField(position, gameObject, typedRef.GetRefType(), true);
+            
+            EditorGUI.BeginDisabledGroup(true);
+            
+            GameObject ownerGo =  ownerIdProp.stringValue == ReferenceManager.NoneReference ? null : ReferenceManager.GetGameObject<GameObject>(ownerIdProp.stringValue);
+            
+            float cellWidth = position.width / 3;
+            _cellHeight = 18f;
+            {
+                Rect drawRect = new Rect()
+                {
+                    x = position.x,
+                    y = position.y,
+                    width = position.width,
+                    height = _cellHeight,
+                };
 
+                EditorGUI.ObjectField(drawRect, ownerGo, typeof(GameObject), true);
+            }
+            
+            EditorGUI.EndDisabledGroup();
+
+            GameObjectComponentReferenceBank refBank = ownerGo?.GetComponent<GameObjectComponentReferenceBank>();
+            Component displayedComp = refBank?.GetComp<Component>(compIdProp.stringValue);
+
+            Type refType = typedRef.GetRefType();
+            Object obj;
+            {
+                Rect drawRect = new Rect()
+                {
+                    x = position.x,
+                    y = position.y + _cellHeight,
+                    width = position.width,
+                    height = _cellHeight,
+                };
+                
+                obj = EditorGUI.ObjectField(drawRect, displayedComp, refType, true);
+            }
+    
             if (EditorGUI.EndChangeCheck())
             {
-                if (obj is GameObject go)
+                if (obj is Component comp)
                 {
-                    objIdProp.stringValue = ReferenceManager.GetGuidOf(go);
+                    ownerIdProp.stringValue = ReferenceManager.GetGuidOf(comp.gameObject);
+                    GameObjectComponentReferenceBank gameObjectComponentReferenceBank = comp.gameObject.GetComponent<GameObjectComponentReferenceBank>();
+                    if (gameObjectComponentReferenceBank == null)
+                    {
+                        gameObjectComponentReferenceBank = comp.gameObject.AddComponent<GameObjectComponentReferenceBank>();
+                    }
+                    gameObjectComponentReferenceBank.LoadReferences();
+                    compIdProp.stringValue = gameObjectComponentReferenceBank.GetGuidOf(comp);
                 } else if (obj is null)
                 {
-                    objIdProp.stringValue = ReferenceManager.NoneReference;
+                    ownerIdProp.stringValue = ReferenceManager.NoneReference;
+                    compIdProp.stringValue = ReferenceManager.NoneReference;
                 }
                 
                 property.serializedObject.ApplyModifiedProperties();
@@ -230,6 +302,11 @@ namespace NodeSystem.Runtime.Utils
             
             EditorGUI.EndProperty();
             // base.OnGUI(position, property, label);
+        }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return base.GetPropertyHeight(property, label) * 2;
         }
     }
     

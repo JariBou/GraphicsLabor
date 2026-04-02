@@ -39,7 +39,6 @@ namespace NodeSystem.Editor.Graph
         {   
             m_currentGraph = graph;
             DrawGraph();
-            GenerateBlackBoard();
         }
 
         private void DrawGraph()
@@ -49,43 +48,10 @@ namespace NodeSystem.Editor.Graph
             m_currentView.graphViewChanged += OnChange;
             rootVisualElement.Add(m_currentView);
         }
-        
-        private void GenerateBlackBoard()
-        {
-            var blackboard = new NodeSystemBlackboard(m_currentView);
-            
-            blackboard.addItemRequested = nodeSystemBlackboard =>
-            {
-                Debug.Log("ahah");
-                m_currentView.AddBlackboardProperty(new BlackboardProperty(), false);
-            };
-            blackboard.editTextRequested = (_blackboard, element, newValue) =>
-            {
-                var oldPropertyName = ((BlackboardField) element).text;
-                if (m_currentView.ExposedProperties.Any(x => x.PropertyName == newValue))
-                {
-                    EditorUtility.DisplayDialog("Error", "This property name already exists, please chose another one.",
-                        "OK");
-                    return;
-                }
-            
-                var targetIndex = m_currentView.ExposedProperties.FindIndex(x => x.PropertyName == oldPropertyName);
-                m_currentView.ExposedProperties[targetIndex].PropertyName = newValue;
-                
-                // m_currentView.ModifyExposedProperties(exposedProperties =>
-                // {
-                //     exposedProperties[targetIndex].PropertyName = newValue;
-                // });
-                ((BlackboardField) element).text = newValue;
-            };
-            blackboard.SetPosition(new Rect(10,30,200,300));
-            m_currentView.Add(blackboard);
-            m_currentView.SetBlackboard(blackboard);
-        }
 
         private GraphViewChange OnChange(GraphViewChange graphviewchange)
         {
-            this.hasUnsavedChanges = true;
+            hasUnsavedChanges = true;
             EditorUtility.SetDirty(m_currentGraph);
             return graphviewchange;
         }
@@ -94,7 +60,7 @@ namespace NodeSystem.Editor.Graph
         {
             if (m_currentGraph is not null)
             {
-                this.hasUnsavedChanges = EditorUtility.IsDirty(m_currentGraph);
+                hasUnsavedChanges = EditorUtility.IsDirty(m_currentGraph);
             }
         }
 

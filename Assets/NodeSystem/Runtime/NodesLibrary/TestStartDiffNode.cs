@@ -21,6 +21,9 @@ namespace NodeSystem.Runtime.NodesLibrary
         
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public SerializableSourceType TestIn;
+        
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.ExtensionContainer)]
+        public SerializableCompRef<Canvas> TestCompRef;
         //
         //
         // [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]

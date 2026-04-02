@@ -150,6 +150,10 @@ namespace NodeSystem.Editor.Nodes
                     port.tooltip = propertyType.ToString();
                     m_ports.Add(port);
 
+                    // port.style.height = EditorGUI.GetPropertyHeight(prop);
+                    port.style.height = new StyleLength(StyleKeyword.Auto);
+                    port.style.width = new StyleLength(StyleKeyword.Auto);
+                    
                     switch (propertyAttribute.PreferredLocation)
                     {
                         case PropContainerLocation.InputContainer:
@@ -226,7 +230,7 @@ namespace NodeSystem.Editor.Nodes
                         PropertyField tempField = new(prop)
                         {
                             name = propertyAttribute.OverrideDisplayName != "" ? propertyAttribute.OverrideDisplayName : fieldInfo.Name,
-                            bindingPath = prop.propertyPath
+                            bindingPath = prop.propertyPath,
                         };
                         port.AddField(tempField);
                     }

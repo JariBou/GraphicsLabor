@@ -6,6 +6,8 @@ using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.References
 {
+    [AddComponentMenu("Reference Data Banks/GameObject Reference Bank")]
+    
     public class ReferenceDataBank : MonoBehaviour
     {
         [FormerlySerializedAs("m_references")] [SerializeField] private List<GameObjectReference> _references;

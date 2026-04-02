@@ -60,6 +60,10 @@ namespace NodeSystem.Editor.Graph
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
             this.AddManipulator(new ClickSelector());
+            this.AddManipulator(new ContentZoomer());
+            
+            AddMinimap(window);
+            GenerateBlackBoard();
 
             DrawNodes();
             DrawConnections();
@@ -78,6 +82,16 @@ namespace NodeSystem.Editor.Graph
             // canPasteSerializedData += CanPasteCallback;
             // unserializeAndPaste += PasteCallback;
             // serializeGraphElements += CopyCutCallback;
+        }
+
+        private void AddMinimap(NodeSystemEditorWindow window)
+        {
+            var miniMap = new MiniMap
+            {
+                anchored = false,
+            };
+            miniMap.SetPosition(new Rect(window.position.width-200-15, 20, 200, 180));
+            Add(miniMap);
         }
 
         #region copy and paste
@@ -126,15 +140,45 @@ namespace NodeSystem.Editor.Graph
             m_blackboard.AddProperty(blackboardProperty, b);
         }
         
+        private void GenerateBlackBoard()
+        {
+            NodeSystemBlackboard blackboard = new(this)
+            {
+                addItemRequested = _ =>
+                {
+                    Debug.Log("ahah");
+                    AddBlackboardProperty(new BlackboardProperty(), false);
+                },
+                editTextRequested = (_, element, newValue) =>
+                {
+                    string oldPropertyName = ((BlackboardField) element).text;
+                    if (ExposedProperties.Any(x => x.PropertyName == newValue))
+                    {
+                        EditorUtility.DisplayDialog("Error", "This property name already exists, please chose another one.",
+                            "OK");
+                        return;
+                    }
+            
+                    int targetIndex = ExposedProperties.FindIndex(x => x.PropertyName == oldPropertyName);
+                    ExposedProperties[targetIndex].PropertyName = newValue;
+                
+                    // m_currentView.ModifyExposedProperties(exposedProperties =>
+                    // {
+                    //     exposedProperties[targetIndex].PropertyName = newValue;
+                    // });
+                    ((BlackboardField) element).text = newValue;
+                }
+            };
+
+            blackboard.SetPosition(new Rect(10,30,200,300));
+            Add(blackboard);
+            m_blackboard = blackboard;
+        }
+        
         // Not used anymore
         public NodeSystemBlackboard GetNodeSystemBlackboard()
         {
             return m_blackboard;
-        }
-        
-        public void SetBlackboard(NodeSystemBlackboard blackboard)
-        {
-            m_blackboard = blackboard;
         }
         
         public void ClearBlackBoardAndExposedProperties()

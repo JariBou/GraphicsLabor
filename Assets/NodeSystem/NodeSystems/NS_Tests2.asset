@@ -68,10 +68,10 @@ MonoBehaviour:
         m_guid: 74879ebe-6c8a-47b3-adcf-af3391160e5d
         m_position:
           serializedVersion: 2
-          x: 121
-          y: 27
+          x: 81
+          y: 38
           width: 441
-          height: 77
+          height: 72
         m_isPure: 1
         typename: NodeSystem.Runtime.NodesLibrary.Blackboard.ExposedVariableNode,
           NodeSystem, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -155,11 +155,19 @@ MonoBehaviour:
           _ownerId: d08a9b6c-dc75-41f0-a4ff-31c42cbf9cbe
           _portIndex: 2
           _portDirection: 2
+        - _exposedPropertyName: TestCompRef
+          _ownerId: d08a9b6c-dc75-41f0-a4ff-31c42cbf9cbe
+          _portIndex: 3
+          _portDirection: 2
         m_pureExecutionDone: 1
         Source: 
         TestIn2: {fileID: 11400000, guid: a6bd2147504027345aa975657be9b8fa, type: 2}
         TestIn:
           _objectId: 
+          _refTypename: 
+        TestCompRef:
+          _compId: 725c887b-cc59-45ef-a571-f46c79545de0
+          _ownerId: fbe6d3ae-ad8f-4c3b-b112-8ec9bc1efbe2
           _refTypename: 
     - rid: 3507076650591584337
       type: {class: StartNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
@@ -167,9 +175,9 @@ MonoBehaviour:
         m_guid: f8fa534a-f0ca-45c1-a922-93dc6bd3f120
         m_position:
           serializedVersion: 2
-          x: 102
-          y: -85
-          width: 74
+          x: -14
+          y: -134
+          width: 75
           height: 77
         m_isPure: 0
         typename: NodeSystem.Runtime.NodesLibrary.Process.StartNode, NodeSystem,
