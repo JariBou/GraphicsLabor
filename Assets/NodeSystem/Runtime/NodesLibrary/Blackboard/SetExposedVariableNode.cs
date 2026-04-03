@@ -10,7 +10,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Blackboard
         public string m_Name;
         [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
         public string m_NewValue;
-        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
+        [ExposedProperty(PropPortDirection.Output, portCapacity: PropPortCapacity.Multi, preferredLocation: PropContainerLocation.OutputContainer)]
         public string m_Value;
 
         public override ProcessInfo OnProcess(ExecInfo info)

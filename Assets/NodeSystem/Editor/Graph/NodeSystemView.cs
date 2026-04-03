@@ -60,7 +60,8 @@ namespace NodeSystem.Editor.Graph
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
             this.AddManipulator(new ClickSelector());
-            this.AddManipulator(new ContentZoomer());
+
+            SetupZoom(0.4f, 1.1f);
             
             AddMinimap(window);
             GenerateBlackBoard();

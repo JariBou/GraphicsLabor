@@ -21,13 +21,8 @@ MonoBehaviour:
   - rid: 1463373045728018440
   - rid: 1463373045728018443
   - rid: 1463373068526419970
+  - rid: 1463373085574955079
   m_connections:
-  - InputPort:
-      NodeId: b4bf99db-d70d-4d28-b9b6-8278eb6e7fa9
-      PortIndex: 1
-    OutputPort:
-      NodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
-      PortIndex: 0
   - InputPort:
       NodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
       PortIndex: 2
@@ -54,6 +49,18 @@ MonoBehaviour:
       PortIndex: 0
   - InputPort:
       NodeId: b4bf99db-d70d-4d28-b9b6-8278eb6e7fa9
+      PortIndex: 1
+    OutputPort:
+      NodeId: 57db825e-ecb2-4661-afbc-c1ab5e256b8f
+      PortIndex: 0
+  - InputPort:
+      NodeId: 1a9ad9eb-b514-4e8a-a2b1-b1ba070989bd
+      PortIndex: 0
+    OutputPort:
+      NodeId: 74879ebe-6c8a-47b3-adcf-af3391160e5d
+      PortIndex: 1
+  - InputPort:
+      NodeId: b4bf99db-d70d-4d28-b9b6-8278eb6e7fa9
       PortIndex: 2
     OutputPort:
       NodeId: 74879ebe-6c8a-47b3-adcf-af3391160e5d
@@ -72,9 +79,9 @@ MonoBehaviour:
         m_guid: 74879ebe-6c8a-47b3-adcf-af3391160e5d
         m_position:
           serializedVersion: 2
-          x: -24
-          y: 63
-          width: 441
+          x: 222
+          y: 71
+          width: 259
           height: 72
         m_isPure: 1
         typename: NodeSystem.Runtime.NodesLibrary.Blackboard.ExposedVariableNode,
@@ -97,8 +104,8 @@ MonoBehaviour:
         m_guid: 9d1e0bd6-5498-4039-912e-3b85a7ba9cc0
         m_position:
           serializedVersion: 2
-          x: 75
-          y: 163
+          x: -16
+          y: 107
           width: 194
           height: 98
         m_isPure: 0
@@ -113,10 +120,10 @@ MonoBehaviour:
         m_guid: 03645e64-7233-4f60-9885-05fcf8577c11
         m_position:
           serializedVersion: 2
-          x: 239
-          y: 313
+          x: 222
+          y: 286
           width: 323
-          height: 178
+          height: 239
         m_isPure: 0
         typename: NodeSystem.Runtime.NodesLibrary.TestStartDiffNode, NodeSystem,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -133,6 +140,14 @@ MonoBehaviour:
           _ownerId: 03645e64-7233-4f60-9885-05fcf8577c11
           _portIndex: 3
           _portDirection: 2
+        - _exposedPropertyName: TestCompRef2
+          _ownerId: 03645e64-7233-4f60-9885-05fcf8577c11
+          _portIndex: 4
+          _portDirection: 2
+        - _exposedPropertyName: testList
+          _ownerId: 03645e64-7233-4f60-9885-05fcf8577c11
+          _portIndex: 5
+          _portDirection: 2
         m_pureExecutionDone: 1
         Source: 
         TestIn2: {fileID: 0}
@@ -148,6 +163,31 @@ MonoBehaviour:
           _ownerId: 
           _refTypename: 
         testList: []
+    - rid: 1463373085574955079
+      type: {class: StringToIntNode, ns: NodeSystem.Runtime.NodesLibrary.Utils, asm: NodeSystem}
+      data:
+        m_guid: 1a9ad9eb-b514-4e8a-a2b1-b1ba070989bd
+        m_position:
+          serializedVersion: 2
+          x: 581
+          y: 35
+          width: 356
+          height: 72
+        m_isPure: 1
+        typename: NodeSystem.Runtime.NodesLibrary.Utils.StringToIntNode, NodeSystem,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: m_string
+          _ownerId: 1a9ad9eb-b514-4e8a-a2b1-b1ba070989bd
+          _portIndex: 0
+          _portDirection: 1
+        - _exposedPropertyName: m_Value
+          _ownerId: 1a9ad9eb-b514-4e8a-a2b1-b1ba070989bd
+          _portIndex: 1
+          _portDirection: 2
+        m_pureExecutionDone: 1
+        m_string: 
+        m_Value: 0
     - rid: 3507076650591584337
       type: {class: StartNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
       data:
@@ -169,8 +209,8 @@ MonoBehaviour:
         m_guid: b4bf99db-d70d-4d28-b9b6-8278eb6e7fa9
         m_position:
           serializedVersion: 2
-          x: 584
-          y: -141
+          x: 609
+          y: -85
           width: 254
           height: 96
         m_isPure: 0

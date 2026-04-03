@@ -12,8 +12,9 @@ namespace NodeSystem.Runtime.Attributes
         public string OverrideDisplayName { get; }
         public PropContainerLocation PreferredLocation { get; }
         public PropPortCapacity PortCapacity { get; }
-        public bool HideInputWhenConnected { get; }
+        public bool DisableInputWhenConnected { get; }
         public bool AutoTyping { get; }
+        public bool LabelOnly { get; }
 
         public ExposedPropertyAttribute(
             PropPortDirection portDirection, 
@@ -21,7 +22,8 @@ namespace NodeSystem.Runtime.Attributes
             string overrideDisplayName = "", 
             PropContainerLocation preferredLocation = PropContainerLocation.ExtensionContainer, 
             PropPortCapacity portCapacity = PropPortCapacity.Single, 
-            bool hideInputWhenConnected = true)
+            bool disableInputWhenConnected = false,
+            bool labelOnly = false)
         {
             this.PortType = portType ?? typeof(string);
             this.PortDirection = portDirection;
@@ -29,7 +31,8 @@ namespace NodeSystem.Runtime.Attributes
             PreferredLocation = preferredLocation;
             AutoTyping = portType == null;
             PortCapacity = portCapacity;
-            HideInputWhenConnected = hideInputWhenConnected;
+            DisableInputWhenConnected = disableInputWhenConnected;
+            LabelOnly =  labelOnly;
         }
 
     }

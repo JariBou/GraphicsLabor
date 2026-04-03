@@ -8,7 +8,7 @@ using UnityEngine;
 namespace NodeSystem.Runtime.NodesLibrary
 {
     // I have no clue how to tackle this
-    [NodeInfo("TestNode", "WIP/Test Start Diff Node", FlowDirection.Output)]
+    [NodeInfo("Test Start Diff Node", "WIP/Test Start Diff Node", FlowDirection.Output)]
     public class TestStartDiffNode : GameObjectSourceNode
     {
         // [ExposedProperty(PropPortDirection.Input, portType: typeof(TestClass), preferredLocation: PropContainerLocation.InputContainer)]

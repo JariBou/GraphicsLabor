@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using NodeSystem.Editor.Editors.NodeEditors;
 using NodeSystem.Runtime;
 using NodeSystem.Runtime.Attributes;
@@ -107,6 +108,8 @@ namespace NodeSystem.Editor.Nodes
             CreateExposedVariables(typeInfo);
             
             RefreshExpandedState();
+            
+            // this.AddManipulator(new Clickable(OnClicked));
         }
 
         private void CreateExposedVariables(Type typeInfo) 
@@ -144,7 +147,7 @@ namespace NodeSystem.Editor.Nodes
                         
                     EditorNodePort port = EditorNodePort.Create(Orientation.Horizontal, portDirection, propertyAttribute.PortCapacity == PropPortCapacity.Single ? Port.Capacity.Single : Port.Capacity.Multi, propertyType);
                     // port.contentContainer.Add(tempField);
-                    port.HideWhenConnected = propertyAttribute.HideInputWhenConnected;
+                    port.HideWhenConnected = propertyAttribute.DisableInputWhenConnected;
                     port.LinkedPropertyName = fieldInfo.Name;
                     port.portName = "";
                     port.tooltip = propertyType.ToString();
@@ -174,8 +177,17 @@ namespace NodeSystem.Editor.Nodes
                         m_ports.IndexOf(port),
                         propertyAttribute.PortDirection
                     ));
-                        
-                    if (propertyType == typeof(SerializableRef))
+
+                    if (propertyAttribute.LabelOnly)
+                    {
+                        Label label = new()
+                        {
+                            text = propertyAttribute.OverrideDisplayName != "" ? propertyAttribute.OverrideDisplayName : ObjectNames.NicifyVariableName(
+                                fieldInfo.Name),
+                        };
+                        port.AddField(label);
+                    }
+                    else if (propertyType == typeof(SerializableRef))
                     {
                         SerializableRef sr = (SerializableRef)fieldInfo.GetValue(m_graphNode);
                         sr.RefTypename = propertyType.AssemblyQualifiedName;
@@ -229,7 +241,8 @@ namespace NodeSystem.Editor.Nodes
                     {
                         PropertyField tempField = new(prop)
                         {
-                            name = propertyAttribute.OverrideDisplayName != "" ? propertyAttribute.OverrideDisplayName : fieldInfo.Name,
+                            name = propertyAttribute.OverrideDisplayName != "" ? propertyAttribute.OverrideDisplayName : ObjectNames.NicifyVariableName(
+                                fieldInfo.Name),
                             bindingPath = prop.propertyPath,
                             style =
                             {
@@ -405,5 +418,50 @@ namespace NodeSystem.Editor.Nodes
                         
             return m_serializedProperty.FindPropertyRelative(linkedPropertyName);
         }
+
+
+        #region Editor QOL
+
+        private float _lastClickedTime;
+        public void OnClicked()
+        {
+
+            // F ME
+            float now = Time.time;
+            
+            float diff = now - _lastClickedTime;
+            Debug.Log(diff);
+            if (diff < 0.1f)
+            {
+                Type nodeType = m_graphNode.GetType();
+                Debug.Log(nodeType);
+                string nodeClass = nodeType.ToString().Split('.').Last();
+                string asset = AssetDatabase.GetAllAssetPaths().FirstOrDefault(p => p.EndsWith(nodeClass + ".cs"));
+                if (asset != null)
+                {
+                    async Awaitable OpenDelayed(string className)
+                    {
+                        await Awaitable.WaitForSecondsAsync(0.1f);
+                        MonoScript script = AssetDatabase.LoadAssetAtPath<MonoScript>(className);
+                        Debug.Log(className);
+                        if (script == null)
+                        {
+                            Debug.LogWarning($"Couldn't open node of type '{className}'");
+                        }
+                        else
+                        {
+                            AssetDatabase.OpenAsset(script);
+                        }
+                    }
+                    
+                    _ = OpenDelayed(asset);
+                }
+            }
+            
+            _lastClickedTime = now;
+        }
+
+        #endregion
+
     }
 }

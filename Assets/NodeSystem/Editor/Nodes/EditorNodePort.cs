@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -41,17 +42,17 @@ namespace NodeSystem.Editor.Nodes
 
         public override void Connect(Edge edge)
         {
-            // Debug.LogWarning("Connect!");
+            Debug.LogWarning("Connect!");
             // This breaks when deleting nodes
-            // NotifyConnectionChanged(true);
+            NotifyConnectionChanged(true);
             base.Connect(edge);
         }
 
         public override void Disconnect(Edge edge)
         {
-            // Debug.LogWarning("Disconnect!");
+            Debug.LogWarning("Disconnect!");
             // This breaks when deleting nodes
-            // NotifyConnectionChanged(false);
+            NotifyConnectionChanged(false);
             base.Disconnect(edge);
         }
 
@@ -77,9 +78,14 @@ namespace NodeSystem.Editor.Nodes
         }
 
         // Does not work as intended smh
-        private void NotifyConnectionChanged(bool connected)
+        private void NotifyConnectionChanged(bool wasConnected)
         {
             Port port = this;
+            if (port.direction == Direction.Output)
+            {
+                OutputConnectionChanged(wasConnected);
+                return;
+            }
             if (port.contentContainer == null) return;
             if (m_propBindingPath == null || !HideWhenConnected) return;
             if (port.contentContainer.childCount < 3) return;
@@ -88,16 +94,19 @@ namespace NodeSystem.Editor.Nodes
                 portContentContainer.Add(port.contentContainer[j]);
 
             var i = 2;
-            if (connected)
+            if (wasConnected)
             {
                 VisualElement element = port.contentContainer[i];
                 if (element is PropertyField propertyField)
+                {
                     // Label tempField = new Label()
                     // {
                     //     name = propertyField.name,
                     // };
                     // portContentContainer[i] = tempField;
-                    propertyField.visible = false;
+                    propertyField.SetEnabled(false);
+                    // propertyField.visible = false;
+                }
             }
             else
             {
@@ -106,15 +115,15 @@ namespace NodeSystem.Editor.Nodes
                 {
                     // SerializedProperty serializedPropertyOf = ((NodeSystemEditorNode)node).GetSerializedPropertyOf(LinkedPropertyName);
                     // if (serializedPropertyOf == null) return;
-                    PropertyField tempField = new( /*serializedPropertyOf*/)
-                    {
-                        name = labelField.name,
-                        bindingPath = m_propBindingPath
-                    };
-                    portContentContainer[i] = tempField;
+                    // PropertyField tempField = new( /*serializedPropertyOf*/)
+                    // {
+                    //     name = labelField.name,
+                    //     bindingPath = m_propBindingPath
+                    // };
+                    // portContentContainer[i] = tempField;
                 }
 
-                if (element is PropertyField propertyField) propertyField.visible = true;
+                if (element is PropertyField propertyField) propertyField.SetEnabled(true);
             }
 
             /*for (int i = 0; i < port.contentContainer.childCount; i++)
@@ -152,13 +161,23 @@ namespace NodeSystem.Editor.Nodes
             foreach (VisualElement visualElement in portContentContainer) port.contentContainer.Add(visualElement);
         }
 
+        private void OutputConnectionChanged(bool wasConnected)
+        {
+            if (HideWhenConnected)
+            {
+                
+                VisualElement element = this.contentContainer[2];
+                element.SetEnabled(!wasConnected);
+            }
+        }
+
         public void AddField<T>(T tempField) where T : VisualElement, IBindable
         {
             contentContainer.Add(tempField);
             m_propBindingPath = tempField.bindingPath;
         }
 
-        public class DefaultEdgeConnectorListener : IEdgeConnectorListener
+        private class DefaultEdgeConnectorListener : IEdgeConnectorListener
         {
             private readonly List<Edge> m_EdgesToCreate;
             private readonly List<GraphElement> m_EdgesToDelete;
@@ -173,20 +192,19 @@ namespace NodeSystem.Editor.Nodes
 
             public void OnDropOutsidePort(Edge edge, Vector2 position)
             {
+                /*
+                 // Works but not really useful rn
                 GraphView firstAncestorOfType = edge.GetFirstAncestorOfType<GraphView>();
                 
-                // edge.candidatePosition
-                Vector4 viewTransformMatrix = firstAncestorOfType.viewTransform.matrix * new Vector4(position.x, position.y, 0, 1);
-
                 Vector2 localToWorld = firstAncestorOfType.contentViewContainer.LocalToWorld(position);
                 Vector2 guiToScreenPoint = GUIUtility.GUIToScreenPoint(localToWorld);
 
-                NodeCreationContext nodeCreationContext = new NodeCreationContext()
+                NodeCreationContext nodeCreationContext = new()
                 {
                     screenMousePosition = guiToScreenPoint,
                 };
                 firstAncestorOfType.nodeCreationRequest(nodeCreationContext);
-                Debug.Log(firstAncestorOfType.name);
+                */
             }
 
             public void OnDrop(GraphView graphView, Edge edge)

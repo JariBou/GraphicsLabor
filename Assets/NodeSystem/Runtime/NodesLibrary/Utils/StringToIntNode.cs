@@ -5,7 +5,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Utils
     [NodeInfo("String to Int", "Utils/String to Int", isPure: true)]
     public class StringToIntNode : NodeSystemNode
     {
-        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
+        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer, disableInputWhenConnected: true)]
         public string m_string;
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public int m_Value;
