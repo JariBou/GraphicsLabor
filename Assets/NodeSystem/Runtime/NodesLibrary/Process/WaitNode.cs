@@ -10,16 +10,11 @@ namespace NodeSystem.Runtime.NodesLibrary.Process
         [ExposedProperty(portDirection: PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
         public uint time;
         
-        public override ProcessInfo OnProcess(ExecInfo info)
+        public override async Awaitable<ProcessInfo> OnProcess(ExecInfo info)
         {
-            info.NodeSystemExecutioner.GetObject().StartCoroutine(Wait(info));
-            return new ProcessInfo(id, GetNextNode(info.GraphInstance).id, ProcessInfo.ExecutionFlowType.Wait);
-        }
-
-        public IEnumerator Wait(ExecInfo info)
-        {
-            yield return new WaitForSeconds(time);
-            info.NodeSystemExecutioner.TickProcess();
+            await Awaitable.WaitForSecondsAsync(time);
+            // return new ProcessInfo(id, GetNextNode(info.GraphInstance).id, ProcessInfo.ExecutionFlowType.Wait);
+            return await ContinueExecution(GetNextNode(info.GraphInstance).id);
         }
     }
 }

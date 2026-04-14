@@ -27,7 +27,7 @@ namespace NodeSystem.Runtime.NodesLibrary
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public TestFlags TestFlags;
         
-        public override ProcessInfo OnProcess(ExecInfo info)
+        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
         {
             // GetValueOfProp<SerializableRef>(info, nameof(Source));
             return base.OnProcess(info);

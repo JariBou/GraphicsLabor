@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NodeSystem.Runtime.References;
 using UnityEngine;
 
@@ -24,9 +25,9 @@ namespace NodeSystem.Runtime.Executionners
             m_currentExecNodeId = _nodeToPlay.id;
         }
 
-        public void Trigger()
+        public async Awaitable Trigger()
         {
-            TickProcess();
+            await TickProcess();
             // nodeToPlay.OnProcess(new ExecInfo(graphInstance, this));
         }
         
@@ -35,16 +36,16 @@ namespace NodeSystem.Runtime.Executionners
             return _graphInstance == null ? null : _graphInstance.GetNode(m_currentExecNodeId);
         }
 
-        public void TickProcess()
+        public async Awaitable TickProcess()
         {
             if (_graphInstance == null || m_currentExecNodeId == "") return;
-            ProcessInfo processInfo = GetCurrentNode().OnProcess(new ExecInfo(_graphInstance, this));
+            ProcessInfo processInfo = await GetCurrentNode().OnProcess(new ExecInfo(_graphInstance, this));
             Debug.Log("Ticking!");
             switch (processInfo.FlowType)
             {
                 case ProcessInfo.ExecutionFlowType.ExecuteNext:
                     m_currentExecNodeId = processInfo.NextNodeId;
-                    TickProcess();
+                    _ = TickProcess(); // TODO: discard? await? idk
                     break;
                 case ProcessInfo.ExecutionFlowType.Wait:
                     m_currentExecNodeId = processInfo.NextNodeId;
@@ -58,11 +59,6 @@ namespace NodeSystem.Runtime.Executionners
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        public MonoBehaviour GetObject()
-        {
-            return this;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NodeSystem.Runtime.Attributes;
+using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Utils
 {
@@ -13,7 +14,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Utils
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public string m_Value;
 
-        public override ProcessInfo OnProcess(ExecInfo info)
+        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
         {
             m_Value = GetValueOfProp<string>(info, nameof(m_a)) + GetValueOfProp<string>(info, nameof(m_b));
             return base.OnProcess(info);

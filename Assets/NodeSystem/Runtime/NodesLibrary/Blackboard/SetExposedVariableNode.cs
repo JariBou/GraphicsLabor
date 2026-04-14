@@ -1,4 +1,5 @@
 ﻿using NodeSystem.Runtime.Attributes;
+using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Blackboard
 {
@@ -13,7 +14,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Blackboard
         [ExposedProperty(PropPortDirection.Output, portCapacity: PropPortCapacity.Multi, preferredLocation: PropContainerLocation.OutputContainer)]
         public string m_Value;
 
-        public override ProcessInfo OnProcess(ExecInfo info)
+        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
         {
             NodeSystemAsset graph = info.GraphInstance;
             string exposedVarName = GetValueOfProp<string>(info, nameof(m_Name));

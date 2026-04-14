@@ -1,4 +1,6 @@
-﻿using NodeSystem.Runtime.Attributes;
+﻿using System.Threading.Tasks;
+using NodeSystem.Runtime.Attributes;
+using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Logic
 {
@@ -8,15 +10,15 @@ namespace NodeSystem.Runtime.NodesLibrary.Logic
         [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
         public bool condition;
         
-        public override ProcessInfo OnProcess(ExecInfo info)
+        public override async Awaitable<ProcessInfo> OnProcess(ExecInfo info)
         {
             NodeSystemAsset graph = info.GraphInstance;
             NodeSystemNode nextNode = GetNodeConnectedToPort(graph, GetValueOfProp<bool>(info, nameof(condition)) ? 0 : 1);
             if (nextNode != null)
             {
-                return new ProcessInfo(id, nextNode.id, ProcessInfo.ExecutionFlowType.ExecuteNext);
+                return await Task.FromResult(new ProcessInfo(id, nextNode.id, ProcessInfo.ExecutionFlowType.ExecuteNext));
             }
-            return new ProcessInfo(id, "", ProcessInfo.ExecutionFlowType.EndExecution);
+            return await EndExecution();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NodeSystem.Runtime.Attributes;
+using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Utils
 {
@@ -7,10 +8,10 @@ namespace NodeSystem.Runtime.NodesLibrary.Utils
     {
         [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer, disableInputWhenConnected: true)]
         public string m_string;
-        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer, labelOnly: true)]
         public int m_Value;
 
-        public override ProcessInfo OnProcess(ExecInfo info)
+        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
         {
             string valueOfProp = GetValueOfProp<string>(info, nameof(m_string));
             int.TryParse(valueOfProp, out m_Value);

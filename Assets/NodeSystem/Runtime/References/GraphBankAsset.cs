@@ -22,7 +22,6 @@ namespace NodeSystem.Runtime.References
 
         public bool TryGetGraph(string graphId, out NodeSystemAsset graph)
         {
-            Debug.Log(_graphBank);
             return _graphBank.TryGetValue(graphId, out graph);
         }
 

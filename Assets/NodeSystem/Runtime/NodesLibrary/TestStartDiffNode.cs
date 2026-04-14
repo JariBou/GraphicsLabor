@@ -31,6 +31,9 @@ namespace NodeSystem.Runtime.NodesLibrary
         
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.ExtensionContainer), Tooltip("HEEEEYAAAAA")]
         public List<string> testList;
+        
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.ExtensionContainer), Tooltip("HEEEEYAAAAA")] 
+        public List<SerializableCompRef<Transform>> testList2;
         //
         //
         // [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
@@ -42,7 +45,7 @@ namespace NodeSystem.Runtime.NodesLibrary
         // [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         // public TestFlags TestFlags;
         
-        public override ProcessInfo OnProcess(ExecInfo info)
+        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
         {
             // GetValueOfProp<SerializableRef>(info, nameof(Source));
             return base.OnProcess(info);

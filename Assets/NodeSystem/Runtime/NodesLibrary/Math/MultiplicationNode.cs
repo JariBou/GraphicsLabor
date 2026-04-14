@@ -1,4 +1,5 @@
 ﻿using NodeSystem.Runtime.Attributes;
+using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Math
 {
@@ -13,7 +14,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Math
         [ExposedProperty(portDirection: PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public int result;
 
-        public override ProcessInfo OnProcess(ExecInfo info)
+        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
         {
             result = GetValueOfProp<int>(info, nameof(a)) * GetValueOfProp<int>(info, nameof(b));
             

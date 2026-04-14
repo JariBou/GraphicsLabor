@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
@@ -104,15 +105,16 @@ namespace NodeSystem.Runtime
             m_position = position;
         }
 
-        public virtual ProcessInfo OnProcess(ExecInfo info)
+        public virtual async Awaitable<ProcessInfo> OnProcess(ExecInfo info)
         {
             NodeSystemAsset graph = info.GraphInstance;
             NodeSystemNode nextNode = GetNextNode(graph);
             if (nextNode != null)
             {
-                return new ProcessInfo(id, nextNode.id, ProcessInfo.ExecutionFlowType.ExecuteNext);
+                return await ContinueExecution(nextNode.id);
             }
-            return new ProcessInfo(id, "", ProcessInfo.ExecutionFlowType.EndExecution);;
+
+            return await EndExecution();
         }
 
         public NodeSystemNode GetNextNode(NodeSystemAsset graph)
@@ -141,6 +143,20 @@ namespace NodeSystem.Runtime
         {
             m_ports.Add(portInfo);
         }
+
+        #region FlowControl
+        
+        protected async Awaitable<ProcessInfo> EndExecution()
+        {
+            return await Task.FromResult(new ProcessInfo(id, "", ProcessInfo.ExecutionFlowType.EndExecution));
+        }
+        
+        protected async Awaitable<ProcessInfo> ContinueExecution(string nextNodeId)
+        {
+            return await Task.FromResult(new ProcessInfo(id, nextNodeId, ProcessInfo.ExecutionFlowType.ExecuteNext));
+        }
+
+        #endregion
     }
 
     [Serializable]
@@ -204,9 +220,7 @@ namespace NodeSystem.Runtime
 
     public interface INodeSystemExecutioner
     {
-        public void TickProcess();
-
-        public MonoBehaviour GetObject();
+        public Awaitable TickProcess();
     }
     
     

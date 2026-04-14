@@ -340,6 +340,7 @@ namespace NodeSystem.Runtime.Utils
                 objectType = typeof(GameObject),
                 value = ownerGo,
                 bindingPath = ownerIdProp.propertyPath,
+                focusable = true,
                 
                 tooltip = "The Owner Object of the  selected comp if Any. Double click to highlight in inspector if scene is open.",
                 label = "Owner"
@@ -358,7 +359,8 @@ namespace NodeSystem.Runtime.Utils
                 {
                     objectType = refType,
                     value = displayedComp,
-                    label = property.displayName
+                    label = property.displayName,
+                    focusable = true,
                 };
 
                 // Doesn't work yet, would like not to use GL but might bring over some code from there
@@ -370,7 +372,8 @@ namespace NodeSystem.Runtime.Utils
 
                 compField.RegisterValueChangedCallback(evt =>
                 {
-                    // property.serializedObject.Update();
+                    property.serializedObject.Update();
+                    ownerIdProp.serializedObject.Update();
                     
                     Object obj = evt.newValue;
                     switch (obj)
@@ -400,10 +403,8 @@ namespace NodeSystem.Runtime.Utils
                         }
                     }
                     
-                    
-                    
-                    // compIdProp.serializedObject.ApplyModifiedProperties();
-                    // property.serializedObject.ApplyModifiedProperties();
+                    compIdProp.serializedObject.ApplyModifiedProperties();
+                    property.serializedObject.ApplyModifiedProperties();
                 });
 
                 container.Add(compField);

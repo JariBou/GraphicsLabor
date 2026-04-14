@@ -23,6 +23,8 @@ namespace NodeSystem.Editor.Editors
         }
         public override void OnInspectorGUI()
         {
+            base.OnInspectorGUI();
+            
             if (GUILayout.Button("Open Graph"))
             {
                 NodeSystemEditorWindow.Open((NodeSystemAsset)target);

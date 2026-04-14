@@ -139,11 +139,7 @@ namespace NodeSystem.Editor.Nodes
                         Console.WriteLine(e);
                     }
 
-                    if (propertyType == null)
-                    {
-                        // Debug.LogWarning("Property Type was null, setting it to fieldInfo.FieldType ('" + fieldInfo.FieldType + "')");
-                        propertyType = fieldInfo.FieldType;
-                    }
+                    propertyType ??= fieldInfo.FieldType;
                         
                     EditorNodePort port = EditorNodePort.Create(Orientation.Horizontal, portDirection, propertyAttribute.PortCapacity == PropPortCapacity.Single ? Port.Capacity.Single : Port.Capacity.Multi, propertyType);
                     // port.contentContainer.Add(tempField);
@@ -184,6 +180,8 @@ namespace NodeSystem.Editor.Nodes
                         {
                             text = propertyAttribute.OverrideDisplayName != "" ? propertyAttribute.OverrideDisplayName : ObjectNames.NicifyVariableName(
                                 fieldInfo.Name),
+                            focusable = true,
+                            
                         };
                         port.AddField(label);
                     }
@@ -196,7 +194,8 @@ namespace NodeSystem.Editor.Nodes
                             objectType = propertyType,
                             // Ref<Object> objectFieldValue =  (Ref<Object>)prop.objectReferenceValue;
                             // objectFieldValue.ObjectId:
-                            value = sr.Get<GameObject>()
+                            value = sr.Get<GameObject>(),
+                            focusable = true,
                         };
 
                         objectField.RegisterValueChangedCallback(evt =>
@@ -247,8 +246,9 @@ namespace NodeSystem.Editor.Nodes
                             style =
                             {
                                 height = Length.Percent(100),
-                                width = Length.Percent(100) // TODO: IMPORTANT
-                            }
+                                width = Length.Percent(100), // TODO: IMPORTANT
+                            },
+                            focusable = true,
                         };
                         port.AddField(tempField);
                     }
@@ -272,7 +272,8 @@ namespace NodeSystem.Editor.Nodes
                     {
                         objectType = sourceAttribute.SourceType,
                         // ReferenceManager.Instance.TestPrint();
-                        value = ReferenceManager.GetGameObject<GameObject>(prop.stringValue)
+                        value = ReferenceManager.GetGameObject<GameObject>(prop.stringValue),
+                        focusable = true,
                     };
 
                     objectField.RegisterValueChangedCallback(evt =>

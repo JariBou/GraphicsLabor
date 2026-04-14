@@ -9,7 +9,7 @@ namespace NodeSystem.Runtime.NodesLibrary
     {
         [FormerlySerializedAs("logMessage")] [ExposedProperty(portDirection: PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer, disableInputWhenConnected: true)]
         public string LogMessage;
-        public override ProcessInfo OnProcess(ExecInfo info)
+        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
         {
             Debug.Log(GetValueOfProp<string>(info, nameof(LogMessage)));
             return base.OnProcess(info);

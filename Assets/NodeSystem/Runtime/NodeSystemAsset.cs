@@ -41,7 +41,7 @@ namespace NodeSystem.Runtime
         {
             foreach (NodeSystemNode node in Nodes)
             {
-                Debug.Log(node.id);
+                // Debug.Log(node.id);
                 m_nodeLookup.Add(node.id, node);
             }
         }

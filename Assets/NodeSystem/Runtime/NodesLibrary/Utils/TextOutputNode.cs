@@ -1,4 +1,5 @@
 ﻿using NodeSystem.Runtime.Attributes;
+using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Utils
 {
@@ -7,7 +8,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Utils
     {
         [ExposedProperty(portDirection: PropPortDirection.Output)]
         public string TextOutput;
-        public override ProcessInfo OnProcess(ExecInfo info)
+        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
         {
             return base.OnProcess(info);
         }

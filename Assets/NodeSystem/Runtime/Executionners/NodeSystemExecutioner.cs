@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using NodeSystem.Runtime.References;
 using UnityEngine;
@@ -14,24 +15,24 @@ namespace NodeSystem.Runtime.Executionners
 
         private string m_currentExecNodeId;
 
-        private void Start()
+        private async Awaitable Start()
         {
-            StartAsset();
+            await StartAsset();
             //ExecuteAsset(graphInstance);
         }
 
-        public void StartAsset()
+        public async Awaitable StartAsset()
         {
             graphInstance = NodeSystemBank.GetGraphInstance(m_graphAsset);
-            ExecuteAsset(graphInstance);
+            await ExecuteAsset(graphInstance);
         }
-        private void ExecuteAsset(NodeSystemAsset instance)
+        private async Awaitable ExecuteAsset(NodeSystemAsset instance)
         {
             NodeSystemNode startNode = instance.GetStartNode();
             m_currentExecNodeId = startNode.id;
 
             // ProcessAndMoveToNextNode(startNode);
-            TickProcess();
+            await TickProcess();
         }
 
         private void ProcessNode(NodeSystemNode startNode)
@@ -44,15 +45,15 @@ namespace NodeSystem.Runtime.Executionners
             return graphInstance == null ? null : graphInstance.GetNode(m_currentExecNodeId);
         }
 
-        public void TickProcess()
+        public async Awaitable TickProcess()
         {
-            ProcessInfo processInfo = GetCurrentNode().OnProcess(new ExecInfo(graphInstance, this));
+            ProcessInfo processInfo = await GetCurrentNode().OnProcess(new ExecInfo(graphInstance, this));
 
             switch (processInfo.FlowType)
             {
                 case ProcessInfo.ExecutionFlowType.ExecuteNext:
                     m_currentExecNodeId = processInfo.NextNodeId;
-                    TickProcess();
+                    _ = TickProcess(); // TODO: discard? await? idk
                     break;
                 case ProcessInfo.ExecutionFlowType.Wait:
                     m_currentExecNodeId = processInfo.NextNodeId;
@@ -65,21 +66,16 @@ namespace NodeSystem.Runtime.Executionners
             }
         }
 
-        public MonoBehaviour GetObject()
-        {
-            return this;
-        }
-
-        private void ProcessAndMoveToNextNode(NodeSystemNode startNode)
-        {
-            ProcessInfo nextNodeId = startNode.OnProcess(new ExecInfo(graphInstance, this));
-
-            if (nextNodeId.FlowType is not ProcessInfo.ExecutionFlowType.Wait and not ProcessInfo.ExecutionFlowType.EndExecution)
-            {
-                NodeSystemNode nexNode = graphInstance.GetNode(nextNodeId.NextNodeId);
-                ProcessAndMoveToNextNode(nexNode);
-            }
-        }
+        // private void ProcessAndMoveToNextNode(NodeSystemNode startNode)
+        // {
+        //     ProcessInfo nextNodeId = startNode.OnProcess(new ExecInfo(graphInstance, this));
+        //
+        //     if (nextNodeId.FlowType is not ProcessInfo.ExecutionFlowType.Wait and not ProcessInfo.ExecutionFlowType.EndExecution)
+        //     {
+        //         NodeSystemNode nexNode = graphInstance.GetNode(nextNodeId.NextNodeId);
+        //         ProcessAndMoveToNextNode(nexNode);
+        //     }
+        // }
 
         public void ModifyExposedVariable(string propertyName, string newValue)
         {
