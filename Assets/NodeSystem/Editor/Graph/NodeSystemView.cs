@@ -51,8 +51,10 @@ namespace NodeSystem.Editor.Graph
             StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/NodeSystem/Editor/USS/NodeSystemEditor.uss");
             styleSheets.Add(styleSheet);
             
-            GridBackground background = new GridBackground();
-            background.name = "Grid";
+            GridBackground background = new GridBackground
+            {
+                name = "Grid"
+            };
             Add(background);
             background.SendToBack();
             

@@ -6,11 +6,12 @@ namespace NodeSystem.Runtime.NodesLibrary.Utils
     [NodeInfo("TextOutput", "Utils/TextOutput")]
     public class TextOutputNode : NodeSystemNode
     {
-        [ExposedProperty(portDirection: PropPortDirection.Output)]
+        [ExposedProperty(PropPortDirection.Output)]
         public string TextOutput;
-        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
+
+        public override Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
-            return base.OnProcess(info);
+            return base.OnProcess(context);
         }
     }
 }

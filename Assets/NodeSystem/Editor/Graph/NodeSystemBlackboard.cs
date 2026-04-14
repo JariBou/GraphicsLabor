@@ -38,19 +38,21 @@ namespace NodeSystem.Editor.Graph
 
         public void AddProperty(BlackboardProperty blackboardProperty, bool loadMode)
         {
-            var localPropertyName = blackboardProperty.PropertyName;
-            var localPropertyValue = blackboardProperty.PropertyValue;
+            string localPropertyName = blackboardProperty.PropertyName;
+            string localPropertyValue = blackboardProperty.PropertyValue;
             if (!loadMode)
             {
                 while (m_associatedGraphView.ExposedProperties.Any(x => x.PropertyName == localPropertyName))
                     localPropertyName = $"{localPropertyName}(1)";
             }
 
-            BlackboardProperty item = new BlackboardProperty();
-            item.PropertyName = localPropertyName;
-            item.PropertyValue = localPropertyValue;
-            
-            
+            BlackboardProperty item = new BlackboardProperty
+            {
+                PropertyName = localPropertyName,
+                PropertyValue = localPropertyValue
+            };
+
+
             if (!loadMode)
             {
                 m_associatedGraphView.ExposedProperties.Add(item);
@@ -68,7 +70,7 @@ namespace NodeSystem.Editor.Graph
             };
             propertyValueTextField.RegisterValueChangedCallback(evt =>
             {
-                var index = m_associatedGraphView.ExposedProperties.FindIndex(x => x.PropertyName == item.PropertyName);
+                int index = m_associatedGraphView.ExposedProperties.FindIndex(x => x.PropertyName == item.PropertyName);
                 m_associatedGraphView.ExposedProperties[index].PropertyValue = evt.newValue;
             });
             BlackboardRow sa = new BlackboardRow(field, propertyValueTextField);

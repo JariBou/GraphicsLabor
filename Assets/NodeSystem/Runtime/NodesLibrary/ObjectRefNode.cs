@@ -1,24 +1,22 @@
 ﻿using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Utils;
+using NodeSystem.Runtime.Utils.RefSystem;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary
 {
     // I have no clue how to tackle this
-    [NodeInfo("Object Ref", "WIP/Object Ref", FlowDirection.None, isPure: true)]
+    [NodeInfo("Object Ref", "WIP/Object Ref", FlowDirection.None, true)]
     public class ObjectRefNode : NodeSystemNode
     {
-        [ExposedProperty(PropPortDirection.Output, portType: typeof(GameObject), preferredLocation: PropContainerLocation.OutputContainer)]
+        [ExposedProperty(PropPortDirection.Output, typeof(GameObject),
+            preferredLocation: PropContainerLocation.OutputContainer)]
         public SerializableRef Source = new();
         
-        [ExposedProperty(PropPortDirection.Output, portType: typeof(GameObject), preferredLocation: PropContainerLocation.OutputContainer)]
-        public GameObject Source2 = new();
         
-        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
+        public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
-            GetValueOfProp<SerializableRef>(info, nameof(Source));
-            return base.OnProcess(info);
+            // await GetValueOfProp<SerializableRef>(context, nameof(Source));
+            return await base.OnProcess(context);
         }
-
     }
 }

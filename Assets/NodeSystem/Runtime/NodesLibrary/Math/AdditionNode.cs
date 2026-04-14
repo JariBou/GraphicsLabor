@@ -3,23 +3,24 @@ using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Math
 {
-    [NodeInfo("Addition Node", "Math/Addition", FlowDirection.None, isPure: true)]
+    [NodeInfo("Addition Node", "Math/Addition", FlowDirection.None, true)]
     public class AdditionNode : NodeSystemNode
     {
         // TODO: make it so you can expand number of ports
-        [ExposedProperty(portDirection: PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
+        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
         public int a;
-        [ExposedProperty(portDirection: PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
+
+        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
         public int b;
 
-        [ExposedProperty(portDirection: PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public int result;
 
-        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
+        public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
-            result = GetValueOfProp<int>(info, nameof(a)) + GetValueOfProp<int>(info, nameof(b));
-            
-            return base.OnProcess(info);
+            result = await GetValueOfProp<int>(context, nameof(a)) + await GetValueOfProp<int>(context, nameof(b));
+
+            return await base.OnProcess(context);
         }
     }
 }

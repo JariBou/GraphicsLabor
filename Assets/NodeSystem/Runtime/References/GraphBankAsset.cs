@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using GraphicsLabor.Scripts.Core.Utility;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.References
@@ -7,12 +6,12 @@ namespace NodeSystem.Runtime.References
     [CreateAssetMenu(menuName = "NodeSystem/New Graph Bank")]
     public class GraphBankAsset : ScriptableObject
     {
-        private Dictionary<string, NodeSystemAsset> _graphBank;
-
         [SerializeField] private List<NodeSystemAsset> _nodeSystems;
+        private Dictionary<string, NodeSystemAsset> _graphBank;
 
         public NodeSystemAsset RegisterGraph(NodeSystemAsset graph)
         {
+            // TODO: shouldn't  be a concern for now but since GraphId is serialized, there is a possibility that, on creation, a graph gets the same Id as another one
             string graphId = graph.GraphId;
             NodeSystemAsset newGraph = Instantiate(graph);
             newGraph.Init();
@@ -29,24 +28,8 @@ namespace NodeSystem.Runtime.References
         {
             _graphBank = new Dictionary<string, NodeSystemAsset>(_nodeSystems.Count);
             foreach (NodeSystemAsset graph in _nodeSystems)
-            {
                 if (graph != null)
-                {
                     RegisterGraph(graph);
-                }
-            }
-        }
-
-        private void OnValidate()
-        {
-            // _graphBank = new Dictionary<string, NodeSystemAsset>(_nodeSystems.Count);
-            // foreach (NodeSystemAsset graph in _nodeSystems)
-            // {
-            //     if (graph != null)
-            //     {
-            //         RegisterGraph(graph);
-            //     }
-            // }
         }
     }
 }

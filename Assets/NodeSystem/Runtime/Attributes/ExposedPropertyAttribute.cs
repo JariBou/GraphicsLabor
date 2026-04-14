@@ -2,9 +2,27 @@
 
 namespace NodeSystem.Runtime.Attributes
 {
-    
     public class ExposedPropertyAttribute : Attribute
     {
+        public ExposedPropertyAttribute(
+            PropPortDirection portDirection,
+            Type portType = null,
+            string overrideDisplayName = "",
+            PropContainerLocation preferredLocation = PropContainerLocation.ExtensionContainer,
+            PropPortCapacity portCapacity = PropPortCapacity.Single,
+            bool disableInputWhenConnected = false,
+            bool labelOnly = false)
+        {
+            PortType = portType ?? typeof(string);
+            PortDirection = portDirection;
+            OverrideDisplayName = overrideDisplayName;
+            PreferredLocation = preferredLocation;
+            AutoTyping = portType == null;
+            PortCapacity = portCapacity;
+            DisableInputWhenConnected = disableInputWhenConnected;
+            LabelOnly = labelOnly;
+        }
+
         public bool HasOutPort => PortDirection == PropPortDirection.Output;
         public bool HasInPort => PortDirection == PropPortDirection.Input;
         public Type PortType { get; }
@@ -15,44 +33,26 @@ namespace NodeSystem.Runtime.Attributes
         public bool DisableInputWhenConnected { get; }
         public bool AutoTyping { get; }
         public bool LabelOnly { get; }
-
-        public ExposedPropertyAttribute(
-            PropPortDirection portDirection, 
-            Type portType = null, 
-            string overrideDisplayName = "", 
-            PropContainerLocation preferredLocation = PropContainerLocation.ExtensionContainer, 
-            PropPortCapacity portCapacity = PropPortCapacity.Single, 
-            bool disableInputWhenConnected = false,
-            bool labelOnly = false)
-        {
-            this.PortType = portType ?? typeof(string);
-            this.PortDirection = portDirection;
-            OverrideDisplayName = overrideDisplayName;
-            PreferredLocation = preferredLocation;
-            AutoTyping = portType == null;
-            PortCapacity = portCapacity;
-            DisableInputWhenConnected = disableInputWhenConnected;
-            LabelOnly =  labelOnly;
-        }
-
     }
 
     public enum PropPortDirection
     {
-        None, Input, Output
+        None,
+        Input,
+        Output
     }
 
     public enum PropContainerLocation
     {
-        InputContainer, OutputContainer, ExtensionContainer
+        InputContainer,
+        OutputContainer,
+        ExtensionContainer
     }
 
     // editor only shenanigans
     public enum PropPortCapacity
     {
-        Single, Multi
+        Single,
+        Multi
     }
-
-   
-
 }

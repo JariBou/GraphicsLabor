@@ -9,15 +9,18 @@ namespace NodeSystem.Runtime.NodesLibrary.Utils
         // TODO: make it so you can expand number of ports
         [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
         public string m_a;
+
         [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
         public string m_b;
+
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public string m_Value;
 
-        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
+        public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
-            m_Value = GetValueOfProp<string>(info, nameof(m_a)) + GetValueOfProp<string>(info, nameof(m_b));
-            return base.OnProcess(info);
+            m_Value = await GetValueOfProp<string>(context, nameof(m_a)) +
+                      await GetValueOfProp<string>(context, nameof(m_b));
+            return await base.OnProcess(context);
         }
     }
 }

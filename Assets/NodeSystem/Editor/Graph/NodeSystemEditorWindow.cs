@@ -1,6 +1,4 @@
-using System.Linq;
 using NodeSystem.Runtime;
-using NodeSystem.Runtime.BlackBoard;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -49,11 +47,11 @@ namespace NodeSystem.Editor.Graph
             rootVisualElement.Add(m_currentView);
         }
 
-        private GraphViewChange OnChange(GraphViewChange graphviewchange)
+        private GraphViewChange OnChange(GraphViewChange graphViewChange)
         {
             hasUnsavedChanges = true;
             EditorUtility.SetDirty(m_currentGraph);
-            return graphviewchange;
+            return graphViewChange;
         }
 
         private void OnGUI()

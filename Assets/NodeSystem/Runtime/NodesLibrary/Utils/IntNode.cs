@@ -2,11 +2,11 @@
 
 namespace NodeSystem.Runtime.NodesLibrary.Utils
 {
-    [NodeInfo("Int Node", "Utils/Int Node", flowDirection: FlowDirection.None)]
+    [NodeInfo("Int Node", "Utils/Int Node", FlowDirection.None)]
     public class IntNode : NodeSystemNode
     {
-        [ExposedProperty(portDirection: PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer, disableInputWhenConnected: false)]
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer,
+            disableInputWhenConnected: false)]
         public int outInt;
-
     }
 }

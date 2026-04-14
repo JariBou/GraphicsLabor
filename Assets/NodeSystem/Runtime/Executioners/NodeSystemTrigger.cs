@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Threading.Tasks;
 using NodeSystem.Runtime.References;
 using UnityEngine;
 
-namespace NodeSystem.Runtime.Executionners
+namespace NodeSystem.Runtime.Executioners
 {
-    public class NodeSystemTrigger : MonoBehaviour, INodeSystemExecutioner
+    public class NodeSystemTrigger : MonoBehaviour
     {
         [SerializeField] private GameObject _gameObjectToTrigger;
         [SerializeField] private NodeSystemAsset _graph;
         [SerializeField] private bool _canBeExecutedMultipleTimes;
-        
+
         private NodeSystemAsset _graphInstance;
+        private NodeSystemNode _nodeToPlay;
 
         private string m_currentExecNodeId;
-        private NodeSystemNode _nodeToPlay;
 
         private void Start()
         {
@@ -30,7 +29,7 @@ namespace NodeSystem.Runtime.Executionners
             await TickProcess();
             // nodeToPlay.OnProcess(new ExecInfo(graphInstance, this));
         }
-        
+
         public NodeSystemNode GetCurrentNode()
         {
             return _graphInstance == null ? null : _graphInstance.GetNode(m_currentExecNodeId);
@@ -39,7 +38,7 @@ namespace NodeSystem.Runtime.Executionners
         public async Awaitable TickProcess()
         {
             if (_graphInstance == null || m_currentExecNodeId == "") return;
-            ProcessInfo processInfo = await GetCurrentNode().OnProcess(new ExecInfo(_graphInstance, this));
+            ProcessInfo processInfo = await GetCurrentNode().OnProcess(new ExecContext(_graphInstance));
             Debug.Log("Ticking!");
             switch (processInfo.FlowType)
             {
@@ -55,7 +54,8 @@ namespace NodeSystem.Runtime.Executionners
 
                     // Allows for rerunning the script
                     m_currentExecNodeId = _canBeExecutedMultipleTimes ? _nodeToPlay.id : "";
-;                    return;
+                    ;
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

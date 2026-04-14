@@ -9,15 +9,15 @@ namespace NodeSystem.Runtime.NodesLibrary.Logic
     {
         [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
         public bool condition;
-        
-        public override async Awaitable<ProcessInfo> OnProcess(ExecInfo info)
+
+        public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
-            NodeSystemAsset graph = info.GraphInstance;
-            NodeSystemNode nextNode = GetNodeConnectedToPort(graph, GetValueOfProp<bool>(info, nameof(condition)) ? 0 : 1);
+            NodeSystemAsset graph = context.GraphInstance;
+            NodeSystemNode nextNode =
+                GetNodeConnectedToPort(graph, await GetValueOfProp<bool>(context, nameof(condition)) ? 0 : 1);
             if (nextNode != null)
-            {
-                return await Task.FromResult(new ProcessInfo(id, nextNode.id, ProcessInfo.ExecutionFlowType.ExecuteNext));
-            }
+                return await Task.FromResult(
+                    new ProcessInfo(id, nextNode.id, ProcessInfo.ExecutionFlowType.ExecuteNext));
             return await EndExecution();
         }
     }

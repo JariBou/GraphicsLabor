@@ -14,41 +14,41 @@ namespace NodeSystem.Runtime
         [SerializeField] private string m_guid;
         [SerializeField] private Rect m_position;
         [SerializeField] private bool m_isPure;
-        private string _lastExecutionId = "";
 
 
         public string typename;
-
-        public string id => m_guid;
-        public Rect position => m_position;
-        public List<PortInfo> PortInfos => m_ports;
         [SerializeField] private List<PortInfo> m_ports = new();
 
         [SerializeField] private bool m_pureExecutionDone = true;
-        
-        public bool PureExecutionDone
-        {
-            get => m_pureExecutionDone;
-            #if UNITY_EDITOR
-            set => m_pureExecutionDone = value;
-            #else
-            private set => m_pureExecutionDone = value;
-            #endif
-        }
-        
-        public bool IsPure
-        {
-            get => m_isPure;
-            #if UNITY_EDITOR
-            set => m_isPure = value;
-            #else
-            private set => m_isPure = value;
-            #endif
-        }
+        private string _lastExecutionId = "";
 
         public NodeSystemNode()
         {
             NewGUID();
+        }
+
+        public string id => m_guid;
+        public Rect position => m_position;
+        public List<PortInfo> PortInfos => m_ports;
+
+        public bool PureExecutionDone
+        {
+            get => m_pureExecutionDone;
+#if UNITY_EDITOR
+            set => m_pureExecutionDone = value;
+#else
+            private set => m_pureExecutionDone = value;
+#endif
+        }
+
+        public bool IsPure
+        {
+            get => m_isPure;
+#if UNITY_EDITOR
+            set => m_isPure = value;
+#else
+            private set => m_isPure = value;
+#endif
         }
 
         protected PortInfo GetExposedPropertyPortInfo(string propName)
@@ -56,43 +56,43 @@ namespace NodeSystem.Runtime
             PortInfo portInfo = m_ports.Find(info => info.ExposedPropertyName == propName);
             return portInfo;
         }
-        
-        protected NodeSystemNode GetNodeConnectedToInputPort(NodeSystemAsset graph, PortInfo exposedPropInfo, out int connectedPortIndex)
+
+        protected NodeSystemNode GetNodeConnectedToInputPort(NodeSystemAsset graph, PortInfo exposedPropInfo,
+            out int connectedPortIndex)
         {
             bool found = graph.GetConnectionToPort(exposedPropInfo, out NodeSystemConnection connectionToInputPort);
             connectedPortIndex = found ? connectionToInputPort.OutputPort.PortIndex : -1;
             return !found ? null : graph.GetNode(connectionToInputPort.OutputPort.NodeId);
         }
-        
+
         // Idealy this would be an extension on the prop
-        public virtual T GetValueOfProp<T>(ExecInfo info, string exposedPropName)
+        public virtual async Awaitable<T> GetValueOfProp<T>(ExecContext context, string exposedPropName)
         {
             PortInfo exposedPropertyPortInfo = GetExposedPropertyPortInfo(exposedPropName);
-            NodeSystemNode connectedNode = GetNodeConnectedToInputPort(info.GraphInstance, exposedPropertyPortInfo, out int connectedPortIndex);
+            NodeSystemNode connectedNode = GetNodeConnectedToInputPort(context.GraphInstance, exposedPropertyPortInfo,
+                out int connectedPortIndex);
             if (connectedNode != null)
             {
-                connectedNode.EnsurePureExecution(info);
+                await connectedNode.EnsurePureExecution(context);
                 PortInfo connectedNodePortInfo = connectedNode.GetPort(connectedPortIndex);
-                object value = connectedNode.GetType().GetField(connectedNodePortInfo.ExposedPropertyName).GetValue(connectedNode);
+                object value = connectedNode.GetType().GetField(connectedNodePortInfo.ExposedPropertyName)
+                    .GetValue(connectedNode);
                 // object value = connectedNode.GetValueOfProp<T>(info, connectedNodePortInfo.ExposedPropertyName);
-                if (value != null)
-                {
-                    return (T)value;
-                }
+                if (value != null) return (T)value;
             }
-            
+
             return (T)GetType().GetField(exposedPropName).GetValue(this);
         }
 
-        private void EnsurePureExecution(ExecInfo info)
+        private async Awaitable EnsurePureExecution(ExecContext context)
         {
             // So that the same exec doesn't trigger multiple OnProcess
-            if (!IsPure || (/*PureExecutionDone && */info.ExecId == _lastExecutionId)) return;
-            
+            if (!IsPure || /*PureExecutionDone && */context.ExecId == _lastExecutionId) return;
+
             // Debug.Log(GetType() + " executing " + info.ExecId);
-            _lastExecutionId = info.ExecId;
+            _lastExecutionId = context.ExecId;
             //PureExecutionDone = true;
-            OnProcess(info);
+            await OnProcess(context);
         }
 
         private void NewGUID()
@@ -100,19 +100,16 @@ namespace NodeSystem.Runtime
             m_guid = GuidSystem.NewGuid();
         }
 
-        public void SetPosition(Rect position)
+        public void SetPosition(Rect newPosition)
         {
-            m_position = position;
+            m_position = newPosition;
         }
 
-        public virtual async Awaitable<ProcessInfo> OnProcess(ExecInfo info)
+        public virtual async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
-            NodeSystemAsset graph = info.GraphInstance;
+            NodeSystemAsset graph = context.GraphInstance;
             NodeSystemNode nextNode = GetNextNode(graph);
-            if (nextNode != null)
-            {
-                return await ContinueExecution(nextNode.id);
-            }
+            if (nextNode != null) return await ContinueExecution(nextNode.id);
 
             return await EndExecution();
         }
@@ -121,7 +118,7 @@ namespace NodeSystem.Runtime
         {
             return GetNodeConnectedToPort(graph, 0);
         }
-        
+
         public NodeSystemNode GetNodeConnectedToPort(NodeSystemAsset graph, int portIndex)
         {
             return graph.GetNodeFromOutputConnection(m_guid, portIndex);
@@ -145,12 +142,12 @@ namespace NodeSystem.Runtime
         }
 
         #region FlowControl
-        
+
         protected async Awaitable<ProcessInfo> EndExecution()
         {
             return await Task.FromResult(new ProcessInfo(id, "", ProcessInfo.ExecutionFlowType.EndExecution));
         }
-        
+
         protected async Awaitable<ProcessInfo> ContinueExecution(string nextNodeId)
         {
             return await Task.FromResult(new ProcessInfo(id, nextNodeId, ProcessInfo.ExecutionFlowType.ExecuteNext));
@@ -175,7 +172,9 @@ namespace NodeSystem.Runtime
 
         public enum ExecutionFlowType
         {
-            ExecuteNext, Wait, EndExecution
+            ExecuteNext,
+            Wait,
+            EndExecution
         }
     }
 
@@ -185,7 +184,9 @@ namespace NodeSystem.Runtime
         [SerializeField] private string _exposedPropertyName;
         [SerializeField] private string _ownerId;
         [SerializeField] private int _portIndex;
-        [FormerlySerializedAs("_flowType")] [FormerlySerializedAs("_portType")] [SerializeField] private PropPortDirection _portDirection;
+
+        [FormerlySerializedAs("_flowType")] [FormerlySerializedAs("_portType")] [SerializeField]
+        private PropPortDirection _portDirection;
 
         public readonly string ExposedPropertyName => _exposedPropertyName;
 
@@ -204,26 +205,19 @@ namespace NodeSystem.Runtime
         }
     }
 
-    public class ExecInfo
+    public class ExecContext
     {
-        public string ExecId { get; private set; }
-        public NodeSystemAsset GraphInstance { get; }
-        public INodeSystemExecutioner NodeSystemExecutioner { get; }
-
-        public ExecInfo(NodeSystemAsset graphInstance, INodeSystemExecutioner nodeSystemExecutioner)
+        public ExecContext(NodeSystemAsset graphInstance)
         {
             GraphInstance = graphInstance;
-            NodeSystemExecutioner = nodeSystemExecutioner;
             ExecId = GuidSystem.NewGuid();
         }
+
+        public string ExecId { get; }
+        public NodeSystemAsset GraphInstance { get; }
     }
 
-    public interface INodeSystemExecutioner
-    {
-        public Awaitable TickProcess();
-    }
-    
-    
+
     // public static class ExposedPropExtensions
     // {
     //     public static T GetValueOfProp<T>(this object obj, NodeSystemAsset graph, NodeSystemNode node)

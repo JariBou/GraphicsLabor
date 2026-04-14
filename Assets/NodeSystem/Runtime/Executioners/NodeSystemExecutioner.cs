@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Threading.Tasks;
-using GraphicsLabor.Scripts.Attributes.LaborerAttributes.InspectedAttributes;
 using NodeSystem.Runtime.References;
 using UnityEngine;
 
-namespace NodeSystem.Runtime.Executionners
+namespace NodeSystem.Runtime.Executioners
 {
-    public class NodeSystemExecutioner : MonoBehaviour, INodeSystemExecutioner
+    public class NodeSystemExecutioner : MonoBehaviour
     {
-        [SerializeField]
-        private NodeSystemAsset m_graphAsset;
+        [SerializeField] private NodeSystemAsset m_graphAsset;
 
         private NodeSystemAsset graphInstance;
 
@@ -26,6 +23,7 @@ namespace NodeSystem.Runtime.Executionners
             graphInstance = NodeSystemBank.GetGraphInstance(m_graphAsset);
             await ExecuteAsset(graphInstance);
         }
+
         private async Awaitable ExecuteAsset(NodeSystemAsset instance)
         {
             NodeSystemNode startNode = instance.GetStartNode();
@@ -37,7 +35,6 @@ namespace NodeSystem.Runtime.Executionners
 
         private void ProcessNode(NodeSystemNode startNode)
         {
-            
         }
 
         public NodeSystemNode GetCurrentNode()
@@ -47,7 +44,7 @@ namespace NodeSystem.Runtime.Executionners
 
         public async Awaitable TickProcess()
         {
-            ProcessInfo processInfo = await GetCurrentNode().OnProcess(new ExecInfo(graphInstance, this));
+            ProcessInfo processInfo = await GetCurrentNode().OnProcess(new ExecContext(graphInstance));
 
             switch (processInfo.FlowType)
             {
@@ -81,17 +78,5 @@ namespace NodeSystem.Runtime.Executionners
         {
             graphInstance.ModifyExposedVariable(propertyName, newValue);
         }
-        
-        #if UNITY_EDITOR
-
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                TickProcess();
-            }
-        }
-        
-        #endif
     }
 }

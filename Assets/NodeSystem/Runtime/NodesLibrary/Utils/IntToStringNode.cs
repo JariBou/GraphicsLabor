@@ -1,20 +1,21 @@
-﻿using System;
-using NodeSystem.Runtime.Attributes;
+﻿using NodeSystem.Runtime.Attributes;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Utils
 {
-    [NodeInfo("Int to String Node", "Utils/Int to String Node", flowDirection: FlowDirection.None, isPure: true)]
+    [NodeInfo("Int to String Node", "Utils/Int to String Node", FlowDirection.None, true)]
     public class IntToStringNode : NodeSystemNode
     {
-        [ExposedProperty(portDirection: PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)] public int inInt;
-        
-        [ExposedProperty(portDirection: PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)] public String outString;
+        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
+        public int inInt;
 
-        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
+        public string outString;
+
+        public override Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
-            outString = GetValueOfProp<int>(info, nameof(inInt)).ToString();
-            return base.OnProcess(info);
+            outString = GetValueOfProp<int>(context, nameof(inInt)).ToString();
+            return base.OnProcess(context);
         }
     }
 }

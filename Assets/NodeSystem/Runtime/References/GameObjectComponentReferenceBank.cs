@@ -12,67 +12,57 @@ namespace NodeSystem.Runtime.References
 
         public void LoadReferences()
         {
-            Component[] currentComponents = GetComponents<Component>();
-            List<GameObjectComponentReference> refsToRemove = new List<GameObjectComponentReference>(_references);
+            var currentComponents = GetComponents<Component>();
+            var refsToRemove = new List<GameObjectComponentReference>(_references);
             foreach (Component comp in currentComponents)
-            {
                 if (_references.Find(x => x.Comp == comp) == null)
-                {
                     _references.Add(new GameObjectComponentReference(comp));
-                }
                 else
-                {
                     refsToRemove.Remove(refsToRemove.Find(x => x.Comp == comp));
-                }
-            }
-            
-            foreach (GameObjectComponentReference t in refsToRemove)
-            {
-                _references.Remove(t);
-            }
+
+            foreach (GameObjectComponentReference t in refsToRemove) _references.Remove(t);
         }
-        
+
         public T GetComp<T>(string guid) where T : Component
         {
             try
             {
                 return _references.Find(goRef => goRef.Guid == guid)?.Comp as T;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.LogWarning("Object  with guid '" + guid + "' could not be found. ");
                 return null;
             }
         }
-    
+
         public string GetGuidOf<T>(T obj) where T : Component
         {
             try
             {
                 return _references.Find(goRef => goRef.Comp == obj).Guid ?? "";
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.LogWarning("Object  '" + obj + "' could not be found. ");
                 return null;
             }
         }
-        
+
         [Serializable]
         public class GameObjectComponentReference
         {
             [SerializeField] private Component _comp;
             [SerializeField] private string _guid;
 
-            public Component Comp => _comp;
-            public string Guid => _guid;
-
             public GameObjectComponentReference(Component comp)
             {
                 _comp = comp;
                 _guid = GuidSystem.NewGuid();
             }
+
+            public Component Comp => _comp;
+            public string Guid => _guid;
         }
-        
     }
 }

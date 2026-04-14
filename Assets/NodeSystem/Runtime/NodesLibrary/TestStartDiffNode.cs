@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.NodesLibrary.Process;
-using NodeSystem.Runtime.References;
-using NodeSystem.Runtime.Utils;
+using NodeSystem.Runtime.Utils.RefSystem;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary
@@ -11,28 +10,31 @@ namespace NodeSystem.Runtime.NodesLibrary
     [NodeInfo("Test Start Diff Node", "WIP/Test Start Diff Node", FlowDirection.Output)]
     public class TestStartDiffNode : GameObjectSourceNode
     {
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
+        [Tooltip("HEEEEYAAAAA")]
+        public SerializableCompRef<Canvas> TestCompRef;
+
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
+        [Tooltip("HEEEEYAAAAA")]
+        public SerializableCompRef<Transform> TestCompRef2;
+
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
+        public SerializableSourceType TestIn;
         // [ExposedProperty(PropPortDirection.Input, portType: typeof(TestClass), preferredLocation: PropContainerLocation.InputContainer)]
         // public SerializableRef Source = new();
-        
+
         // [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
         // public GraphBankAsset TestIn1;
         //
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public ScriptableObject TestIn2;
-        
-        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
-        public SerializableSourceType TestIn;
-        
-        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer), Tooltip("HEEEEYAAAAA")]
-        public SerializableCompRef<Canvas> TestCompRef;
-        
-        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer), Tooltip("HEEEEYAAAAA")]
-        public SerializableCompRef<Transform> TestCompRef2;
-        
-        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.ExtensionContainer), Tooltip("HEEEEYAAAAA")]
+
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.ExtensionContainer)]
+        [Tooltip("HEEEEYAAAAA")]
         public List<string> testList;
-        
-        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.ExtensionContainer), Tooltip("HEEEEYAAAAA")] 
+
+        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.ExtensionContainer)]
+        [Tooltip("HEEEEYAAAAA")]
         public List<SerializableCompRef<Transform>> testList2;
         //
         //
@@ -41,15 +43,14 @@ namespace NodeSystem.Runtime.NodesLibrary
         //
         // [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         // public ScriptableObject TestOut2;
-        
+
         // [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         // public TestFlags TestFlags;
-        
-        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
+
+        public override Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
             // GetValueOfProp<SerializableRef>(info, nameof(Source));
-            return base.OnProcess(info);
+            return base.OnProcess(context);
         }
-
     }
 }

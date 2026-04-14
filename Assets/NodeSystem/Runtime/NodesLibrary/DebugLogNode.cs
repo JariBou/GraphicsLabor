@@ -7,14 +7,15 @@ namespace NodeSystem.Runtime.NodesLibrary
     [NodeInfo("Debug Log", "Debug/Debug Log Console")]
     public class DebugLogNode : NodeSystemNode
     {
-        [FormerlySerializedAs("logMessage")] [ExposedProperty(portDirection: PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer, disableInputWhenConnected: true)]
+        [FormerlySerializedAs("logMessage")]
+        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer,
+            disableInputWhenConnected: true)]
         public string LogMessage;
-        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
-        {
-            Debug.Log(GetValueOfProp<string>(info, nameof(LogMessage)));
-            return base.OnProcess(info);
-        }
 
-        
+        public override Awaitable<ProcessInfo> OnProcess(ExecContext context)
+        {
+            Debug.Log(GetValueOfProp<string>(context, nameof(LogMessage)));
+            return base.OnProcess(context);
+        }
     }
 }

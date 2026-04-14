@@ -11,8 +11,8 @@ namespace NodeSystem.Runtime
 
         public NodeSystemConnection(NodeSystemConnectionPort inputPort, NodeSystemConnectionPort outputPort)
         {
-            this.InputPort = inputPort;
-            this.OutputPort = outputPort;
+            InputPort = inputPort;
+            OutputPort = outputPort;
         }
 
         public NodeSystemConnection(string inputNodeId, int inputPortIndex, string outputNodeId, int outputPortIndex)
@@ -35,7 +35,6 @@ namespace NodeSystem.Runtime
         {
             return HashCode.Combine(InputPort, OutputPort);
         }
-
     }
 
     [Serializable]
@@ -46,8 +45,8 @@ namespace NodeSystem.Runtime
 
         public NodeSystemConnectionPort(string nodeId, int portIndex)
         {
-            this.NodeId = nodeId;
-            this.PortIndex = portIndex;
+            NodeId = nodeId;
+            PortIndex = portIndex;
         }
 
         public bool Equals(NodeSystemConnectionPort other)

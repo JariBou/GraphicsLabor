@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Process
 {
-    [NodeInfo("Start", "Process/Start", flowDirection: FlowDirection.Output)]
+    [NodeInfo("Start", "Process/Start", FlowDirection.Output)]
     public class StartNode : NodeSystemNode
     {
-        public override Awaitable<ProcessInfo> OnProcess(ExecInfo info)
+        public override Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
             Debug.Log("Hello World Start");
-            return base.OnProcess(info);
+            return base.OnProcess(context);
         }
     }
 }
