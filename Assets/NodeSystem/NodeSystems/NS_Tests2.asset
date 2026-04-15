@@ -71,8 +71,8 @@ MonoBehaviour:
         m_guid: 51bb64fb-c78a-460f-a90f-3736219df948
         m_position:
           serializedVersion: 2
-          x: 247
-          y: 351
+          x: 256
+          y: 338
           width: 194
           height: 98
         m_isPure: 0
@@ -109,10 +109,10 @@ MonoBehaviour:
         m_guid: c683d3cc-d61f-43cb-8c85-919649953c2d
         m_position:
           serializedVersion: 2
-          x: -264
-          y: 629
-          width: 315
-          height: 260
+          x: -200
+          y: 587
+          width: 351
+          height: 442
         m_isPure: 0
         typename: NodeSystem.Runtime.NodesLibrary.TestStartDiffNode, NodeSystem,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -160,7 +160,10 @@ MonoBehaviour:
         - 
         - 
         - 
-        testList2: []
+        testList2:
+        - _compId: 
+          _ownerId: 
+          _refTypename: 
     - rid: 2224113340452962376
       type: {class: StartNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
       data:

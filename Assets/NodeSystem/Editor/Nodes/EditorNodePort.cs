@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NodeSystem.Editor.Graph;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -15,6 +16,161 @@ namespace NodeSystem.Editor.Nodes
         protected EditorNodePort(Orientation portOrientation, Direction portDirection, Capacity portCapacity, Type type)
             : base(portOrientation, portDirection, portCapacity, type)
         {
+            // RegisterCallback<MouseDownEvent>(OnMouseDown);
+        }
+
+        private void OnMouseDown(MouseDownEvent evt)
+        {
+            VisualElement target = evt.target as VisualElement;
+            if (target?.name == "connector")
+            {
+                evt.StopImmediatePropagation();
+            }
+            if (IsFromListView(evt.target as VisualElement, out ListView view))
+            {
+                // MouseDownEvent ms = new MouseDownEvent()
+                // {
+                    // target = evt.target,
+                // };
+                evt.StopImmediatePropagation();
+                // view.SendEvent(ms);
+            }
+        }
+
+        protected override void HandleEventTrickleDown(EventBase evt)
+        {
+            return;
+            if (evt is MouseDownEvent @event)
+            {
+                OnMouseDown(@event);
+            }
+            // if (IsFromListView(evt.target as VisualElement))
+            // {
+                // evt.StopImmediatePropagation();
+            // }
+        }
+
+        protected override void HandleEventBubbleUp(EventBase evt)
+        {
+            if (evt.eventTypeId == EventBase<MouseMoveEvent>.TypeId())
+            {
+                VisualElement visualElement = node.parent;
+                GraphView view = null;
+                while (visualElement != null)
+                {
+                    if (visualElement is GraphView graphView)
+                    {
+                        view = graphView;
+                        break;
+                    }
+
+                    visualElement = visualElement.parent;
+                }
+
+                if (view != null)
+                {
+                    // Zoom has an influence on Y value
+                    Vector2 adjustedPos = view.ChangeCoordinatesTo(this, evt.originalMousePosition);
+                    Debug.Log(adjustedPos);
+                    // adjustedPos *= view.panel.visualTree.layout.size;
+                    Debug.Log($"IsPointInside: {ContainsPoint(adjustedPos)}");
+                }
+                // Debug.Log($"IsPointInside: {ContainsPoint(node.ChangeCoordinatesTo(this, evt.originalMousePosition))}");
+            }
+            base.HandleEventBubbleUp(evt);
+            // if (m_ConnectorBox == null || m_ConnectorBoxCap == null)
+            //     return;
+            // if (evt.eventTypeId == EventBase<MouseEnterEvent>.TypeId())
+            // {
+            //     Debug.Log("Entering!");
+            // }
+            //
+            // if (evt.eventTypeId == EventBase<MouseMoveEvent>.TypeId())
+            // {
+            //     Debug.Log("Moving!");
+            // }
+            //
+            // if (highlight && ContainsPoint(evt.originalMousePosition))
+            // {
+            //     if (evt.eventTypeId == EventBase<MouseEnterEvent>.TypeId())
+            //     {
+            //         m_ConnectorBoxCap.style.backgroundColor = portColor;
+            //     }
+            //     else
+            //     {
+            //         if (evt.eventTypeId != EventBase<MouseLeaveEvent>.TypeId())
+            //             return;
+            //         ResetCapColor();
+            //     }
+            // }
+            // else
+            // {
+            //     if (evt.eventTypeId != EventBase<MouseUpEvent>.TypeId() || layout.Contains(((MouseEventBase<MouseUpEvent>) evt).localMousePosition))
+            //         return;
+            //     ResetCapColor();
+            // }
+        }
+
+        private void ResetCapColor()
+        {
+            if (portCapLit || connected)
+                m_ConnectorBoxCap.style.backgroundColor = portColor;
+            else
+                m_ConnectorBoxCap.style.backgroundColor = StyleKeyword.Null;
+        }
+
+        private bool IsFromListView(VisualElement target, out ListView listView)
+        {
+            listView = null;
+            VisualElement current = target;
+            while (current != null)
+            {
+                if (current is ListView view)
+                {
+                    listView = view;
+                    return true;
+                }
+                current = current.parent;
+            }
+            return false;
+        }
+
+        public override bool ContainsPoint(Vector2 localPoint)
+        {
+            Rect layout = this.m_ConnectorBox.layout;
+            Rect rect1 = default;
+            if (this.direction == Direction.Input)
+            {
+                ref Rect local1 = ref rect1;
+                double x = -(double) layout.xMin;
+                double y = -(double) layout.yMin;
+                double width1 = (double) layout.width + (double) layout.xMin;
+                Rect rect2 = new Rect(0.0f, 0.0f, this.layout.width, this.layout.height);
+                double height = (double) rect2.height;
+                local1 = new Rect((float) x, (float) y, (float) width1, (float) height);
+                ref Rect local2 = ref rect1;
+                double width2 = (double) local2.width;
+                rect2 = this.m_ConnectorText.layout;
+                double num = (double) rect2.xMin - (double) layout.xMax;
+                local2.width = (float) (width2 + num);
+            }
+            else
+            {
+                ref Rect local = ref rect1;
+                double y = -(double) layout.yMin;
+                Rect rect3 = new Rect(0.0f, 0.0f, this.layout.width, this.layout.height);
+                double width = (double) rect3.width - (double) layout.xMin;
+                rect3 = new Rect(0.0f, 0.0f, this.layout.width, this.layout.height);
+                double height = (double) rect3.height;
+                local = new Rect(0.0f, (float) y, (float) width, (float) height);
+                double xMin = (double) layout.xMin;
+                rect3 = this.m_ConnectorText.layout;
+                double xMax = (double) rect3.xMax;
+                float num = (float) (xMin - xMax);
+                rect1.xMin -= num;
+                rect1.width += num;
+            }
+            return rect1.Contains(this.ChangeCoordinatesTo(this.m_ConnectorBox, localPoint));
         }
 
         public string LinkedPropertyName { get; set; }
@@ -72,9 +228,10 @@ namespace NodeSystem.Editor.Nodes
             {
                 m_EdgeConnector = new EdgeConnector<TEdge>(listener)
             };
-            intentional compilation error;
+            // intentional compilation error;
             // TODO;
             // https://docs.unity3d.com/6000.3/Documentation/Manual/UIE-manipulators.html
+            port.AddManipulator(new ListViewSelector());
             port.AddManipulator(new ClickSelector());
             port.AddManipulator(port.m_EdgeConnector);
             return port;

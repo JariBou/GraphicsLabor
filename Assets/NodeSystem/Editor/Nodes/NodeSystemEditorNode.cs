@@ -151,7 +151,7 @@ namespace NodeSystem.Editor.Nodes
 
                     // port.style.height = EditorGUI.GetPropertyHeight(prop);
                     port.style.height = new StyleLength(StyleKeyword.Auto);
-                    port.style.width = Length.Percent(100);
+                    // port.style.width = Length.Percent(100);
                     
                     switch (propertyAttribute.PreferredLocation)
                     {
@@ -246,7 +246,8 @@ namespace NodeSystem.Editor.Nodes
                             style =
                             {
                                 height = Length.Percent(100),
-                                width = Length.Percent(100), // TODO: IMPORTANT
+                                width = Length.Percent(80), // TODO: IMPORTANT
+                                // width = Length.Percent(100), // TODO: IMPORTANT
                             },
                             focusable = true,
                         };

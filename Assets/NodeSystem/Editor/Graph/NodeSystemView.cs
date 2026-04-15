@@ -118,7 +118,6 @@ namespace NodeSystem.Editor.Graph
             Add(background);
             background.SendToBack();
             
-            this.AddManipulator(new ListViewSelector());
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
@@ -135,14 +134,14 @@ namespace NodeSystem.Editor.Graph
             graphViewChanged += OnGraphViewChangedEvent;
             Undo.undoRedoEvent += OnUndoRedo;
 
-            
+            // schedule.Execute(_ => FrameAll());
             // Neither work smh
             // EditorApplication.delayCall += () =>
             // {
             //     FrameAll();
             // };
             // schedule.Execute(() => { FrameAll(); });
-            
+
             // canPasteSerializedData += CanPasteCallback;
             // unserializeAndPaste += PasteCallback;
             // serializeGraphElements += CopyCutCallback;
