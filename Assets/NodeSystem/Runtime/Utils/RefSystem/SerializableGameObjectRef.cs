@@ -5,7 +5,7 @@ using UnityEngine;
 namespace NodeSystem.Runtime.Utils.RefSystem
 {
     [Serializable]
-    public class SerializableSourceType
+    public class SerializableGameObjectRef
     {
         [SerializeField] private string _objectId = ReferenceManager.NoneReference;
 

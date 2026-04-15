@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using NodeSystem.Runtime.Utils;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.References
 {
-    [CreateAssetMenu(menuName = "NodeSystem/New Graph Bank")]
-    public class GraphBankAsset : ScriptableObject
+    [CreateAssetMenu(menuName = NodeSystemConsts.AddComponentMenuCategoryName+"/New Graph Bank")]
+    public sealed class GraphBankAsset : ScriptableObject
     {
         [SerializeField] private List<NodeSystemAsset> _nodeSystems;
         private Dictionary<string, NodeSystemAsset> _graphBank;

@@ -1,4 +1,5 @@
 ﻿using System;
+using NodeSystem.Runtime.NodesLibrary.Utils;
 using NodeSystem.Runtime.References;
 using NodeSystem.Runtime.Utils.RefSystem;
 using UnityEditor;
@@ -119,7 +120,6 @@ namespace NodeSystem.Editor.Editors.RefEditors
             {
                 objectType = typeof(GameObject),
                 value = ownerGo,
-                bindingPath = ownerIdProp.propertyPath,
                 focusable = true,
                 
                 tooltip = "The Owner Object of the  selected comp if Any. Double click to highlight in inspector if scene is open.",
@@ -129,66 +129,57 @@ namespace NodeSystem.Editor.Editors.RefEditors
 
             container.Add(objectField);
             
-
+            GameObjectComponentReferenceBank refBank = ownerGo?.GetComponent<GameObjectComponentReferenceBank>();
+            Component displayedComp = refBank?.GetComp<Component>(compIdProp.stringValue);
+            Type refType = typedRef.GetRefType();
+            
+            ObjectField compField = new()
             {
-                GameObjectComponentReferenceBank refBank = ownerGo?.GetComponent<GameObjectComponentReferenceBank>();
-                Component displayedComp = refBank?.GetComp<Component>(compIdProp.stringValue);
-                Type refType = typedRef.GetRefType();
+                objectType = refType,
+                value = displayedComp,
+                label = property.displayName,
+                focusable = true,
+                tooltip = property.tooltip
+            };
+
+            compField.RegisterValueChangedCallback(evt =>
+            {
+                property.serializedObject.Update();
+                ownerIdProp.serializedObject.Update();
                 
-                ObjectField compField = new()
+                Object obj = evt.newValue;
+                switch (obj)
                 {
-                    objectType = refType,
-                    value = displayedComp,
-                    label = property.displayName,
-                    focusable = true,
-                };
-
-                // Doesn't work yet, would like not to use GL but might bring over some code from there
-                // TooltipAttribute tooltipAttribute = property.GetAttribute<TooltipAttribute>();
-                // if (tooltipAttribute != null)
-                // {
-                //     compField.tooltip = tooltipAttribute.tooltip;
-                // }
-
-                compField.RegisterValueChangedCallback(evt =>
-                {
-                    property.serializedObject.Update();
-                    ownerIdProp.serializedObject.Update();
-                    
-                    Object obj = evt.newValue;
-                    switch (obj)
+                    case Component comp:
                     {
-                        case Component comp:
+                        ownerIdProp.stringValue = ReferenceManager.GetGuidOf(comp.gameObject);
+                        GameObjectComponentReferenceBank gameObjectComponentReferenceBank =
+                            comp.gameObject.GetComponent<GameObjectComponentReferenceBank>();
+                        if (gameObjectComponentReferenceBank == null)
                         {
-                            ownerIdProp.stringValue = ReferenceManager.GetGuidOf(comp.gameObject);
-                            GameObjectComponentReferenceBank gameObjectComponentReferenceBank =
-                                comp.gameObject.GetComponent<GameObjectComponentReferenceBank>();
-                            if (gameObjectComponentReferenceBank == null)
-                            {
-                                gameObjectComponentReferenceBank =
-                                    comp.gameObject.AddComponent<GameObjectComponentReferenceBank>();
-                            }
+                            gameObjectComponentReferenceBank =
+                                comp.gameObject.AddComponent<GameObjectComponentReferenceBank>();
+                        }
 
-                            gameObjectComponentReferenceBank.LoadReferences();
-                            compIdProp.stringValue = gameObjectComponentReferenceBank.GetGuidOf(comp);
-                            objectField.SetValueWithoutNotify(comp.gameObject); // This is soooo weird, I can't stress it enough but hey... it works
-                            break;
-                        }
-                        case null:
-                        {
-                            ownerIdProp.stringValue = ReferenceManager.NoneReference;
-                            compIdProp.stringValue = ReferenceManager.NoneReference;
-                            objectField.SetValueWithoutNotify(null);
-                            break;
-                        }
+                        gameObjectComponentReferenceBank.LoadReferences();
+                        compIdProp.stringValue = gameObjectComponentReferenceBank.GetGuidOf(comp);
+                        objectField.SetValueWithoutNotify(comp.gameObject); // This is soooo weird, I can't stress it enough but hey... it works
+                        break;
                     }
-                    
-                    compIdProp.serializedObject.ApplyModifiedProperties();
-                    property.serializedObject.ApplyModifiedProperties();
-                });
+                    case null:
+                    {
+                        ownerIdProp.stringValue = ReferenceManager.NoneReference;
+                        compIdProp.stringValue = ReferenceManager.NoneReference;
+                        objectField.SetValueWithoutNotify(null);
+                        break;
+                    }
+                }
+                
+                compIdProp.serializedObject.ApplyModifiedProperties();
+                property.serializedObject.ApplyModifiedProperties();
+            });
 
-                container.Add(compField);
-            }
+            container.Add(compField);
             
             return container;
         }

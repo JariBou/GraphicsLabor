@@ -5,15 +5,15 @@ using UnityEngine;
 
 namespace NodeSystem.Runtime.References
 {
-    [AddComponentMenu("Reference Data Banks/GameObject Component Reference Bank")]
+    [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName+"/References/GameObject Component Reference Bank")]
     public class GameObjectComponentReferenceBank : MonoBehaviour
     {
         [SerializeField] private List<GameObjectComponentReference> _references = new();
 
         public void LoadReferences()
         {
-            var currentComponents = GetComponents<Component>();
-            var refsToRemove = new List<GameObjectComponentReference>(_references);
+            Component[] currentComponents = GetComponents<Component>();
+            List<GameObjectComponentReference> refsToRemove = new List<GameObjectComponentReference>(_references);
             foreach (Component comp in currentComponents)
                 if (_references.Find(x => x.Comp == comp) == null)
                     _references.Add(new GameObjectComponentReference(comp));
@@ -50,7 +50,7 @@ namespace NodeSystem.Runtime.References
         }
 
         [Serializable]
-        public class GameObjectComponentReference
+        private class GameObjectComponentReference
         {
             [SerializeField] private Component _comp;
             [SerializeField] private string _guid;

@@ -1,5 +1,6 @@
 ﻿using System;
 using NodeSystem.Runtime.References;
+using NodeSystem.Runtime.Utils;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace NodeSystem.Editor.Windows
         private NodeSystemStatus _nodeSystemStatus;
         
         
-        [MenuItem("Window/NodeSystem/Node System Setup")]
+        [MenuItem("Window/"+NodeSystemConsts.AddComponentMenuCategoryName+"/Node System Setup")]
         private static void Init()
         {
             GetWindow<NodeSystemSetup>();

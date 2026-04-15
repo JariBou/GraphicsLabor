@@ -2,7 +2,7 @@
 
 namespace NodeSystem.Runtime.Attributes
 {
-    public class NodeInfoAttribute : Attribute
+    public sealed class NodeInfoAttribute : Attribute
     {
         public NodeInfoAttribute(string nodeTitle, string menuItem = "",
             FlowDirection flowDirection = FlowDirection.Both, bool isPure = false, int outputPortCount = 1)

@@ -5,7 +5,7 @@ using Object = UnityEngine.Object;
 
 namespace NodeSystem.Runtime.Utils.RefSystem
 {
-    [Serializable]
+    [Serializable, Obsolete]
     public class SerializableRef
     {
         [SerializeField] private string _objectId = "";

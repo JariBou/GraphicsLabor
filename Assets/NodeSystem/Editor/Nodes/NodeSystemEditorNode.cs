@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NodeSystem.Editor.Editors.NodeEditors;
+using NodeSystem.Editor.Utils;
 using NodeSystem.Runtime;
 using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.References;
@@ -251,6 +252,7 @@ namespace NodeSystem.Editor.Nodes
                         };
                         port.AddField(tempField);
                     }
+                    // port.Remove(port[1]);
                         
                     continue;
 
@@ -353,6 +355,7 @@ namespace NodeSystem.Editor.Nodes
             Port inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(PortTypes.FlowPort));
             inputPort.portName = "In";
             inputPort.tooltip = "The flow input";
+            inputPort.portColor = NodeSystemEditorConsts.PortColor_In;
             RegisterPort(inputPort, PropContainerLocation.InputContainer);
             // m_ports.Add(inputPort);
             // inputContainer.Add(inputPort);
@@ -363,6 +366,7 @@ namespace NodeSystem.Editor.Nodes
             m_outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(PortTypes.FlowPort));
             m_outputPort.portName = "Out";
             m_outputPort.tooltip = "The flow output";
+            m_outputPort.portColor = NodeSystemEditorConsts.PortColor_Out;
             RegisterPort(m_outputPort, PropContainerLocation.OutputContainer);
             // m_ports.Add(m_outputPort);
             // outputContainer.Add(m_outputPort);

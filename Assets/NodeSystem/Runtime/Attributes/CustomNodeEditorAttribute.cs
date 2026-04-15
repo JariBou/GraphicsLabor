@@ -3,7 +3,7 @@
 namespace NodeSystem.Runtime.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class CustomNodeEditorAttribute : Attribute
+    public sealed class CustomNodeEditorAttribute : Attribute
     {
         public CustomNodeEditorAttribute(Type targetType)
         {

@@ -8,9 +8,9 @@ namespace NodeSystem.Runtime.NodesLibrary
     [NodeInfo("Object Ref", "WIP/Object Ref", FlowDirection.None, true)]
     public class ObjectRefNode : NodeSystemNode
     {
-        [ExposedProperty(PropPortDirection.Output, typeof(GameObject),
+        [ExposedProperty(PropPortDirection.Output,
             preferredLocation: PropContainerLocation.OutputContainer)]
-        public SerializableRef Source = new();
+        public SerializableGameObjectRef Source = new();
         
         public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {

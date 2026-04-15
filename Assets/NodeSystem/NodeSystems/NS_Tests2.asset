@@ -87,10 +87,10 @@ MonoBehaviour:
         m_guid: a8650aa4-585f-453a-867a-676ce4a379ab
         m_position:
           serializedVersion: 2
-          x: 176
-          y: 210
-          width: 208
-          height: 110
+          x: -200
+          y: 474
+          width: 222
+          height: 73
         m_isPure: 1
         typename: NodeSystem.Runtime.NodesLibrary.ObjectRefNode, NodeSystem, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
@@ -101,7 +101,7 @@ MonoBehaviour:
           _portDirection: 2
         m_pureExecutionDone: 1
         Source:
-          _objectId: 
+          _objectId: 2b0e546a-5f97-4389-9945-75b208b5aa34
           _refTypename: 
     - rid: 1463373357213024330
       type: {class: TestStartDiffNode, ns: NodeSystem.Runtime.NodesLibrary, asm: NodeSystem}
@@ -109,9 +109,9 @@ MonoBehaviour:
         m_guid: c683d3cc-d61f-43cb-8c85-919649953c2d
         m_position:
           serializedVersion: 2
-          x: -200
-          y: 547
-          width: 323
+          x: -264
+          y: 629
+          width: 315
           height: 260
         m_isPure: 0
         typename: NodeSystem.Runtime.NodesLibrary.TestStartDiffNode, NodeSystem,
@@ -156,6 +156,9 @@ MonoBehaviour:
           _refTypename: 
         TestIn2: {fileID: 0}
         testList:
+        - 
+        - 
+        - 
         - 
         testList2: []
     - rid: 2224113340452962376

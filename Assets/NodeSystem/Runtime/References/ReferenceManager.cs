@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
@@ -8,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace NodeSystem.Runtime.References
 {
-    [AddComponentMenu("Reference Data Banks/Reference Manager")]
+    [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName+"/References/Reference Manager")]
     public class ReferenceManager : MonoBehaviour
     {
         public const string NoneReference = "";
@@ -18,23 +19,41 @@ namespace NodeSystem.Runtime.References
         [FormerlySerializedAs("m_referenceDataBanks")] [SerializeField]
         private List<ReferenceDataBank> _referenceDataBanks = new();
 
+        [NotNull]
         public static ReferenceManager Instance
         {
             get
             {
                 if (_instance is not null) return _instance;
 
-                _instance = FindAnyObjectByType<ReferenceManager>();
-                if (_instance is null)
-                {
-                    _instance = new GameObject("ReferenceManager").AddComponent<ReferenceManager>();
-                    // #if !UNITY_EDITOR
-                    DontDestroyOnLoad(_instance.gameObject);
-                    // #endif          
-                }
+                // IRC I did it this way to allow for future implementation of in-editor graphs running
+                
+                _instance = FindAnyObjectByType<ReferenceManager>() ?? new GameObject("ReferenceManager").AddComponent<ReferenceManager>();
 
-                _instance.Initialize();
+                // #if !UNITY_EDITOR
+                // DontDestroyOnLoad(_instance.gameObject);
+                // #endif          
                 return _instance;
+            }
+        }
+
+        private void Awake()
+        {
+            if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                _instance = null;
             }
         }
 
@@ -44,18 +63,7 @@ namespace NodeSystem.Runtime.References
                 FindObjectsByType<ReferenceDataBank>(FindObjectsInactive.Include, FindObjectsSortMode.None));
         }
 
-        public void Initialize()
-        {
-            _referenceDataBanks.Clear();
-
-            foreach (ReferenceDataBank referenceDataBank in GetAvailableDataBanks())
-                _instance.RecordHolder(referenceDataBank);
-
-            if (_referenceDataBanks.Count == 0)
-                _instance.RecordHolder(_instance.gameObject.AddComponent<ReferenceDataBank>());
-        }
-
-        public void RecordHolder(ReferenceDataBank referenceDataBank)
+        public void RecordRefDataBank(ReferenceDataBank referenceDataBank)
         {
             Debug.Log("Recording " + referenceDataBank.name);
             _referenceDataBanks.Add(referenceDataBank);
@@ -71,7 +79,7 @@ namespace NodeSystem.Runtime.References
             if (guid == "") return null;
             // return GetAvailableDataBanks().Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
             // return Instance._referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
-            var objects = Instance._referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).ToArray();
+            T[] objects = Instance._referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).ToArray();
             return objects.Any() ? objects.First() : null;
         }
 
@@ -82,26 +90,5 @@ namespace NodeSystem.Runtime.References
 
             return "";
         }
-
-        public void TestPrint()
-        {
-            Debug.Log(_referenceDataBanks.Count);
-        }
-    }
-
-    [Serializable]
-    public class GameObjectReference
-    {
-        [SerializeField] private GameObject m_go;
-        [SerializeField] private string m_guid;
-
-        public GameObjectReference(GameObject go)
-        {
-            m_go = go;
-            m_guid = GuidSystem.NewGuid();
-        }
-
-        public GameObject Object => m_go;
-        public string Guid => m_guid;
     }
 }

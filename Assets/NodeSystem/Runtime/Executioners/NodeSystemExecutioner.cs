@@ -1,9 +1,11 @@
 ﻿using System;
 using NodeSystem.Runtime.References;
+using NodeSystem.Runtime.Utils;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.Executioners
 {
+    [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName+"/Executioners/Node System Executioner")]
     public class NodeSystemExecutioner : MonoBehaviour
     {
         [SerializeField] private NodeSystemAsset m_graphAsset;

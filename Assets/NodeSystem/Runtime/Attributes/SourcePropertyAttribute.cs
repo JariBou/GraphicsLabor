@@ -2,7 +2,7 @@
 
 namespace NodeSystem.Runtime.Attributes
 {
-    public class SourcePropertyAttribute : Attribute
+    public sealed class SourcePropertyAttribute : Attribute
     {
         public SourcePropertyAttribute(Type sourceType)
         {

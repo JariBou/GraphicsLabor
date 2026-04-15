@@ -2,7 +2,7 @@
 
 namespace NodeSystem.Runtime.Attributes
 {
-    public class ExposedPropertyAttribute : Attribute
+    public sealed class ExposedPropertyAttribute : Attribute
     {
         public ExposedPropertyAttribute(
             PropPortDirection portDirection,

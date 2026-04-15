@@ -7,25 +7,20 @@ using Object = UnityEngine.Object;
 
 namespace NodeSystem.Runtime.References
 {
-    [AddComponentMenu("Reference Data Banks/GameObject Reference Bank")]
+    [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName+"/References/GameObject Reference Bank")]
     public class ReferenceDataBank : MonoBehaviour
     {
         [FormerlySerializedAs("m_references")] [SerializeField]
         private List<GameObjectReference> _references;
+        
+        [SerializeField] private bool _autoRecord = true;
 
         private void OnEnable()
         {
-            // I don't liek this one bit
-            //TODO: Update this, what was I thinking??
-            ReferenceManager refManager = ReferenceManager.Instance;
-            if (refManager == null)
+            if (_autoRecord)
             {
-                GameObject refManagerGo = Instantiate(new GameObject("ReferenceManager"));
-                DontDestroyOnLoad(refManagerGo);
-                refManager = refManagerGo.AddComponent<ReferenceManager>();
+                ReferenceManager.Instance.RecordRefDataBank(this);
             }
-
-            refManager.RecordHolder(this);
         }
 
         private void OnDisable()
@@ -35,12 +30,10 @@ namespace NodeSystem.Runtime.References
 
         public void LoadReferences()
         {
-            // Scene activeScene = SceneManager.GetActiveScene();
-            var objectsInScene =
-                new List<GameObject>(FindObjectsByType<GameObject>(FindObjectsInactive.Include,
-                    FindObjectsSortMode.None));
-            var refsToRemove = new List<GameObjectReference>(_references);
-            // m_references = new List<GameObjectReference>(objectsInScene.Count);
+            GameObject[] objectsInScene = FindObjectsByType<GameObject>(FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+            
+            List<GameObjectReference> refsToRemove = new List<GameObjectReference>(_references);
             foreach (GameObject go in objectsInScene)
                 if (_references.Find(goRef => goRef.Object == go) == null)
                     _references.Add(new GameObjectReference(go));

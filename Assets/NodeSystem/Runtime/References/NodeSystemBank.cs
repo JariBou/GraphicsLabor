@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using NodeSystem.Runtime.Utils;
+using UnityEngine;
 
 namespace NodeSystem.Runtime.References
 {
+    [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName+"/Node System Bank")]
     public class NodeSystemBank : MonoBehaviour
     {
         private static NodeSystemBank _instance;
@@ -10,9 +12,16 @@ namespace NodeSystem.Runtime.References
 
         private void Awake()
         {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-            _bank.Initialize();
+            if (_instance != null)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                _instance = this;
+                DontDestroyOnLoad(gameObject);
+                _bank.Initialize();
+            }
         }
 
         public static NodeSystemAsset GetGraphInstance(string guid)

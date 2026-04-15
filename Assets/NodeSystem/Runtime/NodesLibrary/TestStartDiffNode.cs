@@ -19,7 +19,7 @@ namespace NodeSystem.Runtime.NodesLibrary
         public SerializableCompRef<Transform> TestCompRef2;
 
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
-        public SerializableSourceType TestIn;
+        public SerializableGameObjectRef TestIn;
         // [ExposedProperty(PropPortDirection.Input, portType: typeof(TestClass), preferredLocation: PropContainerLocation.InputContainer)]
         // public SerializableRef Source = new();
 

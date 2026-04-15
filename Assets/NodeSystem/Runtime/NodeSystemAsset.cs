@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace NodeSystem.Runtime
 {
-    [CreateAssetMenu(menuName = "NodeSystem/New Graph")]
+    [CreateAssetMenu(menuName = NodeSystemConsts.AddComponentMenuCategoryName+"/New Node Graph")]
     public class NodeSystemAsset : ScriptableObject
     {
         [SerializeField] private string _graphId = GuidSystem.NewGuid();

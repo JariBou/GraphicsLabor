@@ -5,15 +5,15 @@ using UnityEngine;
 
 namespace NodeSystem.Editor.Editors.RefEditors
 {
-    [CustomPropertyDrawer(typeof(SerializableSourceType))]
-    public class SerializableSourceTypeEditor : PropertyDrawer
+    [CustomPropertyDrawer(typeof(SerializableGameObjectRef))]
+    public class SerializableGameObjectRefEditor : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             property.serializedObject.Update();
             
             EditorGUI.BeginProperty(position, label, property);
-            SerializableSourceType src = (SerializableSourceType)property.boxedValue;
+            SerializableGameObjectRef src = (SerializableGameObjectRef)property.boxedValue;
             SerializedProperty objIdProp = property.FindPropertyRelative("_objectId");
             EditorGUI.BeginChangeCheck();
             GameObject gameObject = src.Get();

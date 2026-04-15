@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using GraphicsLabor.Scripts.Editor.Utility;
 using NodeSystem.Runtime;
+using NodeSystem.Runtime.Utils;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace NodeSystem.Editor.Windows
         public const string DefaultGeneratedPath = "Assets/NodeSystem/Generated";
         [SerializeField] private string _generatedPath = "Assets/NodeSystem/Generated";
         
-        [MenuItem("Window/NodeSystem/AssemblyDeclsGenerator")]
+        [MenuItem("Window/"+NodeSystemConsts.AddComponentMenuCategoryName+"/AssemblyDeclsGenerator")]
         static void Init()
         {
             GetWindow<AssemblyDeclsGenerator>();

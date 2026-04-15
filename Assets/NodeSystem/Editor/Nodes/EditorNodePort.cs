@@ -68,12 +68,16 @@ namespace NodeSystem.Editor.Nodes
             where TEdge : Edge, new()
         {
             DefaultEdgeConnectorListener listener = new();
-            EditorNodePort ele = new(orientation, direction, capacity, type)
+            EditorNodePort port = new(orientation, direction, capacity, type)
             {
                 m_EdgeConnector = new EdgeConnector<TEdge>(listener)
             };
-            ele.AddManipulator(ele.m_EdgeConnector);
-            return ele;
+            intentional compilation error;
+            // TODO;
+            // https://docs.unity3d.com/6000.3/Documentation/Manual/UIE-manipulators.html
+            port.AddManipulator(new ClickSelector());
+            port.AddManipulator(port.m_EdgeConnector);
+            return port;
         }
 
         // Does not work as intended smh
