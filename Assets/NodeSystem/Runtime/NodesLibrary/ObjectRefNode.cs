@@ -12,7 +12,6 @@ namespace NodeSystem.Runtime.NodesLibrary
             preferredLocation: PropContainerLocation.OutputContainer)]
         public SerializableRef Source = new();
         
-        
         public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
             // await GetValueOfProp<SerializableRef>(context, nameof(Source));

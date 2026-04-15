@@ -8,7 +8,7 @@ using NodeSystem.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace NodeSystem.Editor.Utils
+namespace NodeSystem.Editor.Windows
 {
     public class AssemblyDeclsGenerator : EditorWindow
     {

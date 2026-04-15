@@ -29,5 +29,10 @@ namespace NodeSystem.Runtime.References
             Debug.Log("Registering graph");
             return _instance._bank.RegisterGraph(baseGraph);
         }
+
+        public bool HasBankAsset()
+        {
+            return _bank != null;
+        }
     }
 }

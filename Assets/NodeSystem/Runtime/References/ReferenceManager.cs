@@ -63,7 +63,7 @@ namespace NodeSystem.Runtime.References
 
         public void UnrecordHolder(ReferenceDataBank referenceDataBank)
         {
-            GetAvailableDataBanks().Remove(referenceDataBank);
+            _referenceDataBanks.Remove(referenceDataBank);
         }
 
         public static T GetGameObject<T>(string guid) where T : Object

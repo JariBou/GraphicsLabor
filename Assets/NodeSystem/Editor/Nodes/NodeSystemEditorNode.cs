@@ -128,7 +128,7 @@ namespace NodeSystem.Editor.Nodes
                     Type propertyType;
                     try
                     {
-                        // Can sometimes crash, like when using string isntead of String idk why
+                        // Can sometimes crash, like when using string instead of String idk why
                         propertyType = propertyAttribute.AutoTyping ? fieldInfo.FieldType /*TypeUtils.GetPropertyType(prop)*/ : propertyAttribute.PortType;
                         // Debug.LogWarning(propertyType);
                     }
@@ -270,7 +270,6 @@ namespace NodeSystem.Editor.Nodes
                     ObjectField objectField = new ObjectField
                     {
                         objectType = sourceAttribute.SourceType,
-                        // ReferenceManager.Instance.TestPrint();
                         value = ReferenceManager.GetGameObject<GameObject>(prop.stringValue),
                         focusable = true,
                     };

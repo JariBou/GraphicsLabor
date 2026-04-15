@@ -17,8 +17,9 @@ namespace NodeSystem.Editor.Editors.RefEditors
             SerializedProperty objIdProp = property.FindPropertyRelative("_objectId");
             EditorGUI.BeginChangeCheck();
             GameObject gameObject = src.Get();
-            Object obj = EditorGUI.ObjectField(position, gameObject, typeof(GameObject), true);
 
+            Object obj = EditorGUI.ObjectField(position, label, gameObject, typeof(GameObject), true);
+            
             if (EditorGUI.EndChangeCheck())
             {
                 objIdProp.stringValue = obj switch

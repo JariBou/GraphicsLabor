@@ -164,8 +164,7 @@ namespace NodeSystem.Editor.Nodes
         {
             if (HideWhenConnected)
             {
-                
-                VisualElement element = this.contentContainer[2];
+                VisualElement element = contentContainer[2];
                 element.SetEnabled(!wasConnected);
             }
         }

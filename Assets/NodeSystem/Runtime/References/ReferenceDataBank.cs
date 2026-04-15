@@ -16,6 +16,7 @@ namespace NodeSystem.Runtime.References
         private void OnEnable()
         {
             // I don't liek this one bit
+            //TODO: Update this, what was I thinking??
             ReferenceManager refManager = ReferenceManager.Instance;
             if (refManager == null)
             {
