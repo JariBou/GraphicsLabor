@@ -151,15 +151,15 @@ MonoBehaviour:
         m_pureExecutionDone: 1
         Source: 
         TestCompRef:
-          _compId: 2aa0029b-692e-4922-b91b-4381502b481e
-          _ownerId: fbe6d3ae-ad8f-4c3b-b112-8ec9bc1efbe2
+          _compId: 20bb1a99-e621-4dc3-901d-12bce8fa30dc
+          _ownerId: 
           _refTypename: 
         TestCompRef2:
           _compId: 
           _ownerId: 
           _refTypename: 
         TestIn:
-          _objectId: 5601c8cc-3a1f-4959-839b-77c6723089e3
+          _objectId: 
           _refTypename: 
         TestIn2: {fileID: 0}
         testList:

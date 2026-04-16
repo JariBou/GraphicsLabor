@@ -1,4 +1,5 @@
 ﻿using System;
+using NodeSystem.Runtime.Executioners;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Events
@@ -10,5 +11,10 @@ namespace NodeSystem.Runtime.NodesLibrary.Events
         public Type EventDataType => typeof(T);
 
         public abstract Awaitable Invoke(ExecContext ctx, T eventData);
+
+        protected Awaitable DefaultInvoke(ExecContext ctx)
+        {
+            return NodeGlobalExecutioner.Instance.RunNode(ctx, this);
+        }
     }
 }

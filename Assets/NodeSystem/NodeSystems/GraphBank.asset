@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e60ed3ba28a459a8bcebbb889bb8b8d, type: 3}
-  m_Name: GraphBankj
+  m_Name: GraphBank
   m_EditorClassIdentifier: 
   _nodeSystems:
-  - {fileID: 11400000, guid: 0bc2ed8a4b753d8448ae92e72c37bfdc, type: 2}
+  - {fileID: 11400000, guid: 107cf9df60ef77349ab0fec398ebec20, type: 2}

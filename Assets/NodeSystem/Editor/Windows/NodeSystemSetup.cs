@@ -54,8 +54,8 @@ namespace NodeSystem.Editor.Windows
         private void OnGUI()
         {
             Rect currentRect = EditorGUILayout.GetControlRect();
-            
-            UpdateNodeSystemStatus();
+
+            NodeSystemBank systemBank = UpdateNodeSystemStatus();
 
             { // Status display
                 GUIContent bankStatusGuiContent = new("Bank Status: ");
@@ -88,6 +88,21 @@ namespace NodeSystem.Editor.Windows
                 };
                 GUI.Box(colorRect, statusGuiContent);
                 GUI.color = color;
+
+                Rect objectRect = new()
+                {
+                    x = colorRect.x + colorRect.width + EditorGUIUtility.standardVerticalSpacing,
+                    y = currentRect.y,
+                    width =
+                        currentRect.width - colorRect.x - colorRect.width - EditorGUIUtility.standardVerticalSpacing,
+                    height = EditorGUIUtility.singleLineHeight
+                };
+                
+                EditorGUI.BeginDisabledGroup(true);
+                
+                EditorGUI.ObjectField(objectRect, systemBank, typeof(NodeSystemBank), false);
+                
+                EditorGUI.EndDisabledGroup();
             }
             
             currentRect.y += VerticalOffset;
@@ -118,11 +133,11 @@ namespace NodeSystem.Editor.Windows
                 };
 
                 EditorGUI.BeginDisabledGroup(_nodeSystemStatus != NodeSystemStatus.NotFound);
-                if (GUI.Button(createNodeBankButtonRect, "Create Bank"))
+                if (GUI.Button(createNodeBankButtonRect, "Create singleton Bank"))
                 {
                     GameObject gameObject = new()
                     {
-                        name = "[Node System] - Bank",
+                        name = "[Node System] - S, DDL - Bank",
                     };
                     gameObject.AddComponent<NodeSystemBank>();
                     
@@ -146,14 +161,45 @@ namespace NodeSystem.Editor.Windows
                 ReferenceManager referenceManager = FindAnyObjectByType<ReferenceManager>();
 
                 EditorGUI.BeginDisabledGroup(referenceManager != null);
-                if (GUI.Button(createReferenceManagersButtonRect, "Create Reference Manager"))
+                if (GUI.Button(createReferenceManagersButtonRect, "Create singleton Reference Manager"))
                 {
-                    GameObject gameObject = new()
+                    GameObject refManager = new()
                     {
-                        name = "[Node System] - Reference Manager",
+                        name = "[Node System] - S, DDL - Reference Manager",
                     };
-                    gameObject.AddComponent<ReferenceManager>();
-                    ReferenceDataBank referenceDataBank = gameObject.AddComponent<ReferenceDataBank>();
+                    refManager.AddComponent<ReferenceManager>();
+                    
+                    UpdateNodeSystemStatus(); // Just to check if for whatever reason it failed to create it wont say that it's ok
+                }
+                EditorGUI.EndDisabledGroup();
+            }
+            
+            currentRect.y += VerticalOffset;
+            
+            { // Create Create reference Data Bank Button
+                // TODO
+                Rect createReferenceManagersButtonRect = new()
+                {
+                    x = currentRect.x,
+                    y = currentRect.y,
+                    width = position.width,
+                    height = EditorGUIUtility.singleLineHeight
+                };
+
+                ReferenceDataBank refDataBank = FindAnyObjectByType<ReferenceDataBank>();
+
+                EditorGUI.BeginDisabledGroup(refDataBank != null);
+                GUIContent guiContent = new ("Create Reference Data Bank in Scene")
+                {
+                    tooltip = refDataBank != null ? "Reference Data Bank already in Scene" : "Create a new Reference Data Bank in the current Scene",
+                };
+                if (GUI.Button(createReferenceManagersButtonRect, guiContent))
+                {
+                    GameObject newRefDataBank = new()
+                    {
+                        name = "[Node System] - Reference Data Bank",
+                    };
+                    ReferenceDataBank referenceDataBank = newRefDataBank.AddComponent<ReferenceDataBank>();
                     referenceDataBank.LoadReferences();
 
                     UpdateNodeSystemStatus(); // Just to check if for whatever reason it failed to create it wont say that it's ok
@@ -161,9 +207,28 @@ namespace NodeSystem.Editor.Windows
                 EditorGUI.EndDisabledGroup();
             }
             
+            currentRect.y += VerticalOffset;
+
+            {
+                GUIContent textGuiContent = new("Game Object naming tags:\n- S: Singleton\n- DDL: Don't Destroy on Load");
+                Vector2 textGuiContentSize = EditorStyles.label.CalcSize(textGuiContent);
+                
+                Rect textRect = new()
+                {
+                    x = currentRect.x,
+                    y = currentRect.y,
+                    width = position.width,
+                    height = textGuiContentSize.y
+                };
+                
+                EditorGUI.LabelField(textRect, textGuiContent);
+                
+                currentRect.y += textRect.height + EditorGUIUtility.standardVerticalSpacing;
+            }
+            
         }
 
-        private void UpdateNodeSystemStatus()
+        private NodeSystemBank UpdateNodeSystemStatus()
         {
             NodeSystemBank nodeSystemBank = FindAnyObjectByType<NodeSystemBank>();
             if (nodeSystemBank == null)
@@ -176,6 +241,7 @@ namespace NodeSystem.Editor.Windows
                     ? NodeSystemStatus.AllSet
                     : NodeSystemStatus.MissingGraphBankAsset;
             }
+            return nodeSystemBank;
         }
 
         private string GetSystemStatusLog()

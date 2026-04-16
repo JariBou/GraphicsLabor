@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2892175d8a24d80418dfbf7c18a1a156, type: 3}
+  m_Name: NS_Test_Build
+  m_EditorClassIdentifier: NodeSystem::NodeSystem.Runtime.NodeSystemAsset
+  _graphId: 85878082-fc60-4c41-8f5d-5ab600c737f7
+  m_nodes:
+  - rid: 2224113392803119104
+  - rid: 2224113392803119174
+  - rid: 2224113392803119175
+  m_connections:
+  - InputPort:
+      NodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
+      PortIndex: 1
+    OutputPort:
+      NodeId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+      PortIndex: 0
+  - InputPort:
+      NodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
+      PortIndex: 3
+    OutputPort:
+      NodeId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+      PortIndex: 4
+  m_exposedProperties: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2224113392803119104
+      type: {class: StartNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
+      data:
+        m_guid: d2de0d24-91e4-4c1d-ab30-67577d14c343
+        m_position:
+          serializedVersion: 2
+          x: 0
+          y: 0
+          width: 0
+          height: 0
+        m_isPure: 0
+        typename: NodeSystem.Runtime.NodesLibrary.Process.StartNode, NodeSystem,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        m_ports: []
+        m_pureExecutionDone: 1
+    - rid: 2224113392803119174
+      type: {class: MyCustomEventNode, ns: NodeSystem.Tests.Runtime, asm: Assembly-CSharp}
+      data:
+        m_guid: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+        m_position:
+          serializedVersion: 2
+          x: -147
+          y: 170
+          width: 180
+          height: 125
+        m_isPure: 0
+        typename: NodeSystem.Tests.Runtime.MyCustomEventNode, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: someInt
+          _ownerId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+          _portIndex: 1
+          _portDirection: 2
+        - _exposedPropertyName: someString
+          _ownerId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+          _portIndex: 2
+          _portDirection: 2
+        - _exposedPropertyName: someBool
+          _ownerId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+          _portIndex: 3
+          _portDirection: 2
+        - _exposedPropertyName: eventData
+          _ownerId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+          _portIndex: 4
+          _portDirection: 2
+        m_pureExecutionDone: 1
+        someInt: 0
+        someString: 
+        someBool: 0
+        eventData:
+          someInt: 0
+          someString: 
+          someBool: 0
+    - rid: 2224113392803119175
+      type: {class: OutputCustomEventToLog, ns: NodeSystem.Tests.Runtime, asm: Assembly-CSharp}
+      data:
+        m_guid: ada5b5fe-50fe-444e-bc18-02ce119060e7
+        m_position:
+          serializedVersion: 2
+          x: 166
+          y: 170
+          width: 353
+          height: 117
+        m_isPure: 0
+        typename: NodeSystem.Tests.Runtime.OutputCustomEventToLog, Assembly-CSharp,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        m_ports:
+        - _exposedPropertyName: logField
+          _ownerId: ada5b5fe-50fe-444e-bc18-02ce119060e7
+          _portIndex: 2
+          _portDirection: 1
+        - _exposedPropertyName: eventData
+          _ownerId: ada5b5fe-50fe-444e-bc18-02ce119060e7
+          _portIndex: 3
+          _portDirection: 1
+        m_pureExecutionDone: 1
+        logField:
+          _compId: ccb57bad-ecb7-446f-85cc-d7312c26a41f
+          _ownerId: 56eb561f-2386-4e97-83ec-9d271ac370ce
+          _refTypename: 
+        eventData:
+          someInt: 0
+          someString: 
+          someBool: 0

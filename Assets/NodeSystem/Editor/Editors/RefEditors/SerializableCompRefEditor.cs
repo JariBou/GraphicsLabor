@@ -93,7 +93,42 @@ namespace NodeSystem.Editor.Editors.RefEditors
         {
             return base.GetPropertyHeight(property, label) * 2;
         }*/
+
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            property.serializedObject.Update();
+            ISerializableTypedRef typedRef = (ISerializableTypedRef)property.boxedValue;
         
+            EditorGUI.BeginProperty(position, label, property);
+            
+            EditorGUI.LabelField(position, label);
+            SerializedProperty ownerIdProp = property.FindPropertyRelative("_ownerId");
+            SerializedProperty compIdProp = property.FindPropertyRelative("_compId");
+            Rect rect1 = new Rect()
+            {
+                x = position.x,
+                y = position.y,
+                width = position.width,
+                height = EditorGUIUtility.singleLineHeight
+            };
+            EditorGUI.LabelField(rect1, "Owner Id: ", ownerIdProp.stringValue);
+            Rect rect2 = new Rect()
+            {
+                x = position.x,
+                y = position.y + EditorGUIUtility.singleLineHeight,
+                width = position.width,
+                height = EditorGUIUtility.singleLineHeight
+            };
+            EditorGUI.LabelField(rect2, "Comp Id: ", compIdProp.stringValue);
+            
+            EditorGUI.EndProperty();
+        }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return base.GetPropertyHeight(property, label) * 2;
+        }
+
 
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         { 
@@ -144,7 +179,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
             compField.RegisterValueChangedCallback(evt =>
             {
                 property.serializedObject.Update();
-                ownerIdProp.serializedObject.Update();
+                // ownerIdProp.serializedObject.Update();
                 
                 Object obj = evt.newValue;
                 switch (obj)
@@ -175,6 +210,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
                 }
                 
                 compIdProp.serializedObject.ApplyModifiedProperties();
+                // ownerIdProp.serializedObject.ApplyModifiedProperties();
                 property.serializedObject.ApplyModifiedProperties();
             });
 

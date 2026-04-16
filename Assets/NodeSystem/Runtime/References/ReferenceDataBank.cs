@@ -11,7 +11,7 @@ namespace NodeSystem.Runtime.References
     public class ReferenceDataBank : MonoBehaviour
     {
         [FormerlySerializedAs("m_references")] [SerializeField]
-        private List<GameObjectReference> _references;
+        private List<GameObjectReference> _references = new();
         
         [SerializeField] private bool _autoRecord = true;
 

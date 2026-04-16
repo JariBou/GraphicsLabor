@@ -2,7 +2,7 @@
 
 namespace NodeSystem.Runtime.Attributes
 {
-    public sealed class ExposedPropertyAttribute : Attribute
+    public class ExposedPropertyAttribute : Attribute
     {
         public ExposedPropertyAttribute(
             PropPortDirection portDirection,
@@ -33,6 +33,13 @@ namespace NodeSystem.Runtime.Attributes
         public bool DisableInputWhenConnected { get; }
         public bool AutoTyping { get; }
         public bool LabelOnly { get; }
+    }
+
+    public class EventExposedPropertyAttribute : ExposedPropertyAttribute
+    {
+        public EventExposedPropertyAttribute(Type portType = null, string overrideDisplayName = "", PropContainerLocation preferredLocation = PropContainerLocation.OutputContainer, PropPortCapacity portCapacity = PropPortCapacity.Single, bool disableInputWhenConnected = false) : base(PropPortDirection.Output, portType, overrideDisplayName, preferredLocation, portCapacity, disableInputWhenConnected, true)
+        {
+        }
     }
 
     public enum PropPortDirection

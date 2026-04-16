@@ -152,6 +152,17 @@ namespace NodeSystem.Runtime
         {
             return await Task.FromResult(new ProcessInfo(id, nextNodeId, ProcessInfo.ExecutionFlowType.ExecuteNext));
         }
+        
+        protected async Awaitable<ProcessInfo> ContinueExecution(ExecContext ctx)
+        {
+            NodeSystemAsset graph = ctx.GraphInstance;
+            NodeSystemNode nextNode = GetNextNode(graph);
+            if (nextNode != null)
+            {
+                return await ContinueExecution(nextNode.id);
+            }
+            return await EndExecution();
+        }
 
         #endregion
     }

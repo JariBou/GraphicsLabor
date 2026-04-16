@@ -57,10 +57,9 @@ namespace NodeSystem.Runtime.References
             }
         }
 
-        public static List<ReferenceDataBank> GetAvailableDataBanks()
+        public static ReferenceDataBank[] GetAvailableDataBanks()
         {
-            return new List<ReferenceDataBank>(
-                FindObjectsByType<ReferenceDataBank>(FindObjectsInactive.Include, FindObjectsSortMode.None));
+            return FindObjectsByType<ReferenceDataBank>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         }
 
         public void RecordRefDataBank(ReferenceDataBank referenceDataBank)
@@ -79,13 +78,17 @@ namespace NodeSystem.Runtime.References
             if (guid == "") return null;
             // return GetAvailableDataBanks().Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
             // return Instance._referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
-            T[] objects = Instance._referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).ToArray();
+            ReferenceDataBank[] referenceDataBanks = Application.isEditor ? GetAvailableDataBanks() : Instance._referenceDataBanks.ToArray();
+            
+            T[] objects = referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).ToArray();
             return objects.Any() ? objects.First() : null;
         }
 
         public static string GetGuidOf<T>(T obj) where T : Object
         {
-            foreach (string guidOf in Instance._referenceDataBanks.Select(mHolder => mHolder.GetGuidOf(obj))
+            ReferenceDataBank[] referenceDataBanks = Application.isEditor ? GetAvailableDataBanks() : Instance._referenceDataBanks.ToArray();
+            
+            foreach (string guidOf in referenceDataBanks.Select(mHolder => mHolder.GetGuidOf(obj))
                          .Where(guidOf => guidOf != "")) return guidOf;
 
             return "";
