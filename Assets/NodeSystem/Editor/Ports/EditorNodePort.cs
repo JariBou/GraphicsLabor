@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using NodeSystem.Editor.Graph;
+using NodeSystem.Editor.Graph.Elements;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NodeSystem.Editor.Nodes
+namespace NodeSystem.Editor.Ports
 {
     public class EditorNodePort : Port
     {
@@ -19,40 +20,36 @@ namespace NodeSystem.Editor.Nodes
             // RegisterCallback<MouseDownEvent>(OnMouseDown);
         }
 
+        public string LinkedPropertyName { get; set; }
+
         private void OnMouseDown(MouseDownEvent evt)
         {
             VisualElement target = evt.target as VisualElement;
-            if (target?.name == "connector")
-            {
-                evt.StopImmediatePropagation();
-            }
+            if (target?.name == "connector") evt.StopImmediatePropagation();
             if (IsFromListView(evt.target as VisualElement, out ListView view))
-            {
                 // MouseDownEvent ms = new MouseDownEvent()
                 // {
-                    // target = evt.target,
+                // target = evt.target,
                 // };
                 evt.StopImmediatePropagation();
-                // view.SendEvent(ms);
-            }
+            // view.SendEvent(ms);
         }
 
         protected override void HandleEventTrickleDown(EventBase evt)
         {
             return;
-            if (evt is MouseDownEvent @event)
-            {
-                OnMouseDown(@event);
-            }
+            if (evt is MouseDownEvent @event) OnMouseDown(@event);
             // if (IsFromListView(evt.target as VisualElement))
             // {
-                // evt.StopImmediatePropagation();
+            // evt.StopImmediatePropagation();
             // }
         }
 
         protected override void HandleEventBubbleUp(EventBase evt)
         {
-            if (evt.eventTypeId == EventBase<MouseMoveEvent>.TypeId())
+            if (m_ConnectorBox == null || m_ConnectorBoxCap == null)
+                return;
+            if (highlight && evt is IMouseEvent)
             {
                 VisualElement visualElement = node.parent;
                 GraphView view = null;
@@ -69,46 +66,24 @@ namespace NodeSystem.Editor.Nodes
 
                 if (view != null)
                 {
-                    // Zoom has an influence on Y value
-                    Vector2 adjustedPos = view.ChangeCoordinatesTo(this, evt.originalMousePosition);
-                    Debug.Log(adjustedPos);
-                    // adjustedPos *= view.panel.visualTree.layout.size;
+                    Vector2 mouseAdjustedPos = new(evt.originalMousePosition.x,
+                        evt.originalMousePosition.y - 25 /* Offset of the title bar */);
+                    Vector2 adjustedPos = view.ChangeCoordinatesTo(this, mouseAdjustedPos);
                     Debug.Log($"IsPointInside: {ContainsPoint(adjustedPos)}");
+
+                    if (ContainsPoint(adjustedPos))
+                    {
+                        m_ConnectorBoxCap.style.backgroundColor = portColor;
+                    }
+                    else
+                    {
+                        if (portCapLit || connected)
+                            m_ConnectorBoxCap.style.backgroundColor = portColor;
+                        else
+                            m_ConnectorBoxCap.style.backgroundColor = StyleKeyword.Null;
+                    }
                 }
-                // Debug.Log($"IsPointInside: {ContainsPoint(node.ChangeCoordinatesTo(this, evt.originalMousePosition))}");
             }
-            base.HandleEventBubbleUp(evt);
-            // if (m_ConnectorBox == null || m_ConnectorBoxCap == null)
-            //     return;
-            // if (evt.eventTypeId == EventBase<MouseEnterEvent>.TypeId())
-            // {
-            //     Debug.Log("Entering!");
-            // }
-            //
-            // if (evt.eventTypeId == EventBase<MouseMoveEvent>.TypeId())
-            // {
-            //     Debug.Log("Moving!");
-            // }
-            //
-            // if (highlight && ContainsPoint(evt.originalMousePosition))
-            // {
-            //     if (evt.eventTypeId == EventBase<MouseEnterEvent>.TypeId())
-            //     {
-            //         m_ConnectorBoxCap.style.backgroundColor = portColor;
-            //     }
-            //     else
-            //     {
-            //         if (evt.eventTypeId != EventBase<MouseLeaveEvent>.TypeId())
-            //             return;
-            //         ResetCapColor();
-            //     }
-            // }
-            // else
-            // {
-            //     if (evt.eventTypeId != EventBase<MouseUpEvent>.TypeId() || layout.Contains(((MouseEventBase<MouseUpEvent>) evt).localMousePosition))
-            //         return;
-            //     ResetCapColor();
-            // }
         }
 
         private void ResetCapColor()
@@ -130,50 +105,53 @@ namespace NodeSystem.Editor.Nodes
                     listView = view;
                     return true;
                 }
+
                 current = current.parent;
             }
+
             return false;
         }
 
         public override bool ContainsPoint(Vector2 localPoint)
         {
-            Rect layout = this.m_ConnectorBox.layout;
+            return base.ContainsPoint(localPoint);
+            Rect layout1 = m_ConnectorBox.layout;
             Rect rect1 = default;
-            if (this.direction == Direction.Input)
+            if (direction == Direction.Input)
             {
                 ref Rect local1 = ref rect1;
-                double x = -(double) layout.xMin;
-                double y = -(double) layout.yMin;
-                double width1 = (double) layout.width + (double) layout.xMin;
-                Rect rect2 = new Rect(0.0f, 0.0f, this.layout.width, this.layout.height);
-                double height = (double) rect2.height;
-                local1 = new Rect((float) x, (float) y, (float) width1, (float) height);
+                double x = -(double)layout1.xMin;
+                double y = -(double)layout1.yMin;
+                double width1 = layout1.width + (double)layout1.xMin;
+                Rect rect2 = new(0.0f, 0.0f, layout.width, layout.height);
+                double height = rect2.height;
+                local1 = new Rect((float)x, (float)y, (float)width1, (float)height);
                 ref Rect local2 = ref rect1;
-                double width2 = (double) local2.width;
-                rect2 = this.m_ConnectorText.layout;
-                double num = (double) rect2.xMin - (double) layout.xMax;
-                local2.width = (float) (width2 + num);
+                double width2 = local2.width;
+                rect2 = m_ConnectorText.layout;
+                double num = rect2.xMin - (double)layout1.xMax;
+                local2.width = (float)(width2 + num);
             }
             else
             {
                 ref Rect local = ref rect1;
-                double y = -(double) layout.yMin;
-                Rect rect3 = new Rect(0.0f, 0.0f, this.layout.width, this.layout.height);
-                double width = (double) rect3.width - (double) layout.xMin;
-                rect3 = new Rect(0.0f, 0.0f, this.layout.width, this.layout.height);
-                double height = (double) rect3.height;
-                local = new Rect(0.0f, (float) y, (float) width, (float) height);
-                double xMin = (double) layout.xMin;
-                rect3 = this.m_ConnectorText.layout;
-                double xMax = (double) rect3.xMax;
-                float num = (float) (xMin - xMax);
+                double y = -(double)layout1.yMin;
+                Rect rect3 = new(0.0f, 0.0f, layout.width, layout.height);
+                double width = rect3.width - (double)layout1.xMin;
+                rect3 = new Rect(0.0f, 0.0f, layout.width, layout.height);
+                double height = rect3.height;
+                local = new Rect(0.0f, (float)y, (float)width, (float)height);
+                double xMin = layout1.xMin;
+                rect3 = m_ConnectorText.layout;
+                double xMax = rect3.xMax;
+                float num = (float)(xMin - xMax);
                 rect1.xMin -= num;
                 rect1.width += num;
             }
-            return rect1.Contains(this.ChangeCoordinatesTo(this.m_ConnectorBox, localPoint));
-        }
 
-        public string LinkedPropertyName { get; set; }
+            Vector2 changeCoordinatesTo = this.ChangeCoordinatesTo(m_ConnectorBox, localPoint);
+            return rect1.Contains(changeCoordinatesTo);
+        }
 
 
         public static EditorNodePort Create(
@@ -182,7 +160,7 @@ namespace NodeSystem.Editor.Nodes
             Capacity capacity,
             Type type)
         {
-            return Create<Edge>(orientation, direction, capacity, type);
+            return Create<NsEdge>(orientation, direction, capacity, type);
         }
 
         public override void OnStartEdgeDragging()
@@ -223,16 +201,16 @@ namespace NodeSystem.Editor.Nodes
             Type type)
             where TEdge : Edge, new()
         {
-            DefaultEdgeConnectorListener listener = new();
+            NsDefaultEdgeConnectorListener listener = new();
             EditorNodePort port = new(orientation, direction, capacity, type)
             {
-                m_EdgeConnector = new EdgeConnector<TEdge>(listener)
+                m_EdgeConnector = new NsEdgeConnector<TEdge>(listener)
             };
             // intentional compilation error;
             // TODO;
             // https://docs.unity3d.com/6000.3/Documentation/Manual/UIE-manipulators.html
-            port.AddManipulator(new ListViewSelector());
-            port.AddManipulator(new ClickSelector());
+            // port.AddManipulator(new ListViewSelector());
+            // port.AddManipulator(new ClickSelector());
             port.AddManipulator(port.m_EdgeConnector);
             return port;
         }
@@ -246,27 +224,26 @@ namespace NodeSystem.Editor.Nodes
                 OutputConnectionChanged(wasConnected);
                 return;
             }
+
             if (port.contentContainer == null) return;
             if (m_propBindingPath == null || !HideWhenConnected) return;
             if (port.contentContainer.childCount < 3) return;
             var portContentContainer = new List<VisualElement>();
-            for (var j = 0; j < port.contentContainer.childCount; j++)
+            for (int j = 0; j < port.contentContainer.childCount; j++)
                 portContentContainer.Add(port.contentContainer[j]);
 
-            var i = 2;
+            int i = 2;
             if (wasConnected)
             {
                 VisualElement element = port.contentContainer[i];
                 if (element is PropertyField propertyField)
-                {
                     // Label tempField = new Label()
                     // {
                     //     name = propertyField.name,
                     // };
                     // portContentContainer[i] = tempField;
                     propertyField.SetEnabled(false);
-                    // propertyField.visible = false;
-                }
+                // propertyField.visible = false;
             }
             else
             {
@@ -323,7 +300,7 @@ namespace NodeSystem.Editor.Nodes
 
         private void OutputConnectionChanged(bool wasConnected)
         {
-            if (HideWhenConnected)
+            if (HideWhenConnected && contentContainer.childCount > 2)
             {
                 VisualElement element = contentContainer[2];
                 element.SetEnabled(!wasConnected);
@@ -334,67 +311,12 @@ namespace NodeSystem.Editor.Nodes
         {
             contentContainer.Add(tempField);
             m_propBindingPath = tempField.bindingPath;
+            // if (IsFromListView(tempField, out _))
+            // {
+            //     ((NsEdgeConnector<Edge>)edgeConnector).IsFromListView = true;
+            // }
         }
 
-        private class DefaultEdgeConnectorListener : IEdgeConnectorListener
-        {
-            private readonly List<Edge> m_EdgesToCreate;
-            private readonly List<GraphElement> m_EdgesToDelete;
-            private readonly GraphViewChange m_GraphViewChange;
-
-            public DefaultEdgeConnectorListener()
-            {
-                m_EdgesToCreate = new List<Edge>();
-                m_EdgesToDelete = new List<GraphElement>();
-                m_GraphViewChange.edgesToCreate = m_EdgesToCreate;
-            }
-
-            public void OnDropOutsidePort(Edge edge, Vector2 position)
-            {
-                /*
-                 // Works but not really useful rn
-                GraphView firstAncestorOfType = edge.GetFirstAncestorOfType<GraphView>();
-                
-                Vector2 localToWorld = firstAncestorOfType.contentViewContainer.LocalToWorld(position);
-                Vector2 guiToScreenPoint = GUIUtility.GUIToScreenPoint(localToWorld);
-
-                NodeCreationContext nodeCreationContext = new()
-                {
-                    screenMousePosition = guiToScreenPoint,
-                };
-                firstAncestorOfType.nodeCreationRequest(nodeCreationContext);
-                */
-            }
-
-            public void OnDrop(GraphView graphView, Edge edge)
-            {
-                m_EdgesToCreate.Clear();
-                m_EdgesToCreate.Add(edge);
-                m_EdgesToDelete.Clear();
-                if (edge.input.capacity == Capacity.Single)
-                    foreach (Edge connection in edge.input.connections)
-                        if (connection != edge)
-                            m_EdgesToDelete.Add(connection);
-
-                if (edge.output.capacity == Capacity.Single)
-                    foreach (Edge connection in edge.output.connections)
-                        if (connection != edge)
-                            m_EdgesToDelete.Add(connection);
-
-                if (m_EdgesToDelete.Count > 0)
-                    graphView.DeleteElements(m_EdgesToDelete);
-                var edgesToCreate = m_EdgesToCreate;
-                if (graphView.graphViewChanged != null)
-                    edgesToCreate = graphView.graphViewChanged(m_GraphViewChange).edgesToCreate;
-                foreach (Edge edge1 in edgesToCreate)
-                {
-                    graphView.AddElement(edge1);
-                    edge.input.Connect(edge1);
-                    // ((EditorNodePort)edge.input).NotifyConnectionChanged(true);
-                    edge.output.Connect(edge1);
-                    // ((EditorNodePort)edge.output).NotifyConnectionChanged(true);
-                }
-            }
-        }
+        
     }
 }

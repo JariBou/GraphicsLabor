@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NodeSystem.Editor.Editors.NodeEditors;
+using NodeSystem.Editor.Graph.Elements;
+using NodeSystem.Editor.Ports;
 using NodeSystem.Editor.Utils;
 using NodeSystem.Runtime;
 using NodeSystem.Runtime.Attributes;
@@ -246,7 +248,7 @@ namespace NodeSystem.Editor.Nodes
                             style =
                             {
                                 height = Length.Percent(100),
-                                width = Length.Percent(80), // TODO: IMPORTANT
+                                width = Length.Auto(), // TODO: IMPORTANT
                                 // width = Length.Percent(100), // TODO: IMPORTANT
                             },
                             focusable = true,
@@ -353,7 +355,8 @@ namespace NodeSystem.Editor.Nodes
 
         private void CreateFlowInputPort()
         {
-            Port inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(PortTypes.FlowPort));
+            // Port inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(PortTypes.FlowPort));
+            Port inputPort = EditorNodePort.Create<NsEdge>(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(PortTypes.FlowPort));
             inputPort.portName = "In";
             inputPort.tooltip = "The flow input";
             inputPort.portColor = NodeSystemEditorConsts.PortColor_In;
@@ -364,7 +367,8 @@ namespace NodeSystem.Editor.Nodes
 
         private void CreateFlowOutputPort()
         {
-            m_outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(PortTypes.FlowPort));
+            // m_outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(PortTypes.FlowPort));
+            m_outputPort = EditorNodePort.Create<NsEdge>(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(PortTypes.FlowPort));
             m_outputPort.portName = "Out";
             m_outputPort.tooltip = "The flow output";
             m_outputPort.portColor = NodeSystemEditorConsts.PortColor_Out;

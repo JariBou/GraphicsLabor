@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NodeSystem.Editor.Graph.Elements;
 using NodeSystem.Editor.Nodes;
 using NodeSystem.Runtime;
 using NodeSystem.Runtime.BlackBoard;
@@ -428,7 +429,7 @@ namespace NodeSystem.Editor.Graph
             {
                 foreach (NodeSystemConnection connection in neededConnections)
                 {
-                    Edge edgeToCreate = new Edge
+                    NsEdge edgeToCreate = new NsEdge()
                     {
                         input = GetNode(connection.InputPort.NodeId).Ports[connection.InputPort.PortIndex],
                         output = GetNode(connection.OutputPort.NodeId).Ports[connection.OutputPort.PortIndex]
@@ -464,7 +465,7 @@ namespace NodeSystem.Editor.Graph
             SerializedObject.Update();
         }
 
-        private void RemoveConnection(Edge edge)
+        internal void RemoveConnection(Edge edge)
         {
             if (m_connectionsDictionary.TryGetValue(edge, out NodeSystemConnection connection))
             {
@@ -510,7 +511,7 @@ namespace NodeSystem.Editor.Graph
             Port inputPort = inputNode.Ports[connection.InputPort.PortIndex]; 
             Port outputPort = outputNode.Ports[connection.OutputPort.PortIndex];
 
-            Edge edge = inputPort.ConnectTo(outputPort);
+            Edge edge = inputPort.ConnectTo<NsEdge>(outputPort);
             m_connectionsDictionary.Add(edge, connection);
             AddElement(edge);
         }
