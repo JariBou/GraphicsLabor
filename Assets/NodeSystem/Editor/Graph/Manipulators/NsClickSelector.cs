@@ -23,11 +23,6 @@ namespace NodeSystem.Editor.Graph.Manipulators
             }
             return false;
         }
-
-        public NsClickSelector() : base()
-        {
-            
-        }
         
         protected override void RegisterCallbacksOnTarget()
         {
@@ -68,6 +63,8 @@ namespace NodeSystem.Editor.Graph.Manipulators
             }
             else
                 currentTarget.Select((VisualElement) firstAncestorOfType, e.actionKey);
+            
+            e.StopImmediatePropagation();
         }
     }
 }

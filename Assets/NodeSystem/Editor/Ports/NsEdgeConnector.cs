@@ -1,7 +1,6 @@
 ﻿using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
-using PointerType = UnityEngine.UIElements.PointerType;
 
 namespace NodeSystem.Editor.Ports
 {
@@ -62,7 +61,7 @@ namespace NodeSystem.Editor.Ports
 
         protected virtual void OnPointerDown(PointerDownEvent e)
         {
-            if ((e.pointerId != PointerId.mousePointerId && e.pointerType != PointerType.touch) ||
+            if ((e.pointerId != PointerId.mousePointerId && e.pointerType != UnityEngine.UIElements.PointerType.touch) ||
                 !CanStartManipulation(e))
                 return;
             OnPointerOrMouseDown(e, e.localPosition);

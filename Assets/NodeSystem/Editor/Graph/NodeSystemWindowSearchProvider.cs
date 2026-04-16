@@ -10,21 +10,20 @@ using UnityEngine.UIElements;
 
 namespace NodeSystem.Editor.Graph
 {
-    public struct SearchContextElement
-    {
-        public object Target { get; }
-        public string Title { get;  }
-
-        public SearchContextElement(object target, string title)
-        {
-            Target = target;
-            Title = title;
-        }
-    }
-    
-    
     public class NodeSystemWindowSearchProvider : ScriptableObject, ISearchWindowProvider
     {
+        private struct SearchContextElement
+        {
+            public object Target { get; }
+            public string Title { get;  }
+
+            public SearchContextElement(object target, string title)
+            {
+                Target = target;
+                Title = title;
+            }
+        }
+        
         public NodeSystemView graph;
         public VisualElement target;
         

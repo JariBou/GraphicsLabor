@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NodeSystem.Editor.Graph;
 using NodeSystem.Editor.Graph.Elements;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -69,7 +68,6 @@ namespace NodeSystem.Editor.Ports
                     Vector2 mouseAdjustedPos = new(evt.originalMousePosition.x,
                         evt.originalMousePosition.y - 25 /* Offset of the title bar */);
                     Vector2 adjustedPos = view.ChangeCoordinatesTo(this, mouseAdjustedPos);
-                    Debug.Log($"IsPointInside: {ContainsPoint(adjustedPos)}");
 
                     if (ContainsPoint(adjustedPos))
                     {

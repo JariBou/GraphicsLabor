@@ -1,5 +1,4 @@
-﻿using System;
-using NodeSystem.Editor.Graph.Manipulators;
+﻿using NodeSystem.Editor.Graph.Manipulators;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
