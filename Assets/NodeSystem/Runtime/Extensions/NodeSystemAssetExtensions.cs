@@ -1,4 +1,5 @@
 ﻿using NodeSystem.Runtime.NodesLibrary.Events;
+using NUnit.Framework.Interfaces;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.Extensions

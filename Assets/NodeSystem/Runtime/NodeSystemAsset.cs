@@ -15,21 +15,14 @@ namespace NodeSystem.Runtime
     {
         [SerializeField] private string _graphId = GuidSystem.NewGuid();
 
-        [SerializeReference] private List<NodeSystemNode> m_nodes;
+        [SerializeReference] private List<NodeSystemNode> m_nodes = new();
 
-        [SerializeField] private List<NodeSystemConnection> m_connections;
+        [SerializeField] private List<NodeSystemConnection> m_connections = new();
 
-        [SerializeField] private List<BlackboardProperty> m_exposedProperties;
+        [SerializeField] private List<BlackboardProperty> m_exposedProperties = new();
         private readonly Dictionary<Type, NodeSystemNode> m_eventNodeLookup = new();
 
         private readonly Dictionary<string, NodeSystemNode> m_nodeLookup = new();
-
-        public NodeSystemAsset()
-        {
-            m_nodes = new List<NodeSystemNode>();
-            m_connections = new List<NodeSystemConnection>();
-            m_exposedProperties = new List<BlackboardProperty>();
-        }
 
         public List<NodeSystemNode> Nodes => m_nodes;
         public List<NodeSystemConnection> Connections => m_connections;

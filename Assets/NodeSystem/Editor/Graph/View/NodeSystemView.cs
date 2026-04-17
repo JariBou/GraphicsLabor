@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using NodeSystem.Editor.Graph.Elements;
 using NodeSystem.Editor.Nodes;
 using NodeSystem.Runtime;
@@ -12,9 +13,9 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NodeSystem.Editor.Graph
+namespace NodeSystem.Editor.Graph.View
 {
-    public class NodeSystemView : GraphView
+    public partial class NodeSystemView : GraphView
     {
         private NodeSystemAsset m_nodeSystem;
         private SerializedObject m_serializedObject;
@@ -31,8 +32,6 @@ namespace NodeSystem.Editor.Graph
         private NodeSystemWindowSearchProvider m_searchProvider;
         
         private NodeSystemBlackboard m_blackboard;
-        
-        private List<NodeSystemNode> m_copiedNodesCache = new();
         
         public NodeSystemView(SerializedObject serializedObject, NodeSystemEditorWindow window)
         {
@@ -63,6 +62,7 @@ namespace NodeSystem.Editor.Graph
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
             this.AddManipulator(new ClickSelector());
+            RegisterCallback<MouseMoveEvent>(OnMouseMoved);
 
             SetupZoom(0.4f, 2.0f);
             
@@ -82,126 +82,23 @@ namespace NodeSystem.Editor.Graph
             //     FrameAll();
             // };
             // schedule.Execute(() => { FrameAll(); });
-
-            // canPasteSerializedData += CanPasteCallback;
-            // unserializeAndPaste += PasteCallback;
-            // serializeGraphElements += CopyCutCallback;
+            
+            SubscribeToCopyCutPaste();
         }
 
-        private void AddMinimap(NodeSystemEditorWindow window)
+        private Vector2 _mousePos;
+        private void OnMouseMoved(MouseMoveEvent evt) => _mousePos = evt.localMousePosition;
+
+
+        private void AddMinimap(NodeSystemEditorWindow editorWindow)
         {
             MiniMap miniMap = new()
             {
                 anchored = false,
             };
-            miniMap.SetPosition(new Rect(window.position.width-200-15, 20, 200, 180));
+            miniMap.SetPosition(new Rect(editorWindow.position.width-200-15, 20, 200, 180));
             Add(miniMap);
         }
-
-        #region copy and paste
-        
-        private string CopyCutCallback(IEnumerable<GraphElement> elements)
-        {
-            List<GraphElement> enumerable = elements.ToList();
-            Debug.Log("Copy/Cut Callback: " + enumerable.Count());
-            m_copiedNodesCache.Clear();
-            foreach (var element in enumerable)
-            {
-                if (element is NodeSystemEditorNode node)
-                {
-                    m_copiedNodesCache.Add(node.Node);
-                } else if (element is Edge edge)
-                {
-                    
-                }
-            }
-            return "";
-        }
-
-        private void PasteCallback(string operationname, string data)
-        {
-            Debug.Log("Paste callback: " + operationname);
-            foreach (NodeSystemNode node in m_copiedNodesCache)
-            {
-                AddNodeToGraph(node);
-                BindToSerializedObject();
-            }
-        }
-
-        private bool CanPasteCallback(string data)
-        {
-            return true;
-        }
-        
-        #endregion
-        
-        #region Blackboard
-
-        public void AddBlackboardProperty(BlackboardProperty blackboardProperty, bool b)
-        {
-            // doesn't work for some reason?
-            Undo.RecordObject(SerializedObject.targetObject, "Add BlackboardProperty"); 
-            m_blackboard.AddProperty(blackboardProperty, b);
-        }
-        
-        private void GenerateBlackBoard()
-        {
-            NodeSystemBlackboard blackboard = new(this)
-            {
-                addItemRequested = _ =>
-                {
-                    Debug.Log("ahah");
-                    AddBlackboardProperty(new BlackboardProperty(), false);
-                },
-                editTextRequested = (_, element, newValue) =>
-                {
-                    string oldPropertyName = ((BlackboardField) element).text;
-                    if (ExposedProperties.Any(x => x.PropertyName == newValue))
-                    {
-                        EditorUtility.DisplayDialog("Error", "This property name already exists, please chose another one.",
-                            "OK");
-                        return;
-                    }
-            
-                    int targetIndex = ExposedProperties.FindIndex(x => x.PropertyName == oldPropertyName);
-                    ExposedProperties[targetIndex].PropertyName = newValue;
-                
-                    // m_currentView.ModifyExposedProperties(exposedProperties =>
-                    // {
-                    //     exposedProperties[targetIndex].PropertyName = newValue;
-                    // });
-                    ((BlackboardField) element).text = newValue;
-                }
-            };
-
-            blackboard.SetPosition(new Rect(10,30,200,300));
-            Add(blackboard);
-            m_blackboard = blackboard;
-        }
-        
-        // Not used anymore
-        public NodeSystemBlackboard GetNodeSystemBlackboard()
-        {
-            return m_blackboard;
-        }
-        
-        public void ClearBlackBoardAndExposedProperties()
-        {
-            //ExposedProperties.Clear();
-            m_blackboard.Clear();
-        }
-        
-        [Obsolete]
-        public void ModifyExposedProperties(Action<List<BlackboardProperty>> action)
-        {
-            action.Invoke(ExposedProperties);
-            // Wait actually we don't need this, let's keep it still as an event possible source
-            // action.Invoke(m_nodeSystem.ExposedProperties);
-            // or if we create a setter
-            // m_nodeSystem.ExposedProperties = ExposedProperties;
-        }
-
-        #endregion
 
         private GraphViewChange OnGraphViewChangedEvent(GraphViewChange graphViewChange)
         {
@@ -255,46 +152,6 @@ namespace NodeSystem.Editor.Graph
 
             SerializedObject.Update();
 
-            // foreach (Port port in changedPorts)
-            // {
-            //     List<VisualElement> portContentContainer = new List<VisualElement>();
-            //     for (int i = 0; i < port.contentContainer.childCount; i++)
-            //     {
-            //         portContentContainer.Add(port.contentContainer[i]);
-            //         if (port.connections.Any())
-            //         {
-            //             VisualElement element = port.contentContainer[i];
-            //             if (element is PropertyField propertyField)
-            //             {
-            //                 TextField tempField = new TextField()
-            //                 {
-            //                     name = propertyField.name,
-            //                     bindingPath = propertyField.bindingPath,
-            //                 };
-            //                 portContentContainer[i] = tempField;
-            //             } 
-            //         }
-            //         else
-            //         {
-            //             VisualElement element = port.contentContainer[i];
-            //             if (element is TextField textField)
-            //             {
-            //                 PropertyField tempField = new PropertyField()
-            //                 {
-            //                     name = textField.name,
-            //                     bindingPath = textField.bindingPath,
-            //                 };
-            //                 portContentContainer[i] = tempField;
-            //             }
-            //         }
-            //     }
-            //     port.contentContainer.Clear();
-            //     foreach (VisualElement visualElement in portContentContainer)
-            //     {
-            //         port.contentContainer.Add(visualElement);
-            //     }
-            // }
-
             return graphViewChange;
         }
         
@@ -312,7 +169,7 @@ namespace NodeSystem.Editor.Graph
                 if (m_nodeSystem.Nodes.Contains(editorNode.Node))
                 {
                     NodeSystemNode nodeSystemNode = neededNodesList.Find(systemNode => systemNode == editorNode.Node);
-                    editorNode.SetPosition(nodeSystemNode.position);
+                    editorNode.SetPosition(nodeSystemNode.Position);
                     neededNodesList.Remove(editorNode.Node);
                     currentEditorNodes.Remove(editorNode);
                 }
@@ -497,8 +354,6 @@ namespace NodeSystem.Editor.Graph
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                
-                
             }
             
             return validPorts;
@@ -522,20 +377,22 @@ namespace NodeSystem.Editor.Graph
             BindToSerializedObject();
         }
 
-        private void AddNodeToGraph(NodeSystemNode node)
+        [CanBeNull]
+        private NodeSystemEditorNode AddNodeToGraph(NodeSystemNode node)
         {
-            if (node == null) return;
+            if (node == null) return null;
 
             node.typename = node.GetType().AssemblyQualifiedName;
 
             NodeSystemEditorNode editorNode = new(node, SerializedObject);
-            editorNode.SetPosition(node.position);
+            editorNode.SetPosition(node.Position);
             if (!m_nodeDictionary.ContainsKey(node.id))
             {
                 m_graphNodes.Add(editorNode);
                 m_nodeDictionary.Add(node.id, editorNode);
             }
             AddElement(editorNode);
+            return editorNode;
         }
 
         private void BindToSerializedObject()
@@ -551,9 +408,7 @@ namespace NodeSystem.Editor.Graph
             Undo.undoRedoEvent -= OnUndoRedo;
             graphViewChanged -= OnGraphViewChangedEvent;
             
-            // canPasteSerializedData -= CanPasteCallback;
-            // unserializeAndPaste -= PasteCallback;
-            // serializeGraphElements -= CopyCutCallback;
+            RemoveCopyCutPasteCallbacks();
         }
     }
 }

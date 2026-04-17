@@ -1,23 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime
 {
     [Serializable]
-    public class NodeSystemNode
+    public abstract partial class NodeSystemNode
     {
-        [SerializeField] private string m_guid;
-        [SerializeField] private Rect m_position;
-        [SerializeField] private bool m_isPure;
+        [SerializeField] protected internal string m_guid;
+        [SerializeField] protected bool m_isPure;
 
 
         public string typename;
-        [SerializeField] private List<PortInfo> m_ports = new();
+        public string Typename => GetType().AssemblyQualifiedName;
+        [SerializeField] protected internal List<PortInfo> m_ports = new();
 
         [SerializeField] private bool m_pureExecutionDone = true;
         private string _lastExecutionId = "";
@@ -28,8 +28,8 @@ namespace NodeSystem.Runtime
         }
 
         public string id => m_guid;
-        public Rect position => m_position;
         public List<PortInfo> PortInfos => m_ports;
+   
 
         public bool PureExecutionDone
         {
@@ -37,7 +37,7 @@ namespace NodeSystem.Runtime
 #if UNITY_EDITOR
             set => m_pureExecutionDone = value;
 #else
-            private set => m_pureExecutionDone = value;
+            protected set => m_pureExecutionDone = value;
 #endif
         }
 
@@ -47,7 +47,7 @@ namespace NodeSystem.Runtime
 #if UNITY_EDITOR
             set => m_isPure = value;
 #else
-            private set => m_isPure = value;
+            protected set => m_isPure = value;
 #endif
         }
 
@@ -100,10 +100,6 @@ namespace NodeSystem.Runtime
             m_guid = GuidSystem.NewGuid();
         }
 
-        public void SetPosition(Rect newPosition)
-        {
-            m_position = newPosition;
-        }
 
         public virtual async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
@@ -165,76 +161,64 @@ namespace NodeSystem.Runtime
         }
 
         #endregion
+
+        // public abstract NodeSystemNode CopyWithNewGuid();
+
+        // public static TNode CopyFrom<TNode>(TNode src) where TNode : NodeSystemNode, new()
+        // {
+        //     TNode copy = new();
+        //     return src.CopyToWithNewGuid(copy);
+        // }
+        //
+        // public NodeSystemNode CopyToWithNewGuid(NodeSystemNode target)
+        // {
+        //     string newGuid = GuidSystem.NewGuid();
+        //     target.m_guid = newGuid;
+        //     target.m_ports = m_ports.Select(portInfo =>
+        //             new PortInfo(portInfo.ExposedPropertyName, newGuid, portInfo.PortIndex, portInfo.PortDirection))
+        //         .ToList();
+        //     target.IsPure = m_isPure;
+        //     target._position = _position;
+        //     return target;
+        // }
+        //
+        // public TNode CopyToWithNewGuid<TNode>(TNode target) where TNode : NodeSystemNode, new()
+        // {
+        //     string newGuid = GuidSystem.NewGuid();
+        //     target.m_guid = newGuid;
+        //     target.m_ports = m_ports.Select(portInfo =>
+        //             new PortInfo(portInfo.ExposedPropertyName, newGuid, portInfo.PortIndex, portInfo.PortDirection))
+        //         .ToList();
+        //     target.IsPure = m_isPure;
+        //     target._position = _position;
+        //     return target;
+        // }
+
+        // public NodeSystemNode CopyWithNewGuid()
+        // {
+        //     string newGuid = GuidSystem.NewGuid();
+        //     NodeSystemNode copy = new()
+        //     {
+        //         m_guid = newGuid,
+        //         _position = _position,
+        //         IsPure = m_isPure,
+        //         m_ports = m_ports.Select(portInfo => new PortInfo(portInfo.ExposedPropertyName, newGuid, portInfo.PortIndex, portInfo.PortDirection)).ToList(),
+        //     };
+        //     return copy;
+        // }
     }
 
-    [Serializable]
-    public struct ProcessInfo
-    {
-        public string NextNodeId { get; }
-        public string PrevNodeId { get; }
-        public ExecutionFlowType FlowType { get; }
-
-        public ProcessInfo(string prevNodeId, string nextNodeId, ExecutionFlowType flowType)
-        {
-            PrevNodeId = prevNodeId;
-            NextNodeId = nextNodeId;
-            FlowType = flowType;
-        }
-
-        public enum ExecutionFlowType
-        {
-            ExecuteNext,
-            Wait,
-            EndExecution
-        }
-    }
-
-    [Serializable]
-    public struct PortInfo
-    {
-        [SerializeField] private string _exposedPropertyName;
-        [SerializeField] private string _ownerId;
-        [SerializeField] private int _portIndex;
-
-        [FormerlySerializedAs("_flowType")] [FormerlySerializedAs("_portType")] [SerializeField]
-        private PropPortDirection _portDirection;
-
-        public readonly string ExposedPropertyName => _exposedPropertyName;
-
-        public readonly string OwnerId => _ownerId;
-
-        public readonly int PortIndex => _portIndex;
-
-        public readonly PropPortDirection PortDirection => _portDirection;
-
-        public PortInfo(string exposedPropertyName, string ownerId, int portIndex, PropPortDirection portDirection)
-        {
-            _exposedPropertyName = exposedPropertyName;
-            _ownerId = ownerId;
-            _portIndex = portIndex;
-            _portDirection = portDirection;
-        }
-    }
-
-    public class ExecContext
-    {
-        public ExecContext(NodeSystemAsset graphInstance)
-        {
-            GraphInstance = graphInstance;
-            ExecId = GuidSystem.NewGuid();
-        }
-
-        public string ExecId { get; }
-        public NodeSystemAsset GraphInstance { get; }
-    }
-
-
-    // public static class ExposedPropExtensions
+    // public abstract class NodeSystemNode<TNode> : NodeSystemNode where TNode : NodeSystemNode, new()
     // {
-    //     public static T GetValueOfProp<T>(this object obj, NodeSystemAsset graph, NodeSystemNode node)
+    //     public override NodeSystemNode CopyWithNewGuid()
     //     {
-    //         // nameof()actually captures 'obj' and not the name of the property... sad
-    //         return node.GetValueOfProp<T>(graph, nameof(obj));
+    //         return CopyWithNewGuid_Impl();
+    //     }
+    //
+    //     public virtual TNode CopyWithNewGuid_Impl()
+    //     {
+    //         TNode copy = new();
+    //         return CopyToWithNewGuid(copy);
     //     }
     // }
 }
