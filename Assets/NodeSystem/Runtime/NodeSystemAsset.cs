@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NodeSystem.Runtime.BlackBoard;
+using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.NodesLibrary.Events;
 using NodeSystem.Runtime.NodesLibrary.Process;
 using NodeSystem.Runtime.References;
@@ -10,7 +11,7 @@ using UnityEngine;
 
 namespace NodeSystem.Runtime
 {
-    [CreateAssetMenu(menuName = NodeSystemConsts.AddComponentMenuCategoryName+"/New Node Graph")]
+    [CreateAssetMenu(menuName = NodeSystemConsts.AddComponentMenuCategoryName + "/New Node Graph")]
     public class NodeSystemAsset : ScriptableObject
     {
         [SerializeField] private string _graphId = GuidSystem.NewGuid();

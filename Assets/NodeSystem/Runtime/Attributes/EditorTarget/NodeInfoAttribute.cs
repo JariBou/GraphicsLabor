@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NodeSystem.Runtime.Attributes
+namespace NodeSystem.Runtime.Attributes.EditorTarget
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class NodeInfoAttribute : Attribute

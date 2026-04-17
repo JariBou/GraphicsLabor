@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NodeSystem.Runtime.References
 {
-    [CreateAssetMenu(menuName = NodeSystemConsts.AddComponentMenuCategoryName+"/New Graph Bank")]
+    [CreateAssetMenu(menuName = NodeSystemConsts.AddComponentMenuCategoryName + "/New Graph Bank")]
     public sealed class GraphBankAsset : ScriptableObject
     {
         [SerializeField] private List<NodeSystemAsset> _nodeSystems;

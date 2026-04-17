@@ -1,12 +1,12 @@
-﻿using NodeSystem.Runtime;
-using NodeSystem.Runtime.Attributes;
+﻿using System;
+using NodeSystem.Runtime.Attributes.EditorTarget;
+using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.NodesLibrary.Events;
 using UnityEngine;
 
 namespace NodeSystem.Tests.Runtime
 {
-    [EventNodeInfo("My Custom Event Node", "Node System Tests/My Custom Event Node")]
-    
+    [EventNodeInfo("My Custom Event Node", "Node System Tests/My Custom Event Node"), Serializable]
     public class MyCustomEventNode : EventNodeBase<MyCustomEventData>
     {
         [EventExposedProperty]

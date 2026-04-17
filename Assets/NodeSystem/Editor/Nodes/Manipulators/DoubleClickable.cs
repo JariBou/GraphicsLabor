@@ -6,8 +6,6 @@ namespace NodeSystem.Editor.Nodes.Manipulators
 {
     public class DoubleClickable : PointerManipulator
     {
-        public event Action<EventBase> ClickedWithEventInfo;
-
         private readonly long _doubleClickDelayInMs;
         private bool _clicked;
         private IVisualElementScheduledItem _timerObj;
@@ -16,11 +14,13 @@ namespace NodeSystem.Editor.Nodes.Manipulators
         {
             ClickedWithEventInfo = callback;
             _doubleClickDelayInMs = doubleClickDelayInMs;
-            activators.Add(new ManipulatorActivationFilter()
+            activators.Add(new ManipulatorActivationFilter
             {
-                button = MouseButton.LeftMouse,
+                button = MouseButton.LeftMouse
             });
         }
+
+        public event Action<EventBase> ClickedWithEventInfo;
 
         private void OnPointerDown(PointerDownEvent evt)
         {
@@ -38,13 +38,9 @@ namespace NodeSystem.Editor.Nodes.Manipulators
             else
             {
                 if (_timerObj != null)
-                {
                     _timerObj?.ExecuteLater(_doubleClickDelayInMs);
-                }
                 else
-                {
                     _timerObj = target.schedule.Execute(OnTimer).StartingIn(_doubleClickDelayInMs);
-                }
                 _clicked = true;
             }
         }
@@ -54,12 +50,12 @@ namespace NodeSystem.Editor.Nodes.Manipulators
             Debug.Log("On Timer");
             _clicked = false;
         }
-        
+
         protected override void RegisterCallbacksOnTarget()
         {
             target.RegisterCallback<PointerDownEvent>(OnPointerDown);
         }
-        
+
         protected override void UnregisterCallbacksFromTarget()
         {
             target.UnregisterCallback<PointerDownEvent>(OnPointerDown);

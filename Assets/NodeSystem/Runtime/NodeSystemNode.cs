@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
 
@@ -16,7 +15,6 @@ namespace NodeSystem.Runtime
 
 
         public string typename;
-        public string Typename => GetType().AssemblyQualifiedName;
         [SerializeField] protected internal List<PortInfo> m_ports = new();
 
         [SerializeField] private bool m_pureExecutionDone = true;
@@ -27,9 +25,11 @@ namespace NodeSystem.Runtime
             NewGUID();
         }
 
+        public string Typename => GetType().AssemblyQualifiedName;
+
         public string id => m_guid;
         public List<PortInfo> PortInfos => m_ports;
-   
+
 
         public bool PureExecutionDone
         {
@@ -148,15 +148,12 @@ namespace NodeSystem.Runtime
         {
             return await Task.FromResult(new ProcessInfo(id, nextNodeId, ProcessInfo.ExecutionFlowType.ExecuteNext));
         }
-        
+
         protected async Awaitable<ProcessInfo> ContinueExecution(ExecContext ctx)
         {
             NodeSystemAsset graph = ctx.GraphInstance;
             NodeSystemNode nextNode = GetNextNode(graph);
-            if (nextNode != null)
-            {
-                return await ContinueExecution(nextNode.id);
-            }
+            if (nextNode != null) return await ContinueExecution(nextNode.id);
             return await EndExecution();
         }
 

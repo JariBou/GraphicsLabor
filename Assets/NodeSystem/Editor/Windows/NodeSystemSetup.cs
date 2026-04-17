@@ -8,48 +8,8 @@ namespace NodeSystem.Editor.Windows
 {
     public class NodeSystemSetup : EditorWindow
     {
-        private float VerticalOffset => EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-
-        private enum NodeSystemStatus
-        {
-            NotFound, AllSet, MissingGraphBankAsset 
-        }
-        
         private NodeSystemStatus _nodeSystemStatus;
-        
-        
-        [MenuItem("Window/"+NodeSystemConsts.AddComponentMenuCategoryName+"/Node System Setup")]
-        private static void Init()
-        {
-            GetWindow<NodeSystemSetup>();
-        }
-        
-
-        private void OnDidOpenScene()
-        {
-            UpdateNodeSystemStatus();
-        }
-
-        private void OnProjectChange()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void OnBecameVisible()
-        {
-            UpdateNodeSystemStatus();
-        }
-
-        private Color GetStatusColor()
-        {
-            return _nodeSystemStatus switch
-            {
-                NodeSystemStatus.AllSet => Color.green,
-                NodeSystemStatus.MissingGraphBankAsset => Color.yellow,
-                NodeSystemStatus.NotFound => Color.red,
-                _ => Color.black
-            };
-        }
+        private float VerticalOffset => EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
         private void OnGUI()
         {
@@ -57,7 +17,8 @@ namespace NodeSystem.Editor.Windows
 
             NodeSystemBank systemBank = UpdateNodeSystemStatus();
 
-            { // Status display
+            {
+                // Status display
                 GUIContent bankStatusGuiContent = new("Bank Status: ");
                 Vector2 bankStatusGuiContentSize = EditorStyles.label.CalcSize(bankStatusGuiContent);
                 Rect textRect = new()
@@ -69,7 +30,7 @@ namespace NodeSystem.Editor.Windows
                 };
 
                 EditorGUI.LabelField(textRect, bankStatusGuiContent);
-                
+
                 Rect colorRect = new()
                 {
                     x = currentRect.x + bankStatusGuiContentSize.x + EditorGUIUtility.standardVerticalSpacing,
@@ -97,17 +58,18 @@ namespace NodeSystem.Editor.Windows
                         currentRect.width - colorRect.x - colorRect.width - EditorGUIUtility.standardVerticalSpacing,
                     height = EditorGUIUtility.singleLineHeight
                 };
-                
+
                 EditorGUI.BeginDisabledGroup(true);
-                
+
                 EditorGUI.ObjectField(objectRect, systemBank, typeof(NodeSystemBank), false);
-                
+
                 EditorGUI.EndDisabledGroup();
             }
-            
+
             currentRect.y += VerticalOffset;
 
-            { // Log Display
+            {
+                // Log Display
                 Rect logRect = new()
                 {
                     x = currentRect.x + EditorGUIUtility.singleLineHeight,
@@ -123,7 +85,8 @@ namespace NodeSystem.Editor.Windows
 
             currentRect.y += VerticalOffset * 2;
 
-            { // Create Bank Button
+            {
+                // Create Bank Button
                 Rect createNodeBankButtonRect = new()
                 {
                     x = currentRect.x,
@@ -137,18 +100,20 @@ namespace NodeSystem.Editor.Windows
                 {
                     GameObject gameObject = new()
                     {
-                        name = "[Node System] - S, DDL - Bank",
+                        name = "[Node System] - S, DDL - Bank"
                     };
                     gameObject.AddComponent<NodeSystemBank>();
-                    
+
                     UpdateNodeSystemStatus(); // Just to check if for whatever reason it failed to create it wont say that it's ok
                 }
+
                 EditorGUI.EndDisabledGroup();
             }
 
             currentRect.y += VerticalOffset;
-            
-            { // Create ReferenceManagers Button
+
+            {
+                // Create ReferenceManagers Button
                 // TODO
                 Rect createReferenceManagersButtonRect = new()
                 {
@@ -165,18 +130,20 @@ namespace NodeSystem.Editor.Windows
                 {
                     GameObject refManager = new()
                     {
-                        name = "[Node System] - S, DDL - Reference Manager",
+                        name = "[Node System] - S, DDL - Reference Manager"
                     };
                     refManager.AddComponent<ReferenceManager>();
-                    
+
                     UpdateNodeSystemStatus(); // Just to check if for whatever reason it failed to create it wont say that it's ok
                 }
+
                 EditorGUI.EndDisabledGroup();
             }
-            
+
             currentRect.y += VerticalOffset;
-            
-            { // Create Create reference Data Bank Button
+
+            {
+                // Create Create reference Data Bank Button
                 // TODO
                 Rect createReferenceManagersButtonRect = new()
                 {
@@ -189,30 +156,35 @@ namespace NodeSystem.Editor.Windows
                 ReferenceDataBank refDataBank = FindAnyObjectByType<ReferenceDataBank>();
 
                 EditorGUI.BeginDisabledGroup(refDataBank != null);
-                GUIContent guiContent = new ("Create Reference Data Bank in Scene")
+                GUIContent guiContent = new("Create Reference Data Bank in Scene")
                 {
-                    tooltip = refDataBank != null ? "Reference Data Bank already in Scene" : "Create a new Reference Data Bank in the current Scene",
+                    tooltip = refDataBank != null
+                        ? "Reference Data Bank already in Scene"
+                        : "Create a new Reference Data Bank in the current Scene"
                 };
                 if (GUI.Button(createReferenceManagersButtonRect, guiContent))
                 {
                     GameObject newRefDataBank = new()
                     {
-                        name = "[Node System] - Reference Data Bank",
+                        name = "[Node System] - Reference Data Bank"
                     };
                     ReferenceDataBank referenceDataBank = newRefDataBank.AddComponent<ReferenceDataBank>();
                     referenceDataBank.LoadReferences();
 
                     UpdateNodeSystemStatus(); // Just to check if for whatever reason it failed to create it wont say that it's ok
                 }
+
                 EditorGUI.EndDisabledGroup();
             }
-            
+
             currentRect.y += VerticalOffset;
 
             {
-                GUIContent textGuiContent = new("Game Object naming tags:\n- S: Singleton\n- DDL: Don't Destroy on Load");
+                // Info Text
+                GUIContent textGuiContent =
+                    new("Game Object naming tags:\n- S: Singleton\n- DDL: Don't Destroy on Load");
                 Vector2 textGuiContentSize = EditorStyles.label.CalcSize(textGuiContent);
-                
+
                 Rect textRect = new()
                 {
                     x = currentRect.x,
@@ -220,27 +192,56 @@ namespace NodeSystem.Editor.Windows
                     width = position.width,
                     height = textGuiContentSize.y
                 };
-                
+
                 EditorGUI.LabelField(textRect, textGuiContent);
-                
+
                 currentRect.y += textRect.height + EditorGUIUtility.standardVerticalSpacing;
             }
-            
+        }
+
+        private void OnBecameVisible()
+        {
+            UpdateNodeSystemStatus();
+        }
+
+
+        private void OnDidOpenScene()
+        {
+            UpdateNodeSystemStatus();
+        }
+
+        private void OnProjectChange()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        [MenuItem("Window/" + NodeSystemConsts.AddComponentMenuCategoryName + "/Node System Setup")]
+        private static void Init()
+        {
+            GetWindow<NodeSystemSetup>();
+        }
+
+        private Color GetStatusColor()
+        {
+            return _nodeSystemStatus switch
+            {
+                NodeSystemStatus.AllSet => Color.green,
+                NodeSystemStatus.MissingGraphBankAsset => Color.yellow,
+                NodeSystemStatus.NotFound => Color.red,
+                _ => Color.black
+            };
         }
 
         private NodeSystemBank UpdateNodeSystemStatus()
         {
             NodeSystemBank nodeSystemBank = FindAnyObjectByType<NodeSystemBank>();
             if (nodeSystemBank == null)
-            {
-                _nodeSystemStatus =  NodeSystemStatus.NotFound;
-            }
+                _nodeSystemStatus = NodeSystemStatus.NotFound;
             else
-            {
                 _nodeSystemStatus = nodeSystemBank.HasBankAsset()
                     ? NodeSystemStatus.AllSet
                     : NodeSystemStatus.MissingGraphBankAsset;
-            }
             return nodeSystemBank;
         }
 
@@ -253,6 +254,13 @@ namespace NodeSystem.Editor.Windows
                 NodeSystemStatus.NotFound => "NodeSystemBank not found!",
                 _ => ""
             };
+        }
+
+        private enum NodeSystemStatus
+        {
+            NotFound,
+            AllSet,
+            MissingGraphBankAsset
         }
     }
 }

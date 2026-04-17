@@ -2,6 +2,8 @@
 {
     public class PortTypes
     {
-        public class FlowPort { };
+        public class FlowPort
+        {
+        }
     }
 }

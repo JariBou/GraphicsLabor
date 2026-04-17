@@ -13,10 +13,10 @@ namespace NodeSystem.Editor.Graph.View
         public void AddBlackboardProperty(BlackboardProperty blackboardProperty, bool b)
         {
             // doesn't work for some reason?
-            Undo.RecordObject(SerializedObject.targetObject, "Add BlackboardProperty"); 
+            Undo.RecordObject(SerializedObject.targetObject, "Add BlackboardProperty");
             m_blackboard.AddProperty(blackboardProperty, b);
         }
-        
+
         private void GenerateBlackBoard()
         {
             NodeSystemBlackboard blackboard = new(this)
@@ -28,42 +28,43 @@ namespace NodeSystem.Editor.Graph.View
                 },
                 editTextRequested = (_, element, newValue) =>
                 {
-                    string oldPropertyName = ((BlackboardField) element).text;
+                    string oldPropertyName = ((BlackboardField)element).text;
                     if (ExposedProperties.Any(x => x.PropertyName == newValue))
                     {
-                        EditorUtility.DisplayDialog("Error", "This property name already exists, please chose another one.",
+                        EditorUtility.DisplayDialog("Error",
+                            "This property name already exists, please chose another one.",
                             "OK");
                         return;
                     }
-            
+
                     int targetIndex = ExposedProperties.FindIndex(x => x.PropertyName == oldPropertyName);
                     ExposedProperties[targetIndex].PropertyName = newValue;
-                
+
                     // m_currentView.ModifyExposedProperties(exposedProperties =>
                     // {
                     //     exposedProperties[targetIndex].PropertyName = newValue;
                     // });
-                    ((BlackboardField) element).text = newValue;
+                    ((BlackboardField)element).text = newValue;
                 }
             };
 
-            blackboard.SetPosition(new Rect(10,30,200,300));
+            blackboard.SetPosition(new Rect(10, 30, 200, 300));
             Add(blackboard);
             m_blackboard = blackboard;
         }
-        
+
         // Not used anymore
         public NodeSystemBlackboard GetNodeSystemBlackboard()
         {
             return m_blackboard;
         }
-        
+
         public void ClearBlackBoardAndExposedProperties()
         {
             //ExposedProperties.Clear();
             m_blackboard.Clear();
         }
-        
+
         [Obsolete]
         public void ModifyExposedProperties(Action<List<BlackboardProperty>> action)
         {

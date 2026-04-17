@@ -13,7 +13,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             property.serializedObject.Update();
-            
+
             EditorGUI.BeginProperty(position, label, property);
             SerializableGameObjectRef src = (SerializableGameObjectRef)property.boxedValue;
             SerializedProperty objIdProp = property.FindPropertyRelative("_objectId");
@@ -24,11 +24,11 @@ namespace NodeSystem.Editor.Editors.RefEditors
             GUIContent labelContent = new()
             {
                 tooltip = objIdProp.stringValue,
-                text = label.text,
+                text = label.text
             };
 
             Object obj = EditorGUI.ObjectField(position, labelContent, gameObject, typeof(GameObject), true);
-            
+
             if (EditorGUI.EndChangeCheck())
             {
                 objIdProp.stringValue = obj switch
@@ -37,17 +37,17 @@ namespace NodeSystem.Editor.Editors.RefEditors
                     null => ReferenceManager.NoneReference,
                     _ => objIdProp.stringValue
                 };
-        
+
                 property.serializedObject.ApplyModifiedProperties();
             }
-            
+
             EditorGUI.EndProperty();
         }
 
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             SerializedProperty objectIdProp = property.FindPropertyRelative("_objectId");
-            
+
             GameObject ownerGo = objectIdProp.stringValue == ReferenceManager.NoneReference
                 ? null
                 : ReferenceManager.GetGameObject<GameObject>(objectIdProp.stringValue);
@@ -58,12 +58,12 @@ namespace NodeSystem.Editor.Editors.RefEditors
                 value = ownerGo,
                 focusable = true,
                 name = property.displayName,
-                
+
                 tooltip = property.tooltip,
                 label = property.displayName,
                 style =
                 {
-                    flexGrow = 1,
+                    flexGrow = 1
                 }
             };
 
@@ -71,7 +71,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
             {
                 property.serializedObject.Update();
                 objectIdProp.serializedObject.Update();
-                
+
                 Object obj = evt.newValue;
                 switch (obj)
                 {
@@ -90,7 +90,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
                 objectIdProp.serializedObject.ApplyModifiedProperties();
                 property.serializedObject.ApplyModifiedProperties();
             });
-            
+
             return objectField;
         }
     }

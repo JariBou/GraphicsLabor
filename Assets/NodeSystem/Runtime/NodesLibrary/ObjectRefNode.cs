@@ -1,4 +1,6 @@
 ﻿using NodeSystem.Runtime.Attributes;
+using NodeSystem.Runtime.Attributes.EditorTarget;
+using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Utils.RefSystem;
 using UnityEngine;
 
@@ -11,7 +13,7 @@ namespace NodeSystem.Runtime.NodesLibrary
         [ExposedProperty(PropPortDirection.Output,
             preferredLocation: PropContainerLocation.OutputContainer)]
         public SerializableGameObjectRef Source = new();
-        
+
         public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
             // await GetValueOfProp<SerializableRef>(context, nameof(Source));

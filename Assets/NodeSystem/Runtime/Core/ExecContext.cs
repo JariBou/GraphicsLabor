@@ -1,6 +1,6 @@
 ﻿using NodeSystem.Runtime.Utils;
 
-namespace NodeSystem.Runtime
+namespace NodeSystem.Runtime.Core
 {
     public class ExecContext
     {

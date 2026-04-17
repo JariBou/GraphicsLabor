@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -9,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace NodeSystem.Runtime.References
 {
-    [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName+"/References/Reference Manager")]
+    [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName + "/References/Reference Manager")]
     public class ReferenceManager : MonoBehaviour
     {
         public const string NoneReference = "";
@@ -27,8 +26,9 @@ namespace NodeSystem.Runtime.References
                 if (_instance is not null) return _instance;
 
                 // IRC I did it this way to allow for future implementation of in-editor graphs running
-                
-                _instance = FindAnyObjectByType<ReferenceManager>() ?? new GameObject("ReferenceManager").AddComponent<ReferenceManager>();
+
+                _instance = FindAnyObjectByType<ReferenceManager>() ??
+                            new GameObject("ReferenceManager").AddComponent<ReferenceManager>();
 
                 // #if !UNITY_EDITOR
                 // DontDestroyOnLoad(_instance.gameObject);
@@ -40,21 +40,14 @@ namespace NodeSystem.Runtime.References
         private void Awake()
         {
             if (Instance != this)
-            {
                 Destroy(gameObject);
-            }
             else
-            {
                 DontDestroyOnLoad(gameObject);
-            }
         }
 
         private void OnDestroy()
         {
-            if (Instance == this)
-            {
-                _instance = null;
-            }
+            if (Instance == this) _instance = null;
         }
 
         public static ReferenceDataBank[] GetAvailableDataBanks()
@@ -78,16 +71,18 @@ namespace NodeSystem.Runtime.References
             if (guid == "") return null;
             // return GetAvailableDataBanks().Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
             // return Instance._referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
-            ReferenceDataBank[] referenceDataBanks = Application.isEditor ? GetAvailableDataBanks() : Instance._referenceDataBanks.ToArray();
-            
-            T[] objects = referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).ToArray();
+            var referenceDataBanks =
+                Application.isEditor ? GetAvailableDataBanks() : Instance._referenceDataBanks.ToArray();
+
+            var objects = referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).ToArray();
             return objects.Any() ? objects.First() : null;
         }
 
         public static string GetGuidOf<T>(T obj) where T : Object
         {
-            ReferenceDataBank[] referenceDataBanks = Application.isEditor ? GetAvailableDataBanks() : Instance._referenceDataBanks.ToArray();
-            
+            var referenceDataBanks =
+                Application.isEditor ? GetAvailableDataBanks() : Instance._referenceDataBanks.ToArray();
+
             foreach (string guidOf in referenceDataBanks.Select(mHolder => mHolder.GetGuidOf(obj))
                          .Where(guidOf => guidOf != "")) return guidOf;
 

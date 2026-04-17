@@ -3,7 +3,7 @@ using NodeSystem.Runtime.Attributes;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace NodeSystem.Runtime
+namespace NodeSystem.Runtime.Core
 {
     [Serializable]
     public struct PortInfo

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using NodeSystem.Runtime.Attributes;
+using NodeSystem.Runtime.Attributes.EditorTarget;
+using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.NodesLibrary.Process;
 using NodeSystem.Runtime.Utils.RefSystem;
 using UnityEngine;

@@ -1,7 +1,8 @@
 NodeSystemView {
     flex-grow: 1;
 }
-#Grid{
+
+#Grid {
     --thick-lines: 0;
     --spacing: 15;
     --grid-background-color: rgb(35, 35, 35);

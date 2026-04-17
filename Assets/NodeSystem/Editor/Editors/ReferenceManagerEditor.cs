@@ -11,11 +11,8 @@ namespace NodeSystem.Editor.Editors
         {
             ReferenceDataBank referenceDataBank = (ReferenceDataBank)target;
             base.OnInspectorGUI();
-        
-            if (GUILayout.Button("Load References"))
-            {
-                referenceDataBank.LoadReferences();
-            }
+
+            if (GUILayout.Button("Load References")) referenceDataBank.LoadReferences();
         }
     }
 }

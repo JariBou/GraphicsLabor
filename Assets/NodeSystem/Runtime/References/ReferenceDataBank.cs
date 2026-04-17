@@ -7,20 +7,17 @@ using Object = UnityEngine.Object;
 
 namespace NodeSystem.Runtime.References
 {
-    [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName+"/References/GameObject Reference Bank")]
+    [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName + "/References/GameObject Reference Bank")]
     public class ReferenceDataBank : MonoBehaviour
     {
         [FormerlySerializedAs("m_references")] [SerializeField]
         private List<GameObjectReference> _references = new();
-        
+
         [SerializeField] private bool _autoRecord = true;
 
         private void OnEnable()
         {
-            if (_autoRecord)
-            {
-                ReferenceManager.Instance.RecordRefDataBank(this);
-            }
+            if (_autoRecord) ReferenceManager.Instance.RecordRefDataBank(this);
         }
 
         private void OnDisable()
@@ -30,10 +27,10 @@ namespace NodeSystem.Runtime.References
 
         public void LoadReferences()
         {
-            GameObject[] objectsInScene = FindObjectsByType<GameObject>(FindObjectsInactive.Include,
+            var objectsInScene = FindObjectsByType<GameObject>(FindObjectsInactive.Include,
                 FindObjectsSortMode.None);
-            
-            List<GameObjectReference> refsToRemove = new List<GameObjectReference>(_references);
+
+            var refsToRemove = new List<GameObjectReference>(_references);
             foreach (GameObject go in objectsInScene)
                 if (_references.Find(goRef => goRef.Object == go) == null)
                     _references.Add(new GameObjectReference(go));

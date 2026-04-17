@@ -37,13 +37,13 @@ MonoBehaviour:
     - rid: 2224113392803119104
       type: {class: StartNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
       data:
-        m_guid: d2de0d24-91e4-4c1d-ab30-67577d14c343
-        m_position:
+        _position:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
+        m_guid: d2de0d24-91e4-4c1d-ab30-67577d14c343
         m_isPure: 0
         typename: NodeSystem.Runtime.NodesLibrary.Process.StartNode, NodeSystem,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -52,13 +52,13 @@ MonoBehaviour:
     - rid: 2224113392803119174
       type: {class: MyCustomEventNode, ns: NodeSystem.Tests.Runtime, asm: Assembly-CSharp}
       data:
-        m_guid: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
-        m_position:
+        _position:
           serializedVersion: 2
           x: -147
           y: 170
           width: 180
           height: 125
+        m_guid: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
         m_isPure: 0
         typename: NodeSystem.Tests.Runtime.MyCustomEventNode, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
@@ -90,13 +90,13 @@ MonoBehaviour:
     - rid: 2224113392803119175
       type: {class: OutputCustomEventToLog, ns: NodeSystem.Tests.Runtime, asm: Assembly-CSharp}
       data:
-        m_guid: ada5b5fe-50fe-444e-bc18-02ce119060e7
-        m_position:
+        _position:
           serializedVersion: 2
           x: 166
           y: 170
           width: 353
           height: 117
+        m_guid: ada5b5fe-50fe-444e-bc18-02ce119060e7
         m_isPure: 0
         typename: NodeSystem.Tests.Runtime.OutputCustomEventToLog, Assembly-CSharp,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null

@@ -1,6 +1,7 @@
 ﻿using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using PointerType = UnityEngine.UIElements.PointerType;
 
 namespace NodeSystem.Editor.Ports
 {
@@ -12,7 +13,7 @@ namespace NodeSystem.Editor.Ports
         protected bool m_Active;
         protected Edge m_EdgeCandidate;
         protected Vector2 m_MouseDownPosition;
-        
+
 
         public NsEdgeConnector(IEdgeConnectorListener listener)
         {
@@ -61,7 +62,7 @@ namespace NodeSystem.Editor.Ports
 
         protected virtual void OnPointerDown(PointerDownEvent e)
         {
-            if ((e.pointerId != PointerId.mousePointerId && e.pointerType != UnityEngine.UIElements.PointerType.touch) ||
+            if ((e.pointerId != PointerId.mousePointerId && e.pointerType != PointerType.touch) ||
                 !CanStartManipulation(e))
                 return;
             OnPointerOrMouseDown(e, e.localPosition);
@@ -81,10 +82,7 @@ namespace NodeSystem.Editor.Ports
                 m_EdgeCandidate = new TEdge();
                 m_EdgeDragHelper.draggedPort = portTarget;
                 m_EdgeDragHelper.edgeCandidate = m_EdgeCandidate;
-                if (!portTarget.ContainsPoint(localPosition))
-                {
-                    return;
-                }
+                if (!portTarget.ContainsPoint(localPosition)) return;
                 switch (e)
                 {
                     case PointerDownEvent evt1:

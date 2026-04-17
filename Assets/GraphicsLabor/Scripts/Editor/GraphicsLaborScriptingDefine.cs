@@ -1,8 +1,8 @@
-#if !NodeSystemImplemented
+#if !GraphicsLaborImplemented
 using UnityEditor;
 using UnityEditor.Build;
 
-public class NodeSystemScriptingDefine
+public class GraphicsLaborScriptingDefine
 {
     [InitializeOnLoad]
     public class Autorun
@@ -16,9 +16,9 @@ public class NodeSystemScriptingDefine
     static void AddNodeSystemScriptingDefine()
     {
         string scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup));
-        if (!scriptingDefineSymbols.Contains("NodeSystemImplemented"))
+        if (!scriptingDefineSymbols.Contains("GraphicsLaborImplemented"))
         {
-            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), scriptingDefineSymbols + ";NodeSystemImplemented");
+            PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), scriptingDefineSymbols + ";GraphicsLaborImplemented");
         }
     }
 }

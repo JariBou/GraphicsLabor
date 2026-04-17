@@ -13,7 +13,7 @@ namespace NodeSystem.Runtime.Utils.RefSystem
 
         [SerializeField] private string _ownerId = ReferenceManager.NoneReference;
 
-        [SerializeField, Obsolete] private string _refTypename = "";
+        [SerializeField] [Obsolete] private string _refTypename = "";
 
         public string CompId
         {

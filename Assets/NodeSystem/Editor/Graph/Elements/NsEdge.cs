@@ -9,9 +9,9 @@ namespace NodeSystem.Editor.Graph.Elements
         public NsEdge()
         {
             // Workaround to get NsClickSelector to be registered before the default ClickSelector
-            this.capabilities &= ~Capabilities.Selectable; // ClickSlector gets unregistered here
+            capabilities &= ~Capabilities.Selectable; // ClickSlector gets unregistered here
             RegisterManipulatorsBeforeDefault(); // Register Manipulators before the default ClickSelector
-            this.capabilities |= Capabilities.Selectable; // and registered back here
+            capabilities |= Capabilities.Selectable; // and registered back here
         }
 
         public virtual void RegisterManipulatorsBeforeDefault()

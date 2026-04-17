@@ -9,27 +9,22 @@ namespace NodeSystem.Editor.Graph
 {
     public class NodeSystemBlackboard : Blackboard
     {
-        private NodeSystemView m_associatedGraphView;
-        public new Action<NodeSystemBlackboard> addItemRequested { get; set; }
-        
+        private readonly NodeSystemView m_associatedGraphView;
+
         public NodeSystemBlackboard(NodeSystemView associatedGraphView) : base(associatedGraphView)
         {
             m_associatedGraphView = associatedGraphView;
-            
-            base.addItemRequested = blackboard =>
-            {
-                addItemRequested?.Invoke((NodeSystemBlackboard)blackboard);
-            };
 
-            Add(new BlackboardSection {title = "Exposed Variables"});
-            
-            foreach (BlackboardProperty property in associatedGraphView.ExposedProperties)
-            {
-                AddProperty(property, true);
-            }
-            
+            base.addItemRequested = blackboard => { addItemRequested?.Invoke((NodeSystemBlackboard)blackboard); };
+
+            Add(new BlackboardSection { title = "Exposed Variables" });
+
+            foreach (BlackboardProperty property in associatedGraphView.ExposedProperties) AddProperty(property, true);
+
             // moveItemRequested += MoveItemRequested;
         }
+
+        public new Action<NodeSystemBlackboard> addItemRequested { get; set; }
 
         // private void MoveItemRequested(Blackboard arg1, int arg2, VisualElement arg3)
         // {
@@ -42,30 +37,24 @@ namespace NodeSystem.Editor.Graph
             string localPropertyName = blackboardProperty.PropertyName;
             string localPropertyValue = blackboardProperty.PropertyValue;
             if (!loadMode)
-            {
                 while (m_associatedGraphView.ExposedProperties.Any(x => x.PropertyName == localPropertyName))
                     localPropertyName = $"{localPropertyName}(1)";
-            }
 
-            BlackboardProperty item = new BlackboardProperty
+            BlackboardProperty item = new()
             {
                 PropertyName = localPropertyName,
                 PropertyValue = localPropertyValue
             };
 
 
-            if (!loadMode)
-            {
-                m_associatedGraphView.ExposedProperties.Add(item);
-                // m_associatedGraphView.ModifyExposedProperties(exposedProperties => { exposedProperties.Add(item); });
-            }
-            
+            if (!loadMode) m_associatedGraphView.ExposedProperties.Add(item);
+            // m_associatedGraphView.ModifyExposedProperties(exposedProperties => { exposedProperties.Add(item); });
 
-            VisualElement container = new VisualElement();
-            BlackboardField field = new BlackboardField {text = localPropertyName, typeText = "string"};
+            VisualElement container = new();
+            BlackboardField field = new() { text = localPropertyName, typeText = "string" };
             container.Add(field);
 
-            TextField propertyValueTextField = new TextField("Value:")
+            TextField propertyValueTextField = new("Value:")
             {
                 value = localPropertyValue
             };
@@ -74,7 +63,7 @@ namespace NodeSystem.Editor.Graph
                 int index = m_associatedGraphView.ExposedProperties.FindIndex(x => x.PropertyName == item.PropertyName);
                 m_associatedGraphView.ExposedProperties[index].PropertyValue = evt.newValue;
             });
-            BlackboardRow sa = new BlackboardRow(field, propertyValueTextField);
+            BlackboardRow sa = new(field, propertyValueTextField);
             container.Add(sa);
             Add(container);
         }

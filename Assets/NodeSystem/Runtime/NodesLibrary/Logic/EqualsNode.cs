@@ -1,4 +1,4 @@
-﻿using NodeSystem.Runtime.Attributes;
+﻿using NodeSystem.Runtime.Attributes.EditorTarget;
 
 namespace NodeSystem.Runtime.NodesLibrary.Logic
 {

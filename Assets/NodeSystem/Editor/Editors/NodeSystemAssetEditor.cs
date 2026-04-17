@@ -18,17 +18,15 @@ namespace NodeSystem.Editor.Editors
                 NodeSystemEditorWindow.Open((NodeSystemAsset)asset);
                 return true;
             }
-            
+
             return false;
         }
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            
-            if (GUILayout.Button("Open Graph"))
-            {
-                NodeSystemEditorWindow.Open((NodeSystemAsset)target);
-            }
+
+            if (GUILayout.Button("Open Graph")) NodeSystemEditorWindow.Open((NodeSystemAsset)target);
         }
     }
 }

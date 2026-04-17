@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace NodeSystem.Runtime.References
 {
-    [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName+"/Node System Bank")]
+    [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName + "/Node System Bank")]
     public class NodeSystemBank : MonoBehaviour
     {
         private static NodeSystemBank _instance;

@@ -1,5 +1,5 @@
-﻿using NodeSystem.Runtime.NodesLibrary.Events;
-using NUnit.Framework.Interfaces;
+﻿using NodeSystem.Runtime.Core;
+using NodeSystem.Runtime.NodesLibrary.Events;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.Extensions

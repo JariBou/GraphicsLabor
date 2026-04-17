@@ -314,7 +314,5 @@ namespace NodeSystem.Editor.Ports
             //     ((NsEdgeConnector<Edge>)edgeConnector).IsFromListView = true;
             // }
         }
-
-        
     }
 }

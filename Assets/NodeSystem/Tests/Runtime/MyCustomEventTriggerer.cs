@@ -1,6 +1,5 @@
 ﻿using System;
 using NodeSystem.Runtime;
-using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Extensions;
 using NodeSystem.Runtime.References;
 using TMPro;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NodeSystem.Runtime
+namespace NodeSystem.Runtime.Core
 {
     [Serializable]
     public struct ProcessInfo
