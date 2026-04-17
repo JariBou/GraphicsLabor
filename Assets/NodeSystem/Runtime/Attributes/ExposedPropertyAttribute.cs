@@ -2,6 +2,7 @@
 
 namespace NodeSystem.Runtime.Attributes
 {
+    [AttributeUsage(AttributeTargets.Field)]
     public class ExposedPropertyAttribute : Attribute
     {
         public ExposedPropertyAttribute(
@@ -35,13 +36,6 @@ namespace NodeSystem.Runtime.Attributes
         public bool LabelOnly { get; }
     }
 
-    public class EventExposedPropertyAttribute : ExposedPropertyAttribute
-    {
-        public EventExposedPropertyAttribute(Type portType = null, string overrideDisplayName = "", PropContainerLocation preferredLocation = PropContainerLocation.OutputContainer, PropPortCapacity portCapacity = PropPortCapacity.Single, bool disableInputWhenConnected = false) : base(PropPortDirection.Output, portType, overrideDisplayName, preferredLocation, portCapacity, disableInputWhenConnected, true)
-        {
-        }
-    }
-
     public enum PropPortDirection
     {
         None,
@@ -56,7 +50,7 @@ namespace NodeSystem.Runtime.Attributes
         ExtensionContainer
     }
 
-    // editor only shenanigans
+    // For Editor-only graph, but is here for ease of use
     public enum PropPortCapacity
     {
         Single,

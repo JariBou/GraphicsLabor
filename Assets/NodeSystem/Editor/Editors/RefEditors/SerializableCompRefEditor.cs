@@ -96,18 +96,50 @@ namespace NodeSystem.Editor.Editors.RefEditors
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            
+            Color colorSave = GUI.color;
+            GUI.color = Color.lightCyan;
+            GUI.Box(position, GUIContent.none);
+            GUI.color = colorSave;
+            
             property.serializedObject.Update();
             ISerializableTypedRef typedRef = (ISerializableTypedRef)property.boxedValue;
+            
         
             EditorGUI.BeginProperty(position, label, property);
+
+            {
+                float cellWidth = position.width/2;
+                Rect nameRect = new Rect()
+                {
+                    x = position.x,
+                    y = position.y,
+                    width = cellWidth,
+                    height = EditorGUIUtility.singleLineHeight
+                };
+
+                EditorGUI.LabelField(nameRect, label);
+                
+                Rect typeRect = new Rect()
+                {
+                    x = position.x + cellWidth,
+                    y = position.y,
+                    width = cellWidth,
+                    height = EditorGUIUtility.singleLineHeight
+                };
+                GUIContent typeGuiContent = new GUIContent($"Type: SerializableCompRef<{typedRef.GetRefType().Name}>");
+                Color color = GUI.color;
+                GUI.color = Color.orange;
+                EditorGUI.LabelField(typeRect, typeGuiContent);
+                GUI.color = color;
+            }
             
-            EditorGUI.LabelField(position, label);
             SerializedProperty ownerIdProp = property.FindPropertyRelative("_ownerId");
             SerializedProperty compIdProp = property.FindPropertyRelative("_compId");
             Rect rect1 = new Rect()
             {
                 x = position.x,
-                y = position.y,
+                y = position.y + EditorGUIUtility.singleLineHeight,
                 width = position.width,
                 height = EditorGUIUtility.singleLineHeight
             };
@@ -115,7 +147,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
             Rect rect2 = new Rect()
             {
                 x = position.x,
-                y = position.y + EditorGUIUtility.singleLineHeight,
+                y = position.y + EditorGUIUtility.singleLineHeight*2,
                 width = position.width,
                 height = EditorGUIUtility.singleLineHeight
             };
@@ -126,7 +158,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return base.GetPropertyHeight(property, label) * 2;
+            return base.GetPropertyHeight(property, label) * 3;
         }
 
 

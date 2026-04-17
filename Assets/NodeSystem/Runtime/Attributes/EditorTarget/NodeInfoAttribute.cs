@@ -2,6 +2,7 @@
 
 namespace NodeSystem.Runtime.Attributes
 {
+    [AttributeUsage(AttributeTargets.Class)]
     public class NodeInfoAttribute : Attribute
     {
         public NodeInfoAttribute(string nodeTitle, string menuItem = "",
@@ -24,13 +25,6 @@ namespace NodeSystem.Runtime.Attributes
         public int OutputPortCount { get; }
     }
 
-    public class EventNodeInfoAttribute : NodeInfoAttribute
-    {
-        public EventNodeInfoAttribute(string nodeTitle, string menuItem = "", bool isPure = false) : base(nodeTitle, menuItem, FlowDirection.Output, isPure, 1)
-        {
-        }
-    }
-    
     public enum FlowDirection
     {
         None,
