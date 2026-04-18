@@ -15,7 +15,8 @@ public class NodeSystemScriptingDefine
     
     static void AddNodeSystemScriptingDefine()
     {
-        string scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup));
+        string scriptingDefineSymbols =
+ PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup));
         if (!scriptingDefineSymbols.Contains("NodeSystemImplemented"))
         {
             PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), scriptingDefineSymbols + ";NodeSystemImplemented");

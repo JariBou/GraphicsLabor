@@ -25,7 +25,7 @@ namespace NodeSystem.Editor.Windows
                                                  "// To regenerate this file, look at the NodeSystem's Node System Code Generator in Editor\n" +
                                                  "//\n//\n";
 
-        [FormerlySerializedAs("_generatedPath")] [SerializeField]
+        [FormerlySerializedAs("_generatedPath"), SerializeField] 
         private string _declsGeneratedPath = "Assets/NodeSystem/Generated";
 
         [SerializeField] private string _eventNodesGeneratedPath = "Assets/NodeSystem/Generated/EventNodes";
@@ -97,7 +97,7 @@ namespace NodeSystem.Editor.Windows
             StringBuilder content = new();
 
             Assembly assembly = typeof(NodeSystemNode).Assembly;
-            var types = assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(NodeSystemNode))).ToArray();
+            Type[] types = assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(NodeSystemNode))).ToArray();
 
             content.Append(AutoGenDisclaimer);
             content.Append("using UnityEngine;\n\n");
@@ -119,7 +119,7 @@ namespace NodeSystem.Editor.Windows
         {
             IOHelper.CreateFolder(_eventNodesGeneratedPath); // Just in case
 
-            var selectMany = AppDomain.CurrentDomain.GetAssemblies()
+            Type[] selectMany = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(assembly => !assembly.GetName().Name.StartsWith("Unity"))
                 .SelectMany(assembly =>
                     assembly.GetTypes().Where(type => type.IsDefined(typeof(GenerateEventNodeAttribute)))).ToArray();

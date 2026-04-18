@@ -2,13 +2,13 @@
 using NodeSystem.Editor.Nodes;
 using NodeSystem.Editor.Utils;
 using NodeSystem.Runtime.Attributes;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using NodeSystem.Runtime.NodesLibrary.Logic;
 using UnityEditor.Experimental.GraphView;
 
 namespace NodeSystem.Editor.Editors.NodeEditors
 {
-    [CustomNodeEditor(typeof(BranchNode))]
-    [UsedImplicitly]
+    [CustomNodeEditor(typeof(BranchNode)), UsedImplicitly]
     public sealed class BranchNodeEditor : NodeEditorBase
     {
         public override bool AddOutputPorts(NodeSystemEditorNode editorNode)

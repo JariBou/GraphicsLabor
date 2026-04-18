@@ -1,25 +1,29 @@
 ﻿using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.NodesLibrary.Blackboard
 {
     [NodeInfo("Exposed Variable", "Blackboard/Exposed Variable", FlowDirection.None, true)]
     public class ExposedVariableNode : NodeSystemNode
     {
-        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
-        public string m_Name;
+        [FormerlySerializedAs("m_Name"),
+         ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
+        public string name;
 
-        [ExposedProperty(PropPortDirection.Output, portCapacity: PropPortCapacity.Multi,
-            preferredLocation: PropContainerLocation.OutputContainer, labelOnly: true)]
-        public string m_Value;
+        [FormerlySerializedAs("m_Value"), ExposedProperty(PropPortDirection.Output,
+             portCapacity: PropPortCapacity.Multi,
+             preferredLocation: PropContainerLocation.OutputContainer, labelOnly: true)]
+        public string value;
 
         public override Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
             NodeSystemAsset graph = context.GraphInstance;
-            m_Value = graph.GetExposedVariableValue(m_Name, out bool found);
-            if (!found) m_Value = "";
+            value = graph.GetExposedVariableValue(name, out bool found);
+            if (!found) value = "";
             return base.OnProcess(context);
         }
     }

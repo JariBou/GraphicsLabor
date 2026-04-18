@@ -1,4 +1,5 @@
-﻿using NodeSystem.Editor.Graph.Manipulators;
+﻿using System.Collections.Generic;
+using NodeSystem.Editor.Graph.Manipulators;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
@@ -9,14 +10,21 @@ namespace NodeSystem.Editor.Graph.Elements
         public NsEdge()
         {
             // Workaround to get NsClickSelector to be registered before the default ClickSelector
-            capabilities &= ~Capabilities.Selectable; // ClickSlector gets unregistered here
+            capabilities &= ~Capabilities.Selectable; // ClickSelector gets unregistered here
+
             RegisterManipulatorsBeforeDefault(); // Register Manipulators before the default ClickSelector
+
             capabilities |= Capabilities.Selectable; // and registered back here
         }
 
-        public virtual void RegisterManipulatorsBeforeDefault()
+        protected virtual List<IManipulator> GetManipulatorsBeforeDefault()
         {
-            this.AddManipulator(new NsClickSelector()); // Register NsClickSelector            
+            return new List<IManipulator> { new NsClickSelector() };
+        }
+
+        private void RegisterManipulatorsBeforeDefault()
+        {
+            foreach (IManipulator manipulator in GetManipulatorsBeforeDefault()) this.AddManipulator(manipulator);
         }
     }
 }

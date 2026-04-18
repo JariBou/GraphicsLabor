@@ -12,14 +12,14 @@ namespace NodeSystem.Editor.Graph.View
 {
     public partial class NodeSystemView
     {
+        private readonly List<NodeSystemNode> _copiedNodesCache = new();
         private Rect _copiedElementsCompoundRect;
-        private readonly List<NodeSystemNode> m_copiedNodesCache = new();
 
         private string CopyCutCallback(IEnumerable<GraphElement> elements)
         {
-            var enumerable = elements.ToList();
+            List<GraphElement> enumerable = elements.ToList();
             Debug.Log("Copy/Cut Callback: " + enumerable.Count());
-            m_copiedNodesCache.Clear();
+            _copiedNodesCache.Clear();
             _copiedElementsCompoundRect = Rect.zero;
             foreach (GraphElement element in enumerable)
             {
@@ -34,13 +34,13 @@ namespace NodeSystem.Editor.Graph.View
                     {
                         NodeSystemNode copy = (NodeSystemNode)Activator.CreateInstance(type);
                         copy.CopyDataFrom(node.Node);
-                        m_copiedNodesCache.Add(copy);
+                        _copiedNodesCache.Add(copy);
                     }
 
                     // NodeSystemNode.CopyFrom(node.Node);
                     // m_copiedNodesCache.Add(node.Node.CopyWithNewGuid());
                 }
-                else if (element is Edge edge)
+                else if (element is Edge _)
                 {
                     // TODO: actually we should traverse everything and update node id's 
                 }
@@ -52,28 +52,27 @@ namespace NodeSystem.Editor.Graph.View
         private void PasteCallback(string operationName, string data)
         {
             Debug.Log("Paste callback: " + operationName);
-            if (operationName != "Paste" || m_copiedNodesCache.Count == 0) return;
+            if (operationName != "Paste" || _copiedNodesCache.Count == 0) return;
 
             Vector2 compoundRectCenter = _copiedElementsCompoundRect.center;
             Vector2 displacement = this.ChangeCoordinatesTo(contentViewContainer, _mousePos) - compoundRectCenter;
-            foreach (NodeSystemNode node in m_copiedNodesCache)
+            foreach (NodeSystemNode node in _copiedNodesCache)
             {
                 node.Displace(displacement);
                 CopyBack(node);
             }
         }
 
-        private NodeSystemEditorNode CopyBack(NodeSystemNode node)
+        private void CopyBack(NodeSystemNode node)
         {
             Undo.RecordObject(SerializedObject.targetObject, "Added Node");
 
-            m_nodeSystem.Nodes.Add(node);
+            _nodeSystem.Nodes.Add(node);
 
             SerializedObject.Update();
 
-            NodeSystemEditorNode nodeSystemEditorNode = AddNodeToGraph(node);
+            AddNodeToGraph(node);
             BindToSerializedObject();
-            return nodeSystemEditorNode;
         }
 
         private bool CanPasteCallback(string data)

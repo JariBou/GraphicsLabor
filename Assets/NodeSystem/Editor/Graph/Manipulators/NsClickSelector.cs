@@ -49,11 +49,8 @@ namespace NodeSystem.Editor.Graph.Manipulators
             if (currentTarget is Edge edge)
                 if (e.altKey && firstAncestorOfType is NodeSystemView graphView)
                 {
-                    edge.output.Disconnect(edge);
-                    edge.input.Disconnect(edge);
-                    graphView.RemoveConnection(edge);
-                    graphView.RemoveElement(edge);
-                    firstAncestorOfType.ClearSelection();
+                    graphView.RecordAction("Deleted edge");
+                    graphView.DeleteConnection(edge);
                     return;
                 }
 

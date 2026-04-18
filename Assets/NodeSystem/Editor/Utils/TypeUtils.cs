@@ -114,6 +114,7 @@ namespace NodeSystem.Editor.Utils
             if (GetValue(source, name) is not IEnumerable enumerable) return null;
 
             IEnumerator enumerator = enumerable.GetEnumerator();
+            using IDisposable disposableEnumerator = enumerator as IDisposable;
             for (int i = 0; i <= index; i++)
                 if (!enumerator.MoveNext())
                     return null;

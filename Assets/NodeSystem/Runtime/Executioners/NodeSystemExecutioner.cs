@@ -3,17 +3,19 @@ using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.References;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.Executioners
 {
     [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName + "/Executioners/Node System Executioner")]
     public class NodeSystemExecutioner : MonoBehaviour
     {
-        [SerializeField] private NodeSystemAsset m_graphAsset;
+        [FormerlySerializedAs("m_graphAsset"), SerializeField]
+        private NodeSystemAsset _graphAsset;
 
-        private NodeSystemAsset graphInstance;
+        private string _currentExecNodeId;
 
-        private string m_currentExecNodeId;
+        private NodeSystemAsset _graphInstance;
 
         private async Awaitable Start()
         {
@@ -23,43 +25,39 @@ namespace NodeSystem.Runtime.Executioners
 
         public async Awaitable StartAsset()
         {
-            graphInstance = NodeSystemBank.GetGraphInstance(m_graphAsset);
-            await ExecuteAsset(graphInstance);
+            _graphInstance = NodeSystemBank.GetGraphInstance(_graphAsset);
+            await ExecuteAsset(_graphInstance);
         }
 
         private async Awaitable ExecuteAsset(NodeSystemAsset instance)
         {
             NodeSystemNode startNode = instance.GetStartNode();
-            m_currentExecNodeId = startNode.id;
+            _currentExecNodeId = startNode.ID;
 
             // ProcessAndMoveToNextNode(startNode);
             await TickProcess();
         }
 
-        private void ProcessNode(NodeSystemNode startNode)
-        {
-        }
-
         public NodeSystemNode GetCurrentNode()
         {
-            return graphInstance == null ? null : graphInstance.GetNode(m_currentExecNodeId);
+            return _graphInstance == null ? null : _graphInstance.GetNode(_currentExecNodeId);
         }
 
         public async Awaitable TickProcess()
         {
-            ProcessInfo processInfo = await GetCurrentNode().OnProcess(new ExecContext(graphInstance));
+            ProcessInfo processInfo = await GetCurrentNode().OnProcess(new ExecContext(_graphInstance));
 
             switch (processInfo.FlowType)
             {
                 case ProcessInfo.ExecutionFlowType.ExecuteNext:
-                    m_currentExecNodeId = processInfo.NextNodeId;
+                    _currentExecNodeId = processInfo.NextNodeId;
                     _ = TickProcess(); // TODO: discard? await? idk
                     break;
                 case ProcessInfo.ExecutionFlowType.Wait:
-                    m_currentExecNodeId = processInfo.NextNodeId;
+                    _currentExecNodeId = processInfo.NextNodeId;
                     break;
                 case ProcessInfo.ExecutionFlowType.EndExecution:
-                    Debug.Log("Stopped execution at " + m_currentExecNodeId);
+                    Debug.Log("Stopped execution at " + _currentExecNodeId);
                     return;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -79,7 +77,7 @@ namespace NodeSystem.Runtime.Executioners
 
         public void ModifyExposedVariable(string propertyName, string newValue)
         {
-            graphInstance.ModifyExposedVariable(propertyName, newValue);
+            _graphInstance.ModifyExposedVariable(propertyName, newValue);
         }
     }
 }

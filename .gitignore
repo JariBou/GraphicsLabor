@@ -74,7 +74,7 @@ crashlytics-build.properties
 /[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-/[Aa]ssets/Scenes/*
+#/[Aa]ssets/Scenes/*
 Assets/Scenes/DemoScene.unity
 [Aa]ssets/GraphicsLabor/Generated
 Assets/GraphicsLabor/Generated.meta

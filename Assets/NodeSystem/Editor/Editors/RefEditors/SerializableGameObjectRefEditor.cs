@@ -1,5 +1,5 @@
-﻿using NodeSystem.Runtime.References;
-using NodeSystem.Runtime.Utils.RefSystem;
+﻿using NodeSystem.Runtime.Core.RefSystem;
+using NodeSystem.Runtime.References;
 using UnityEditor;
 using UnityEditor.Search;
 using UnityEngine;

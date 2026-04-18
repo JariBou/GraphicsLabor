@@ -3,7 +3,8 @@ using NodeSystem.Runtime;
 using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
-using NodeSystem.Runtime.Utils.RefSystem;
+using NodeSystem.Runtime.Core.PortConfigEnums;
+using NodeSystem.Runtime.Core.RefSystem;
 using TMPro;
 using UnityEngine;
 

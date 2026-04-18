@@ -1,4 +1,5 @@
 ﻿using System;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 
 namespace NodeSystem.Runtime.Attributes
 {
@@ -36,24 +37,5 @@ namespace NodeSystem.Runtime.Attributes
         public bool LabelOnly { get; }
     }
 
-    public enum PropPortDirection
-    {
-        None,
-        Input,
-        Output
-    }
-
-    public enum PropContainerLocation
-    {
-        InputContainer,
-        OutputContainer,
-        ExtensionContainer
-    }
-
     // For Editor-only graph, but is here for ease of use
-    public enum PropPortCapacity
-    {
-        Single,
-        Multi
-    }
 }

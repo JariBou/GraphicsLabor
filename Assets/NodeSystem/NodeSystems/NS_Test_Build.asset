@@ -13,11 +13,17 @@ MonoBehaviour:
   m_Name: NS_Test_Build
   m_EditorClassIdentifier: NodeSystem::NodeSystem.Runtime.NodeSystemAsset
   _graphId: 85878082-fc60-4c41-8f5d-5ab600c737f7
-  m_nodes:
+  _nodes:
   - rid: 2224113392803119104
   - rid: 2224113392803119174
   - rid: 2224113392803119175
-  m_connections:
+  _connections:
+  - InputPort:
+      NodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
+      PortIndex: 3
+    OutputPort:
+      NodeId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+      PortIndex: 4
   - InputPort:
       NodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
       PortIndex: 1
@@ -26,11 +32,11 @@ MonoBehaviour:
       PortIndex: 0
   - InputPort:
       NodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
-      PortIndex: 3
+      PortIndex: 1
     OutputPort:
       NodeId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
-      PortIndex: 4
-  m_exposedProperties: []
+      PortIndex: 0
+  _exposedProperties: []
   references:
     version: 2
     RefIds:
@@ -45,8 +51,6 @@ MonoBehaviour:
           height: 0
         m_guid: d2de0d24-91e4-4c1d-ab30-67577d14c343
         m_isPure: 0
-        typename: NodeSystem.Runtime.NodesLibrary.Process.StartNode, NodeSystem,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         m_ports: []
         m_pureExecutionDone: 1
     - rid: 2224113392803119174
@@ -60,8 +64,6 @@ MonoBehaviour:
           height: 125
         m_guid: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
         m_isPure: 0
-        typename: NodeSystem.Tests.Runtime.MyCustomEventNode, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
         m_ports:
         - _exposedPropertyName: someInt
           _ownerId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
@@ -98,8 +100,6 @@ MonoBehaviour:
           height: 117
         m_guid: ada5b5fe-50fe-444e-bc18-02ce119060e7
         m_isPure: 0
-        typename: NodeSystem.Tests.Runtime.OutputCustomEventToLog, Assembly-CSharp,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         m_ports:
         - _exposedPropertyName: logField
           _ownerId: ada5b5fe-50fe-444e-bc18-02ce119060e7

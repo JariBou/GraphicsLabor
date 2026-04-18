@@ -4,38 +4,43 @@ using System.Threading.Tasks;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime
 {
     [Serializable]
     public abstract partial class NodeSystemNode
     {
-        [SerializeField] protected internal string m_guid;
-        [SerializeField] protected bool m_isPure;
+        [FormerlySerializedAs("m_guid"), SerializeField]
+        protected internal string guid;
 
+        [FormerlySerializedAs("m_isPure"), SerializeField]
+        protected bool isPure;
 
-        public string typename;
-        [SerializeField] protected internal List<PortInfo> m_ports = new();
+        [FormerlySerializedAs("m_ports"), SerializeField]
+        protected internal List<PortInfo> ports = new();
 
-        [SerializeField] private bool m_pureExecutionDone = true;
+        [FormerlySerializedAs("pureExecutionDone"), FormerlySerializedAs("m_pureExecutionDone"), SerializeField]
+        private bool _pureExecutionDone = true;
+
         private string _lastExecutionId = "";
 
-        public NodeSystemNode()
+        protected NodeSystemNode()
         {
-            NewGUID();
+            NewGuid();
         }
 
         public string Typename => GetType().AssemblyQualifiedName;
 
-        public string id => m_guid;
-        public List<PortInfo> PortInfos => m_ports;
+        public string ID => guid;
+        public List<PortInfo> PortInfos => ports;
 
 
         public bool PureExecutionDone
         {
-            get => m_pureExecutionDone;
+            get => _pureExecutionDone;
 #if UNITY_EDITOR
-            set => m_pureExecutionDone = value;
+            set => _pureExecutionDone = value;
 #else
             protected set => m_pureExecutionDone = value;
 #endif
@@ -43,9 +48,9 @@ namespace NodeSystem.Runtime
 
         public bool IsPure
         {
-            get => m_isPure;
+            get => isPure;
 #if UNITY_EDITOR
-            set => m_isPure = value;
+            set => isPure = value;
 #else
             protected set => m_isPure = value;
 #endif
@@ -53,7 +58,7 @@ namespace NodeSystem.Runtime
 
         protected PortInfo GetExposedPropertyPortInfo(string propName)
         {
-            PortInfo portInfo = m_ports.Find(info => info.ExposedPropertyName == propName);
+            PortInfo portInfo = ports.Find(info => info.ExposedPropertyName == propName);
             return portInfo;
         }
 
@@ -61,8 +66,8 @@ namespace NodeSystem.Runtime
             out int connectedPortIndex)
         {
             bool found = graph.GetConnectionToPort(exposedPropInfo, out NodeSystemConnection connectionToInputPort);
-            connectedPortIndex = found ? connectionToInputPort.OutputPort.PortIndex : -1;
-            return !found ? null : graph.GetNode(connectionToInputPort.OutputPort.NodeId);
+            connectedPortIndex = found ? connectionToInputPort.outputPort.portIndex : -1;
+            return !found ? null : graph.GetNode(connectionToInputPort.outputPort.nodeId);
         }
 
         // Idealy this would be an extension on the prop
@@ -95,9 +100,9 @@ namespace NodeSystem.Runtime
             await OnProcess(context);
         }
 
-        private void NewGUID()
+        private void NewGuid()
         {
-            m_guid = GuidSystem.NewGuid();
+            guid = GuidSystem.NewGuid();
         }
 
 
@@ -105,7 +110,7 @@ namespace NodeSystem.Runtime
         {
             NodeSystemAsset graph = context.GraphInstance;
             NodeSystemNode nextNode = GetNextNode(graph);
-            if (nextNode != null) return await ContinueExecution(nextNode.id);
+            if (nextNode != null) return await ContinueExecution(nextNode.ID);
 
             return await EndExecution();
         }
@@ -117,43 +122,43 @@ namespace NodeSystem.Runtime
 
         public NodeSystemNode GetNodeConnectedToPort(NodeSystemAsset graph, int portIndex)
         {
-            return graph.GetNodeFromOutputConnection(m_guid, portIndex);
+            return graph.GetNodeFromOutputConnection(guid, portIndex);
         }
 
         public bool Equals(NodeSystemNode obj)
         {
-            if (obj != null) return obj.id == id;
+            if (obj != null) return obj.ID == ID;
             return false;
         }
 
         public PortInfo GetPort(int portIndex)
         {
-            PortInfo portInfo = m_ports.Find(info => info.PortIndex == portIndex);
+            PortInfo portInfo = ports.Find(info => info.PortIndex == portIndex);
             return portInfo;
         }
 
         public void AddPortInfo(PortInfo portInfo)
         {
-            m_ports.Add(portInfo);
+            ports.Add(portInfo);
         }
 
         #region FlowControl
 
         protected async Awaitable<ProcessInfo> EndExecution()
         {
-            return await Task.FromResult(new ProcessInfo(id, "", ProcessInfo.ExecutionFlowType.EndExecution));
+            return await Task.FromResult(new ProcessInfo(ID, "", ProcessInfo.ExecutionFlowType.EndExecution));
         }
 
         protected async Awaitable<ProcessInfo> ContinueExecution(string nextNodeId)
         {
-            return await Task.FromResult(new ProcessInfo(id, nextNodeId, ProcessInfo.ExecutionFlowType.ExecuteNext));
+            return await Task.FromResult(new ProcessInfo(ID, nextNodeId, ProcessInfo.ExecutionFlowType.ExecuteNext));
         }
 
         protected async Awaitable<ProcessInfo> ContinueExecution(ExecContext ctx)
         {
             NodeSystemAsset graph = ctx.GraphInstance;
             NodeSystemNode nextNode = GetNextNode(graph);
-            if (nextNode != null) return await ContinueExecution(nextNode.id);
+            if (nextNode != null) return await ContinueExecution(nextNode.ID);
             return await EndExecution();
         }
 

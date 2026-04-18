@@ -24,7 +24,7 @@ namespace NodeSystem.Generated.EventNodes
 
 		public override Awaitable Invoke(ExecContext ctx, MyCustomEventData data)
 		{
-			this.eventData = data;
+			eventData = data;
 			return DefaultInvoke(ctx);
 		}
 	}

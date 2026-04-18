@@ -10,7 +10,7 @@ namespace NodeSystem.Runtime.References
     [AddComponentMenu(NodeSystemConsts.AddComponentMenuCategoryName + "/References/GameObject Reference Bank")]
     public class ReferenceDataBank : MonoBehaviour
     {
-        [FormerlySerializedAs("m_references")] [SerializeField]
+        [FormerlySerializedAs("m_references"), SerializeField]
         private List<GameObjectReference> _references = new();
 
         [SerializeField] private bool _autoRecord = true;
@@ -27,10 +27,10 @@ namespace NodeSystem.Runtime.References
 
         public void LoadReferences()
         {
-            var objectsInScene = FindObjectsByType<GameObject>(FindObjectsInactive.Include,
+            GameObject[] objectsInScene = FindObjectsByType<GameObject>(FindObjectsInactive.Include,
                 FindObjectsSortMode.None);
 
-            var refsToRemove = new List<GameObjectReference>(_references);
+            List<GameObjectReference> refsToRemove = new(_references);
             foreach (GameObject go in objectsInScene)
                 if (_references.Find(goRef => goRef.Object == go) == null)
                     _references.Add(new GameObjectReference(go));
@@ -68,12 +68,12 @@ namespace NodeSystem.Runtime.References
         }
 
         [Serializable]
-        public class GameObjectReference
+        private class GameObjectReference
         {
-            [FormerlySerializedAs("m_go")] [SerializeField]
+            [FormerlySerializedAs("m_go"), SerializeField]
             private GameObject _go;
 
-            [FormerlySerializedAs("m_guid")] [SerializeField]
+            [FormerlySerializedAs("m_guid"), SerializeField]
             private string _guid;
 
             public GameObjectReference(GameObject go)

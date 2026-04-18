@@ -24,10 +24,10 @@ namespace NodeSystem.Editor.Nodes.Manipulators
 
         private void OnPointerDown(PointerDownEvent evt)
         {
-            ProcessDownEvent(evt, evt.localPosition);
+            ProcessDownEvent(evt);
         }
 
-        private void ProcessDownEvent(PointerDownEvent evt, Vector3 mouseLocalPosition)
+        private void ProcessDownEvent(PointerDownEvent evt)
         {
             if (_clicked)
             {

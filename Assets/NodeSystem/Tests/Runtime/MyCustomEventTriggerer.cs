@@ -4,27 +4,34 @@ using NodeSystem.Runtime.Extensions;
 using NodeSystem.Runtime.References;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace NodeSystem.Tests.Runtime
 {
     public class MyCustomEventTriggerer : MonoBehaviour
     {
-        [SerializeField] private TMP_InputField someStringInputField;
-        [SerializeField] private TMP_InputField someIntInputField;
-        [SerializeField] private Toggle sommeBoolToggle;
-        
-        [SerializeField] private NodeSystemAsset m_graphAsset;
+        [FormerlySerializedAs("someStringInputField"), SerializeField]
+        private TMP_InputField _someStringInputField;
+
+        [FormerlySerializedAs("someIntInputField"), SerializeField]
+        private TMP_InputField _someIntInputField;
+
+        [FormerlySerializedAs("sommeBoolToggle"), SerializeField]
+        private Toggle _sommeBoolToggle;
+
+        [FormerlySerializedAs("m_graphAsset"), SerializeField]
+        private NodeSystemAsset _graphAsset;
 
 
         public void TriggerEvent()
         {
-            NodeSystemAsset graphInstance = NodeSystemBank.GetGraphInstance(m_graphAsset);
-            MyCustomEventData eventData = new MyCustomEventData()
+            NodeSystemAsset graphInstance = NodeSystemBank.GetGraphInstance(_graphAsset);
+            MyCustomEventData eventData = new()
             {
-                someString = someStringInputField.text,
-                someInt = Convert.ToInt32(someIntInputField.text),
-                someBool = sommeBoolToggle.isOn,
+                someString = _someStringInputField.text,
+                someInt = Convert.ToInt32(_someIntInputField.text),
+                someBool = _sommeBoolToggle.isOn
             };
             graphInstance.TryCallEvent(eventData);
         }

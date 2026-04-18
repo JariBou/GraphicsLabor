@@ -2,6 +2,7 @@
 using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Logic
@@ -19,7 +20,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Logic
                 GetNodeConnectedToPort(graph, await GetValueOfProp<bool>(context, nameof(condition)) ? 0 : 1);
             if (nextNode != null)
                 return await Task.FromResult(
-                    new ProcessInfo(id, nextNode.id, ProcessInfo.ExecutionFlowType.ExecuteNext));
+                    new ProcessInfo(ID, nextNode.ID, ProcessInfo.ExecutionFlowType.ExecuteNext));
             return await EndExecution();
         }
     }

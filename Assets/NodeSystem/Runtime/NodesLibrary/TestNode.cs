@@ -1,8 +1,9 @@
 ﻿using System;
 using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Attributes.EditorTarget;
-using NodeSystem.Runtime.Core;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.NodesLibrary
 {
@@ -26,14 +27,9 @@ namespace NodeSystem.Runtime.NodesLibrary
         // [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         // public ScriptableObject TestOut2;
 
-        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
-        public TestFlags TestFlags;
-
-        public override Awaitable<ProcessInfo> OnProcess(ExecContext context)
-        {
-            // GetValueOfProp<SerializableRef>(info, nameof(Source));
-            return base.OnProcess(context);
-        }
+        [FormerlySerializedAs("TestFlags"),
+         ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
+        public TestFlags testFlags;
     }
 
     public class TestClass : MonoBehaviour

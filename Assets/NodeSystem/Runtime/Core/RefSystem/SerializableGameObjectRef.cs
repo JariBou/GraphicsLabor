@@ -1,15 +1,13 @@
 ﻿using System;
 using NodeSystem.Runtime.References;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
-namespace NodeSystem.Runtime.Utils.RefSystem
+namespace NodeSystem.Runtime.Core.RefSystem
 {
     [Serializable]
-    [Obsolete]
-    public class SerializableRef
+    public class SerializableGameObjectRef : ISerializableTypedRef
     {
-        [SerializeField] private string _objectId = "";
+        [SerializeField] private string _objectId = ReferenceManager.NoneReference;
 
         [SerializeField] private string _refTypename = "";
 
@@ -38,9 +36,9 @@ namespace NodeSystem.Runtime.Utils.RefSystem
             return Type.GetType(_refTypename);
         }
 
-        public T Get<T>() where T : Object
+        public GameObject Get()
         {
-            return ReferenceManager.GetGameObject<T>(_objectId);
+            return ReferenceManager.GetGameObject<GameObject>(_objectId);
         }
     }
 }

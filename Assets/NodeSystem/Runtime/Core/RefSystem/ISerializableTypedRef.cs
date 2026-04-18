@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NodeSystem.Runtime.Utils.RefSystem
+namespace NodeSystem.Runtime.Core.RefSystem
 {
     public interface ISerializableTypedRef
     {

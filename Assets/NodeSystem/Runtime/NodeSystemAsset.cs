@@ -8,6 +8,7 @@ using NodeSystem.Runtime.NodesLibrary.Process;
 using NodeSystem.Runtime.References;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime
 {
@@ -16,19 +17,23 @@ namespace NodeSystem.Runtime
     {
         [SerializeField] private string _graphId = GuidSystem.NewGuid();
 
-        [SerializeReference] private List<NodeSystemNode> m_nodes = new();
+        [FormerlySerializedAs("m_nodes"), SerializeReference]
+        private List<NodeSystemNode> _nodes = new();
 
-        [SerializeField] private List<NodeSystemConnection> m_connections = new();
+        [FormerlySerializedAs("m_connections"), SerializeField]
+        private List<NodeSystemConnection> _connections = new();
 
-        [SerializeField] private List<BlackboardProperty> m_exposedProperties = new();
-        private readonly Dictionary<Type, NodeSystemNode> m_eventNodeLookup = new();
+        [FormerlySerializedAs("m_exposedProperties"), SerializeField]
+        private List<BlackboardProperty> _exposedProperties = new();
 
-        private readonly Dictionary<string, NodeSystemNode> m_nodeLookup = new();
+        private readonly Dictionary<Type, NodeSystemNode> _eventNodeLookup = new();
 
-        public List<NodeSystemNode> Nodes => m_nodes;
-        public List<NodeSystemConnection> Connections => m_connections;
+        private readonly Dictionary<string, NodeSystemNode> _nodeLookup = new();
 
-        public List<BlackboardProperty> ExposedProperties => m_exposedProperties;
+        public List<NodeSystemNode> Nodes => _nodes;
+        public List<NodeSystemConnection> Connections => _connections;
+
+        public List<BlackboardProperty> ExposedProperties => _exposedProperties;
 
         public string GraphId => _graphId;
 
@@ -37,11 +42,11 @@ namespace NodeSystem.Runtime
             foreach (NodeSystemNode node in Nodes)
             {
                 // Node lookup init
-                m_nodeLookup.Add(node.id, node);
+                _nodeLookup.Add(node.ID, node);
 
                 // Event node lookup init
                 if (node is IEventNode eventNode)
-                    if (!m_eventNodeLookup.TryAdd(eventNode.EventDataType, node))
+                    if (!_eventNodeLookup.TryAdd(eventNode.EventDataType, node))
                         Debug.LogError(
                             $"Found duplicate Event node for event of type '{eventNode.EventDataType}', only 1 event node per event type is supported.");
             }
@@ -56,8 +61,8 @@ namespace NodeSystem.Runtime
         public bool GetConnectionToPort(PortInfo portInfo, out NodeSystemConnection outConnection)
         {
             foreach (NodeSystemConnection connection in Connections)
-                if (connection.InputPort.NodeId == portInfo.OwnerId &&
-                    connection.InputPort.PortIndex == portInfo.PortIndex)
+                if (connection.inputPort.nodeId == portInfo.OwnerId &&
+                    connection.inputPort.portIndex == portInfo.PortIndex)
                 {
                     outConnection = connection;
                     return true;
@@ -70,29 +75,29 @@ namespace NodeSystem.Runtime
 
         public void ModifyExposedVariable(string propertyName, string newValue)
         {
-            BlackboardProperty property = ExposedProperties.Find(bgProp => bgProp.PropertyName == propertyName);
-            property.PropertyValue = newValue;
+            BlackboardProperty property = ExposedProperties.Find(bgProp => bgProp.propertyName == propertyName);
+            property.propertyValue = newValue;
         }
 
         public NodeSystemNode GetStartNode()
         {
-            var startNodes = Nodes.OfType<StartNode>().ToArray();
+            StartNode[] startNodes = Nodes.OfType<StartNode>().ToArray();
             return startNodes.Length > 0 ? startNodes[0] : null;
         }
 
         public NodeSystemNode GetNode(string nextNodeId)
         {
-            return m_nodeLookup.GetValueOrDefault(nextNodeId);
+            return _nodeLookup.GetValueOrDefault(nextNodeId);
         }
 
         public NodeSystemNode GetNodeFromOutputConnection(string startingNodeId, int outputPortIndex)
         {
             foreach (NodeSystemConnection connection in Connections)
-                if (connection.OutputPort.NodeId == startingNodeId &&
-                    connection.OutputPort.PortIndex == outputPortIndex)
+                if (connection.outputPort.nodeId == startingNodeId &&
+                    connection.outputPort.portIndex == outputPortIndex)
                 {
-                    string nodeId = connection.InputPort.NodeId;
-                    NodeSystemNode node = m_nodeLookup[nodeId];
+                    string nodeId = connection.inputPort.nodeId;
+                    NodeSystemNode node = _nodeLookup[nodeId];
                     return node;
                 }
 
@@ -102,7 +107,7 @@ namespace NodeSystem.Runtime
         public string GetExposedVariableValue(string variableName, out bool found)
         {
             BlackboardProperty blackboardProperty =
-                ExposedProperties.Find(bgProp => bgProp.PropertyName == variableName);
+                ExposedProperties.Find(bgProp => bgProp.propertyName == variableName);
             if (blackboardProperty == null)
             {
                 found = false;
@@ -110,13 +115,13 @@ namespace NodeSystem.Runtime
             }
 
             found = true;
-            return blackboardProperty.PropertyValue;
+            return blackboardProperty.propertyValue;
         }
 
         public string SetExposedVariableValue(string variableName, string newVal, out bool found)
         {
             BlackboardProperty blackboardProperty =
-                ExposedProperties.Find(bgProp => bgProp.PropertyName == variableName);
+                ExposedProperties.Find(bgProp => bgProp.propertyName == variableName);
             if (blackboardProperty == null)
             {
                 found = false;
@@ -124,8 +129,8 @@ namespace NodeSystem.Runtime
             }
 
             found = true;
-            blackboardProperty.PropertyValue = newVal;
-            return blackboardProperty.PropertyValue;
+            blackboardProperty.propertyValue = newVal;
+            return blackboardProperty.propertyValue;
         }
 
         /// <summary>
@@ -137,9 +142,9 @@ namespace NodeSystem.Runtime
         {
             string guid = ReferenceManager.GetGuidOf(gameObject);
             if (guid == "") return null;
-            foreach (NodeSystemNode node in m_nodes)
+            foreach (NodeSystemNode node in _nodes)
                 if (node is GameObjectSourceNode sourceNode)
-                    if (sourceNode.Source == guid)
+                    if (sourceNode.source.ObjectId == guid)
                         return node;
 
             return null;
@@ -152,7 +157,7 @@ namespace NodeSystem.Runtime
         /// <returns> The node or null </returns>
         public EventNodeBase<T> FindEventNode<T>() where T : EventData
         {
-            if (m_eventNodeLookup.TryGetValue(typeof(T), out NodeSystemNode node)) return node as EventNodeBase<T>;
+            if (_eventNodeLookup.TryGetValue(typeof(T), out NodeSystemNode node)) return node as EventNodeBase<T>;
 
             return null;
         }

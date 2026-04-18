@@ -14,7 +14,7 @@ namespace NodeSystem.Runtime.Extensions
 
         public static Awaitable TryCallEvent<T>(this NodeSystemAsset self, T eventData) where T : EventData
         {
-            var eventNode = self.FindEventNode<T>();
+            EventNodeBase<T> eventNode = self.FindEventNode<T>();
             return eventNode?.Invoke(new ExecContext(self), eventData);
         }
     }

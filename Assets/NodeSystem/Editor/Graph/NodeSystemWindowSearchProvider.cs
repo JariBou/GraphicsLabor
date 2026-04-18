@@ -23,11 +23,11 @@ namespace NodeSystem.Editor.Graph
         {
             if (_cachedTree.Count != 0) return _cachedTree;
 
-            var tree = new List<SearchTreeEntry> { new SearchTreeGroupEntry(new GUIContent("Nodes")) };
+            List<SearchTreeEntry> tree = new() { new SearchTreeGroupEntry(new GUIContent("Nodes")) };
 
             _elements = new List<SearchContextElement>();
 
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+            IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(assembly => !assembly.GetName().Name.StartsWith("Unity"));
 
             foreach (Assembly assembly in assemblies)
@@ -64,7 +64,7 @@ namespace NodeSystem.Editor.Graph
                 return 0;
             });
 
-            var groups = new List<string>();
+            List<string> groups = new();
 
             foreach (SearchContextElement element in _elements)
             {
@@ -100,7 +100,7 @@ namespace NodeSystem.Editor.Graph
         public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
         {
             Vector2 windowMousePosition =
-                graph.ChangeCoordinatesTo(graph, context.screenMousePosition - graph.window.position.position);
+                graph.ChangeCoordinatesTo(graph, context.screenMousePosition - graph.Window.position.position);
             Vector2 graphMousePosition = graph.contentViewContainer.WorldToLocal(windowMousePosition);
             Debug.Log(graphMousePosition);
 

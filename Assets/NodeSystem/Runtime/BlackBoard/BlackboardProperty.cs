@@ -1,11 +1,14 @@
 ﻿using System;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.BlackBoard
 {
     [Serializable]
     public class BlackboardProperty
     {
-        public string PropertyName = "New String";
-        public string PropertyValue = "New Value";
+        [FormerlySerializedAs("PropertyName")] public string propertyName = "New String";
+
+        [FormerlySerializedAs("PropertyValue")]
+        public string propertyValue = "New Value";
     }
 }

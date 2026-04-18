@@ -6,15 +6,15 @@ namespace NodeSystem.Editor.Ports
 {
     public class NsDefaultEdgeConnectorListener : IEdgeConnectorListener
     {
-        private readonly List<Edge> m_EdgesToCreate;
-        private readonly List<GraphElement> m_EdgesToDelete;
-        private readonly GraphViewChange m_GraphViewChange;
+        private readonly List<Edge> _edgesToCreate;
+        private readonly List<GraphElement> _edgesToDelete;
+        private readonly GraphViewChange _graphViewChange;
 
         public NsDefaultEdgeConnectorListener()
         {
-            m_EdgesToCreate = new List<Edge>();
-            m_EdgesToDelete = new List<GraphElement>();
-            m_GraphViewChange.edgesToCreate = m_EdgesToCreate;
+            _edgesToCreate = new List<Edge>();
+            _edgesToDelete = new List<GraphElement>();
+            _graphViewChange.edgesToCreate = _edgesToCreate;
         }
 
         public void OnDropOutsidePort(Edge edge, Vector2 position)
@@ -36,24 +36,24 @@ namespace NodeSystem.Editor.Ports
 
         public void OnDrop(GraphView graphView, Edge edge)
         {
-            m_EdgesToCreate.Clear();
-            m_EdgesToCreate.Add(edge);
-            m_EdgesToDelete.Clear();
+            _edgesToCreate.Clear();
+            _edgesToCreate.Add(edge);
+            _edgesToDelete.Clear();
             if (edge.input.capacity == Port.Capacity.Single)
                 foreach (Edge connection in edge.input.connections)
                     if (connection != edge)
-                        m_EdgesToDelete.Add(connection);
+                        _edgesToDelete.Add(connection);
 
             if (edge.output.capacity == Port.Capacity.Single)
                 foreach (Edge connection in edge.output.connections)
                     if (connection != edge)
-                        m_EdgesToDelete.Add(connection);
+                        _edgesToDelete.Add(connection);
 
-            if (m_EdgesToDelete.Count > 0)
-                graphView.DeleteElements(m_EdgesToDelete);
-            var edgesToCreate = m_EdgesToCreate;
+            if (_edgesToDelete.Count > 0)
+                graphView.DeleteElements(_edgesToDelete);
+            List<Edge> edgesToCreate = _edgesToCreate;
             if (graphView.graphViewChanged != null)
-                edgesToCreate = graphView.graphViewChanged(m_GraphViewChange).edgesToCreate;
+                edgesToCreate = graphView.graphViewChanged(_graphViewChange).edgesToCreate;
             foreach (Edge edge1 in edgesToCreate)
             {
                 graphView.AddElement(edge1);

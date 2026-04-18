@@ -14,7 +14,7 @@ namespace NodeSystem.Editor.Graph.View
         {
             // doesn't work for some reason?
             Undo.RecordObject(SerializedObject.targetObject, "Add BlackboardProperty");
-            m_blackboard.AddProperty(blackboardProperty, b);
+            _blackboard.AddProperty(blackboardProperty, b);
         }
 
         private void GenerateBlackBoard()
@@ -29,7 +29,7 @@ namespace NodeSystem.Editor.Graph.View
                 editTextRequested = (_, element, newValue) =>
                 {
                     string oldPropertyName = ((BlackboardField)element).text;
-                    if (ExposedProperties.Any(x => x.PropertyName == newValue))
+                    if (ExposedProperties.Any(x => x.propertyName == newValue))
                     {
                         EditorUtility.DisplayDialog("Error",
                             "This property name already exists, please chose another one.",
@@ -37,8 +37,8 @@ namespace NodeSystem.Editor.Graph.View
                         return;
                     }
 
-                    int targetIndex = ExposedProperties.FindIndex(x => x.PropertyName == oldPropertyName);
-                    ExposedProperties[targetIndex].PropertyName = newValue;
+                    int targetIndex = ExposedProperties.FindIndex(x => x.propertyName == oldPropertyName);
+                    ExposedProperties[targetIndex].propertyName = newValue;
 
                     // m_currentView.ModifyExposedProperties(exposedProperties =>
                     // {
@@ -50,19 +50,19 @@ namespace NodeSystem.Editor.Graph.View
 
             blackboard.SetPosition(new Rect(10, 30, 200, 300));
             Add(blackboard);
-            m_blackboard = blackboard;
+            _blackboard = blackboard;
         }
 
         // Not used anymore
         public NodeSystemBlackboard GetNodeSystemBlackboard()
         {
-            return m_blackboard;
+            return _blackboard;
         }
 
         public void ClearBlackBoardAndExposedProperties()
         {
             //ExposedProperties.Clear();
-            m_blackboard.Clear();
+            _blackboard.Clear();
         }
 
         [Obsolete]

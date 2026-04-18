@@ -1,7 +1,9 @@
 ﻿using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.NodesLibrary.Blackboard
 {
@@ -9,23 +11,26 @@ namespace NodeSystem.Runtime.NodesLibrary.Blackboard
     [NodeInfo("Set Exposed Variable", "Blackboard/Set Exposed Variable")]
     public class SetExposedVariableNode : NodeSystemNode
     {
-        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
-        public string m_Name;
+        [FormerlySerializedAs("m_Name"),
+         ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
+        public string name;
 
-        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
-        public string m_NewValue;
+        [FormerlySerializedAs("m_NewValue"),
+         ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
+        public string newValue;
 
-        [ExposedProperty(PropPortDirection.Output, portCapacity: PropPortCapacity.Multi,
-            preferredLocation: PropContainerLocation.OutputContainer)]
-        public string m_Value;
+        [FormerlySerializedAs("m_Value"), ExposedProperty(PropPortDirection.Output,
+             portCapacity: PropPortCapacity.Multi,
+             preferredLocation: PropContainerLocation.OutputContainer)]
+        public string value;
 
         public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
             NodeSystemAsset graph = context.GraphInstance;
-            string exposedVarName = await GetValueOfProp<string>(context, nameof(m_Name));
-            string newVal = await GetValueOfProp<string>(context, nameof(m_NewValue));
-            m_Value = graph.SetExposedVariableValue(exposedVarName, newVal, out bool found);
-            if (!found) m_Value = "";
+            string exposedVarName = await GetValueOfProp<string>(context, nameof(name));
+            string newVal = await GetValueOfProp<string>(context, nameof(newValue));
+            value = graph.SetExposedVariableValue(exposedVarName, newVal, out bool found);
+            if (!found) value = "";
 
             return await base.OnProcess(context);
         }

@@ -10,26 +10,26 @@ namespace NodeSystem.Runtime
     {
         public virtual void CopyDataFrom(NodeSystemNode node)
         {
-            m_ports = node.m_ports.Select(portInfo =>
-                    new PortInfo(portInfo.ExposedPropertyName, m_guid, portInfo.PortIndex, portInfo.PortDirection))
+            ports = node.ports.Select(portInfo =>
+                    new PortInfo(portInfo.ExposedPropertyName, guid, portInfo.PortIndex, portInfo.PortDirection))
                 .ToList();
             IsPure = node.IsPure;
 #if UNITY_EDITOR
-            _position = node._position;
+            position = node.position;
 #endif
         }
 #if UNITY_EDITOR
         /// <summary>
         ///     Only available in editor
         /// </summary>
-        [FormerlySerializedAs("m_position")] [SerializeField]
-        protected internal Rect _position;
+        [FormerlySerializedAs("_position"), FormerlySerializedAs("m_position"), SerializeField]
+        protected internal Rect position;
 
 
         /// <summary>
         ///     Only available in editor
         /// </summary>
-        public Rect Position => _position;
+        public Rect Position => position;
 
         /// <summary>
         ///     Only available in editor
@@ -37,7 +37,7 @@ namespace NodeSystem.Runtime
         /// <param name="newPosition"> The new position of the node </param>
         public void SetPosition(Rect newPosition)
         {
-            _position = newPosition;
+            position = newPosition;
         }
 
         /// <summary>
@@ -46,8 +46,8 @@ namespace NodeSystem.Runtime
         /// <param name="displacement"> The displacement of the node </param>
         public void Displace(Vector2 displacement)
         {
-            _position.x += displacement.x;
-            _position.y += displacement.y;
+            position.x += displacement.x;
+            position.y += displacement.y;
         }
 
 #endif

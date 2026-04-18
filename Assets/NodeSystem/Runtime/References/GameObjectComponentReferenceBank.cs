@@ -13,8 +13,8 @@ namespace NodeSystem.Runtime.References
 
         public void LoadReferences()
         {
-            var currentComponents = GetComponents<Component>();
-            var refsToRemove = new List<GameObjectComponentReference>(_references);
+            Component[] currentComponents = GetComponents<Component>();
+            List<GameObjectComponentReference> refsToRemove = new(_references);
             foreach (Component comp in currentComponents)
                 if (_references.Find(x => x.Comp == comp) == null)
                     _references.Add(new GameObjectComponentReference(comp));

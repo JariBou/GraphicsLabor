@@ -15,7 +15,7 @@ namespace NodeSystem.Runtime.References
 
         private static ReferenceManager _instance;
 
-        [FormerlySerializedAs("m_referenceDataBanks")] [SerializeField]
+        [FormerlySerializedAs("m_referenceDataBanks"), SerializeField]
         private List<ReferenceDataBank> _referenceDataBanks = new();
 
         [NotNull]
@@ -71,16 +71,16 @@ namespace NodeSystem.Runtime.References
             if (guid == "") return null;
             // return GetAvailableDataBanks().Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
             // return Instance._referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
-            var referenceDataBanks =
+            ReferenceDataBank[] referenceDataBanks =
                 Application.isEditor ? GetAvailableDataBanks() : Instance._referenceDataBanks.ToArray();
 
-            var objects = referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).ToArray();
+            T[] objects = referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).ToArray();
             return objects.Any() ? objects.First() : null;
         }
 
         public static string GetGuidOf<T>(T obj) where T : Object
         {
-            var referenceDataBanks =
+            ReferenceDataBank[] referenceDataBanks =
                 Application.isEditor ? GetAvailableDataBanks() : Instance._referenceDataBanks.ToArray();
 
             foreach (string guidOf in referenceDataBanks.Select(mHolder => mHolder.GetGuidOf(obj))

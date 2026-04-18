@@ -1,6 +1,7 @@
 ﻿using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Math

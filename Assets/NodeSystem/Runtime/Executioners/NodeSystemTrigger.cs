@@ -13,10 +13,10 @@ namespace NodeSystem.Runtime.Executioners
         [SerializeField] private NodeSystemAsset _graph;
         [SerializeField] private bool _canBeExecutedMultipleTimes;
 
+        private string _currentExecNodeId;
+
         private NodeSystemAsset _graphInstance;
         private NodeSystemNode _nodeToPlay;
-
-        private string m_currentExecNodeId;
 
         private void Start()
         {
@@ -24,7 +24,7 @@ namespace NodeSystem.Runtime.Executioners
             if (_gameObjectToTrigger == null) _gameObjectToTrigger = gameObject;
             _nodeToPlay = _graphInstance.GetNodeToPlayFromSource(_gameObjectToTrigger);
             if (_nodeToPlay == null) return;
-            m_currentExecNodeId = _nodeToPlay.id;
+            _currentExecNodeId = _nodeToPlay.ID;
         }
 
         public async Awaitable Trigger()
@@ -35,30 +35,35 @@ namespace NodeSystem.Runtime.Executioners
 
         public NodeSystemNode GetCurrentNode()
         {
-            return _graphInstance == null ? null : _graphInstance.GetNode(m_currentExecNodeId);
+            return _graphInstance == null ? null : _graphInstance.GetNode(_currentExecNodeId);
         }
 
         public async Awaitable TickProcess()
         {
-            if (_graphInstance == null || m_currentExecNodeId == "") return;
+            if (_graphInstance == null || _currentExecNodeId == "") return;
             ProcessInfo processInfo = await GetCurrentNode().OnProcess(new ExecContext(_graphInstance));
             Debug.Log("Ticking!");
             switch (processInfo.FlowType)
             {
                 case ProcessInfo.ExecutionFlowType.ExecuteNext:
-                    m_currentExecNodeId = processInfo.NextNodeId;
+                {
+                    _currentExecNodeId = processInfo.NextNodeId;
                     _ = TickProcess(); // TODO: discard? await? idk
                     break;
+                }
                 case ProcessInfo.ExecutionFlowType.Wait:
-                    m_currentExecNodeId = processInfo.NextNodeId;
+                {
+                    _currentExecNodeId = processInfo.NextNodeId;
                     break;
+                }
                 case ProcessInfo.ExecutionFlowType.EndExecution:
-                    Debug.Log("Stopped execution at " + m_currentExecNodeId);
+                {
+                    Debug.Log("Stopped execution at " + _currentExecNodeId);
 
                     // Allows for rerunning the script
-                    m_currentExecNodeId = _canBeExecutedMultipleTimes ? _nodeToPlay.id : "";
-                    ;
+                    _currentExecNodeId = _canBeExecutedMultipleTimes ? _nodeToPlay.ID : "";
                     return;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }

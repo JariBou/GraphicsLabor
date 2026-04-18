@@ -1,6 +1,7 @@
 ﻿using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Process
@@ -15,7 +16,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Process
         {
             await Awaitable.WaitForSecondsAsync(time);
             // return new ProcessInfo(id, GetNextNode(info.GraphInstance).id, ProcessInfo.ExecutionFlowType.Wait);
-            return await ContinueExecution(GetNextNode(context.GraphInstance).id);
+            return await ContinueExecution(GetNextNode(context.GraphInstance).ID);
         }
     }
 }

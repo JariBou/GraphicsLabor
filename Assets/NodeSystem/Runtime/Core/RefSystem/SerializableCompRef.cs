@@ -3,17 +3,17 @@ using NodeSystem.Runtime.References;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace NodeSystem.Runtime.Utils.RefSystem
+namespace NodeSystem.Runtime.Core.RefSystem
 {
     [Serializable]
     public class SerializableCompRef<T> : ISerializableTypedRef where T : Component
     {
-        [FormerlySerializedAs("_objectId")] [SerializeField]
+        [FormerlySerializedAs("_objectId"), SerializeField]
         private string _compId = ReferenceManager.NoneReference;
 
         [SerializeField] private string _ownerId = ReferenceManager.NoneReference;
 
-        [SerializeField] [Obsolete] private string _refTypename = "";
+        [SerializeField, Obsolete] private string _refTypename = "";
 
         public string CompId
         {

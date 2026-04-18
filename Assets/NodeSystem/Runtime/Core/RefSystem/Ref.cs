@@ -4,7 +4,7 @@ using NodeSystem.Runtime.References;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace NodeSystem.Runtime.Utils.RefSystem
+namespace NodeSystem.Runtime.Core.RefSystem
 {
     [Serializable]
     public class Ref<T> : Object, ISerializable where T : Object

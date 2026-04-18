@@ -8,24 +8,23 @@ namespace NodeSystem.Editor.Ports
     // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class NsEdgeConnector<TEdge> : EdgeConnector where TEdge : Edge, new()
     {
-        internal const float k_ConnectionDistanceTreshold = 10f;
-        protected readonly EdgeDragHelper m_EdgeDragHelper;
-        protected bool m_Active;
-        protected Edge m_EdgeCandidate;
-        protected Vector2 m_MouseDownPosition;
+        internal const float ConnectionDistanceTreshold = 10f;
+        protected bool active;
+        protected Edge edgeCandidate;
+        protected Vector2 mouseDownPosition;
 
 
         public NsEdgeConnector(IEdgeConnectorListener listener)
         {
-            m_EdgeDragHelper = new EdgeDragHelper<TEdge>(listener);
-            m_Active = false;
+            edgeDragHelper = new EdgeDragHelper<TEdge>(listener);
+            active = false;
             activators.Add(new ManipulatorActivationFilter
             {
                 button = MouseButton.LeftMouse
             });
         }
 
-        public override EdgeDragHelper edgeDragHelper => m_EdgeDragHelper;
+        public override EdgeDragHelper edgeDragHelper { get; }
 
         protected override void RegisterCallbacksOnTarget()
         {
@@ -70,7 +69,7 @@ namespace NodeSystem.Editor.Ports
 
         protected virtual void OnPointerOrMouseDown(EventBase e, Vector2 localPosition)
         {
-            if (m_Active)
+            if (active)
             {
                 e.StopImmediatePropagation();
             }
@@ -78,17 +77,17 @@ namespace NodeSystem.Editor.Ports
             {
                 if (target is not Port portTarget)
                     return;
-                m_MouseDownPosition = localPosition;
-                m_EdgeCandidate = new TEdge();
-                m_EdgeDragHelper.draggedPort = portTarget;
-                m_EdgeDragHelper.edgeCandidate = m_EdgeCandidate;
+                mouseDownPosition = localPosition;
+                edgeCandidate = new TEdge();
+                edgeDragHelper.draggedPort = portTarget;
+                edgeDragHelper.edgeCandidate = edgeCandidate;
                 if (!portTarget.ContainsPoint(localPosition)) return;
                 switch (e)
                 {
                     case PointerDownEvent evt1:
-                        if (m_EdgeDragHelper.HandlePointerDown(evt1))
+                        if (edgeDragHelper.HandlePointerDown(evt1))
                         {
-                            m_Active = true;
+                            active = true;
                             target.CapturePointer(evt1.pointerId);
                             e.StopPropagation();
                             return;
@@ -96,9 +95,9 @@ namespace NodeSystem.Editor.Ports
 
                         break;
                     case MouseDownEvent evt2:
-                        if (m_EdgeDragHelper.HandleMouseDown(evt2))
+                        if (edgeDragHelper.HandleMouseDown(evt2))
                         {
-                            m_Active = true;
+                            active = true;
                             target.CaptureMouse();
                             e.StopPropagation();
                             return;
@@ -107,8 +106,8 @@ namespace NodeSystem.Editor.Ports
                         break;
                 }
 
-                m_EdgeDragHelper.Reset();
-                m_EdgeCandidate = null;
+                edgeDragHelper.Reset();
+                edgeCandidate = null;
             }
         }
 
@@ -124,8 +123,8 @@ namespace NodeSystem.Editor.Ports
 
         protected virtual void OnCaptureOut()
         {
-            m_Active = false;
-            if (m_EdgeCandidate == null)
+            active = false;
+            if (edgeCandidate == null)
                 return;
             Abort();
         }
@@ -142,28 +141,28 @@ namespace NodeSystem.Editor.Ports
 
         protected virtual void OnPointerOrMouseMove(EventBase e, Vector2 position)
         {
-            if (!m_Active)
+            if (!active)
                 return;
             switch (e)
             {
                 case PointerMoveEvent evt1:
                     if (!target.HasPointerCapture(evt1.pointerId))
                         return;
-                    m_EdgeDragHelper.HandlePointerMove(evt1);
+                    edgeDragHelper.HandlePointerMove(evt1);
                     break;
                 case MouseMoveEvent evt2:
-                    m_EdgeDragHelper.HandleMouseMove(evt2);
+                    edgeDragHelper.HandleMouseMove(evt2);
                     break;
             }
 
-            m_EdgeCandidate.candidatePosition = position;
-            m_EdgeCandidate.UpdateEdgeControl();
+            edgeCandidate.candidatePosition = position;
+            edgeCandidate.UpdateEdgeControl();
             e.StopPropagation();
         }
 
         protected virtual void OnPointerUp(PointerUpEvent e)
         {
-            if (!m_Active || !CanStopManipulation(e))
+            if (!active || !CanStopManipulation(e))
                 return;
             OnPointerOrMouseUp(e, e.localPosition);
             target.ReleasePointer(e.pointerId);
@@ -171,7 +170,7 @@ namespace NodeSystem.Editor.Ports
 
         protected virtual void OnMouseUp(MouseUpEvent e)
         {
-            if (!m_Active || !CanStopManipulation(e))
+            if (!active || !CanStopManipulation(e))
                 return;
             OnPointerOrMouseUp(e, e.localMousePosition);
             target.ReleaseMouse();
@@ -183,42 +182,42 @@ namespace NodeSystem.Editor.Ports
                 switch (e)
                 {
                     case PointerUpEvent evt1:
-                        m_EdgeDragHelper.HandlePointerUp(evt1);
+                        edgeDragHelper.HandlePointerUp(evt1);
                         break;
                     case MouseUpEvent evt2:
-                        m_EdgeDragHelper.HandleMouseUp(evt2);
+                        edgeDragHelper.HandleMouseUp(evt2);
                         break;
                 }
             else
                 Abort();
 
-            m_Active = false;
-            m_EdgeCandidate = null;
+            active = false;
+            edgeCandidate = null;
             e.StopPropagation();
         }
 
         protected virtual void OnKeyDown(KeyDownEvent e)
         {
-            if (e.keyCode != KeyCode.Escape || !m_Active)
+            if (e.keyCode != KeyCode.Escape || !active)
                 return;
             Abort();
-            m_Active = false;
+            active = false;
             target.ReleaseMouse();
             e.StopPropagation();
         }
 
         protected virtual void Abort()
         {
-            target?.GetFirstAncestorOfType<GraphView>()?.RemoveElement(m_EdgeCandidate);
-            m_EdgeCandidate.input = null;
-            m_EdgeCandidate.output = null;
-            m_EdgeCandidate = null;
-            m_EdgeDragHelper.Reset();
+            target?.GetFirstAncestorOfType<GraphView>()?.RemoveElement(edgeCandidate);
+            edgeCandidate.input = null;
+            edgeCandidate.output = null;
+            edgeCandidate = null;
+            edgeDragHelper.Reset();
         }
 
         protected virtual bool CanPerformConnection(Vector2 mousePosition)
         {
-            return Vector2.Distance(m_MouseDownPosition, mousePosition) > 10.0;
+            return Vector2.Distance(mouseDownPosition, mousePosition) > 10.0;
         }
     }
 }

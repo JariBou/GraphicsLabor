@@ -1,5 +1,5 @@
 ﻿using System;
-using NodeSystem.Runtime.Attributes;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -12,7 +12,7 @@ namespace NodeSystem.Runtime.Core
         [SerializeField] private string _ownerId;
         [SerializeField] private int _portIndex;
 
-        [FormerlySerializedAs("_flowType")] [FormerlySerializedAs("_portType")] [SerializeField]
+        [FormerlySerializedAs("_flowType"), FormerlySerializedAs("_portType"), SerializeField]
         private PropPortDirection _portDirection;
 
         public readonly string ExposedPropertyName => _exposedPropertyName;

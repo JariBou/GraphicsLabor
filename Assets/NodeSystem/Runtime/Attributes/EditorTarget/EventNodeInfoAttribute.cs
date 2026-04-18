@@ -1,4 +1,5 @@
 ﻿using System;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 
 namespace NodeSystem.Runtime.Attributes.EditorTarget
 {

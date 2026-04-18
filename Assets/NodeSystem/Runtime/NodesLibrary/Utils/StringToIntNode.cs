@@ -1,25 +1,29 @@
 ﻿using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.NodesLibrary.Utils
 {
     [NodeInfo("String to Int", "Utils/String to Int", isPure: true)]
     public class StringToIntNode : NodeSystemNode
     {
-        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer,
-            disableInputWhenConnected: true)]
-        public string m_string;
+        [FormerlySerializedAs("string"), FormerlySerializedAs("m_string"), ExposedProperty(PropPortDirection.Input,
+             preferredLocation: PropContainerLocation.InputContainer,
+             disableInputWhenConnected: true)]
+        public string inputString;
 
-        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer,
-            labelOnly: true)]
-        public int m_Value;
+        [FormerlySerializedAs("m_Value"), ExposedProperty(PropPortDirection.Output,
+             preferredLocation: PropContainerLocation.OutputContainer,
+             labelOnly: true)]
+        public int value;
 
         public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
-            string valueOfProp = await GetValueOfProp<string>(context, nameof(m_string));
-            int.TryParse(valueOfProp, out m_Value);
+            string valueOfProp = await GetValueOfProp<string>(context, nameof(inputString));
+            int.TryParse(valueOfProp, out value);
             return await base.OnProcess(context);
         }
     }

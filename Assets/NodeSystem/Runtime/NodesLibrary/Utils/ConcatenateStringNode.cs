@@ -1,7 +1,9 @@
 ﻿using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.NodesLibrary.Utils
 {
@@ -9,19 +11,22 @@ namespace NodeSystem.Runtime.NodesLibrary.Utils
     public class ConcatenateStringNode : NodeSystemNode
     {
         // TODO: make it so you can expand number of ports
-        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
-        public string m_a;
+        [FormerlySerializedAs("m_a"),
+         ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
+        public string a;
 
-        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
-        public string m_b;
+        [FormerlySerializedAs("m_b"),
+         ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
+        public string b;
 
-        [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
-        public string m_Value;
+        [FormerlySerializedAs("m_Value"),
+         ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
+        public string value;
 
         public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
-            m_Value = await GetValueOfProp<string>(context, nameof(m_a)) +
-                      await GetValueOfProp<string>(context, nameof(m_b));
+            value = await GetValueOfProp<string>(context, nameof(a)) +
+                    await GetValueOfProp<string>(context, nameof(b));
             return await base.OnProcess(context);
         }
     }

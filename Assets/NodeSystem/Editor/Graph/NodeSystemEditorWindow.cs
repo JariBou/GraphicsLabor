@@ -3,37 +3,39 @@ using NodeSystem.Runtime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NodeSystem.Editor.Graph
 {
     public class NodeSystemEditorWindow : EditorWindow
     {
-        [SerializeField] private NodeSystemAsset m_currentGraph;
+        [FormerlySerializedAs("m_currentGraph"), SerializeField]
+        private NodeSystemAsset _currentGraph;
 
-        [SerializeField] private NodeSystemView m_currentView;
+        private NodeSystemView _currentView;
 
-        private SerializedObject m_serializedObject;
+        private SerializedObject _serializedObject;
 
-        public NodeSystemAsset CurrentGraph => m_currentGraph;
+        public NodeSystemAsset CurrentGraph => _currentGraph;
 
         private void OnEnable()
         {
-            if (m_currentGraph != null) Load(m_currentGraph);
+            if (_currentGraph != null) Load(_currentGraph);
         }
 
         private void OnDisable()
         {
-            m_currentView?.UnsubscribeFromEvents();
+            _currentView?.UnsubscribeFromEvents();
         }
 
         private void OnGUI()
         {
-            if (m_currentGraph is not null) hasUnsavedChanges = EditorUtility.IsDirty(m_currentGraph);
+            if (_currentGraph is not null) hasUnsavedChanges = EditorUtility.IsDirty(_currentGraph);
         }
 
         public static void Open(NodeSystemAsset graph)
         {
-            var windows = Resources.FindObjectsOfTypeAll<NodeSystemEditorWindow>();
+            NodeSystemEditorWindow[] windows = Resources.FindObjectsOfTypeAll<NodeSystemEditorWindow>();
             foreach (NodeSystemEditorWindow window in windows)
                 if (window.CurrentGraph == graph)
                 {
@@ -49,22 +51,22 @@ namespace NodeSystem.Editor.Graph
 
         private void Load(NodeSystemAsset graph)
         {
-            m_currentGraph = graph;
+            _currentGraph = graph;
             DrawGraph();
         }
 
         private void DrawGraph()
         {
-            m_serializedObject = new SerializedObject(m_currentGraph);
-            m_currentView = new NodeSystemView(m_serializedObject, this);
-            m_currentView.graphViewChanged += OnChange;
-            rootVisualElement.Add(m_currentView);
+            _serializedObject = new SerializedObject(_currentGraph);
+            _currentView = new NodeSystemView(_serializedObject, this);
+            _currentView.graphViewChanged += OnChange;
+            rootVisualElement.Add(_currentView);
         }
 
         private GraphViewChange OnChange(GraphViewChange graphViewChange)
         {
             hasUnsavedChanges = true;
-            EditorUtility.SetDirty(m_currentGraph);
+            EditorUtility.SetDirty(_currentGraph);
             return graphViewChange;
         }
     }

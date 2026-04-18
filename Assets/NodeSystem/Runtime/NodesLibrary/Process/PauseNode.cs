@@ -10,7 +10,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Process
     {
         public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
-            return await Task.FromResult(new ProcessInfo(id, GetNextNode(context.GraphInstance).id,
+            return await Task.FromResult(new ProcessInfo(ID, GetNextNode(context.GraphInstance).ID,
                 ProcessInfo.ExecutionFlowType.Wait));
         }
     }

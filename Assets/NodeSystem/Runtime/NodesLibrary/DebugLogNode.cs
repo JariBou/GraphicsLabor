@@ -1,6 +1,7 @@
 ﻿using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,14 +10,14 @@ namespace NodeSystem.Runtime.NodesLibrary
     [NodeInfo("Debug Log", "Debug/Debug Log Console")]
     public class DebugLogNode : NodeSystemNode
     {
-        [FormerlySerializedAs("logMessage")]
-        [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer,
-            disableInputWhenConnected: true)]
-        public string LogMessage;
+        [FormerlySerializedAs("LogMessage"), ExposedProperty(PropPortDirection.Input,
+             preferredLocation: PropContainerLocation.InputContainer,
+             disableInputWhenConnected: true)]
+        public string logMessage;
 
         public override Awaitable<ProcessInfo> OnProcess(ExecContext context)
         {
-            Debug.Log(GetValueOfProp<string>(context, nameof(LogMessage)));
+            Debug.Log(GetValueOfProp<string>(context, nameof(logMessage)));
             return base.OnProcess(context);
         }
     }

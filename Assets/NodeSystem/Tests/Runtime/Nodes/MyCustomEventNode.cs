@@ -19,13 +19,13 @@ namespace NodeSystem.Tests.Runtime
         [EventExposedProperty]
         public MyCustomEventData  eventData;
         
-        public override Awaitable Invoke(ExecContext ctx, MyCustomEventData eventData)
+        public override Awaitable Invoke(ExecContext ctx, MyCustomEventData data)
         {
-            someInt = eventData.someInt;
-            someString = eventData.someString;
-            someBool = eventData.someBool;
+            someInt = data.someInt;
+            someString = data.someString;
+            someBool = data.someBool;
             
-            this.eventData= eventData;
+            this.eventData= data;
             
             return DefaultInvoke(ctx);
         }

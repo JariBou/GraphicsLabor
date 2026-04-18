@@ -1,10 +1,20 @@
 ﻿using System;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 
 namespace NodeSystem.Runtime.Attributes.EditorTarget
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class NodeInfoAttribute : Attribute
     {
+        public string Title { get; }
+        public string MenuItem { get; }
+        public FlowDirection NodeFlowDirection { get; }
+        public bool HasFlowInput => (NodeFlowDirection & FlowDirection.Input) > 0 && !IsPure;
+        public bool HasFlowOutput => (NodeFlowDirection & FlowDirection.Output) > 0 && !IsPure;
+        public bool IsPure { get; }
+        public int OutputPortCount { get; }
+        
+        
         public NodeInfoAttribute(string nodeTitle, string menuItem = "",
             FlowDirection flowDirection = FlowDirection.Both, bool isPure = false, int outputPortCount = 1)
         {
@@ -14,22 +24,5 @@ namespace NodeSystem.Runtime.Attributes.EditorTarget
             IsPure = isPure;
             OutputPortCount = outputPortCount;
         }
-
-        public string Title { get; }
-        public string MenuItem { get; }
-        public FlowDirection NodeFlowDirection { get; }
-
-        public bool HasFlowInput => NodeFlowDirection is FlowDirection.Input or FlowDirection.Both && !IsPure;
-        public bool HasFlowOutput => NodeFlowDirection is FlowDirection.Output or FlowDirection.Both && !IsPure;
-        public bool IsPure { get; }
-        public int OutputPortCount { get; }
-    }
-
-    public enum FlowDirection
-    {
-        None,
-        Input,
-        Output,
-        Both
     }
 }

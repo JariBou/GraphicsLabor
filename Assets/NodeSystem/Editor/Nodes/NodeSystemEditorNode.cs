@@ -12,6 +12,7 @@ using NodeSystem.Runtime;
 using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
+using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -23,13 +24,15 @@ namespace NodeSystem.Editor.Nodes
 {
     public class NodeSystemEditorNode : Node
     {
+        private const long DoubleClickDelayInMs = 200;
+        
         private static List<Assembly> _assemblies = new();
-        private int m_indexInNodes = -1;
 
-        private Port m_outputPort;
+        private readonly SerializedObject _serializedObject;
 
-        private readonly SerializedObject m_serializedObject;
-        private SerializedProperty m_serializedProperty;
+        private Port _outputPort;
+        private SerializedProperty _serializedProperty;
+
 
         public NodeSystemEditorNode(NodeSystemNode node, SerializedObject serializedObject)
         {
@@ -38,13 +41,12 @@ namespace NodeSystem.Editor.Nodes
             Node = node;
             Ports = new List<Port>();
 
-            m_serializedObject = serializedObject;
+            _serializedObject = serializedObject;
 
             Type typeInfo = node.GetType();
             NodeInfoAttribute info = typeInfo.GetCustomAttribute<NodeInfoAttribute>();
             if (info == null) throw new MissingNodeInfoException(typeInfo, serializedObject);
 
-            // m_graphNode.PureExecutionDone = !info.IsPure;
             Node.IsPure = info.IsPure;
 
             title = info.Title;
@@ -59,14 +61,12 @@ namespace NodeSystem.Editor.Nodes
                 _assemblies = AppDomain.CurrentDomain.GetAssemblies()
                     .Where(assembly => !assembly.GetName().ToString().StartsWith("Unity")).ToList();
 
-            var editors = _assemblies
+            IEnumerable<Type> editors = _assemblies
                 .SelectMany(a => a.GetTypes().Where(t =>
                     t.IsDefined(typeof(CustomNodeEditorAttribute)) && !t.IsAbstract &&
                     t.GetCustomAttribute<CustomNodeEditorAttribute>().TargetType == node.GetType()));
-            /*
-            Assembly.GetAssembly(node.GetType()).GetTypes()
-            .Where(t => t.IsDefined(typeof(CustomNodeEditorAttribute)) && !t.IsAbstract && t.GetCustomAttribute<CustomNodeEditorAttribute>().TargetType == node.GetType()); */
-            var customEditors = editors as Type[] ?? editors.ToArray();
+            
+            Type[] customEditors = editors as Type[] ?? editors.ToArray();
 
             if (customEditors.Any()) nodeEditor = Activator.CreateInstance(customEditors.First()) as NodeEditorBase;
 
@@ -84,12 +84,19 @@ namespace NodeSystem.Editor.Nodes
 
             RefreshExpandedState();
 
-            this.AddManipulator(new DoubleClickable(OnDoubleClicked, 200));
+            this.AddManipulator(new DoubleClickable(OnDoubleClicked, DoubleClickDelayInMs));
+        }
+
+        public sealed override string title
+        {
+            get => base.title;
+            set => base.title = value;
         }
 
         public NodeSystemNode Node { get; }
 
         public List<Port> Ports { get; }
+
 
         private void CreateExposedVariables(Type typeInfo)
         {
@@ -155,7 +162,7 @@ namespace NodeSystem.Editor.Nodes
 
             Node.AddPortInfo(new PortInfo(
                 fieldInfo.Name,
-                Node.id,
+                Node.ID,
                 Ports.IndexOf(port),
                 propertyAttribute.PortDirection
             ));
@@ -203,27 +210,24 @@ namespace NodeSystem.Editor.Nodes
         ///     Returns the m_nodes index of this node
         /// </summary>
         /// <returns></returns>
-        private int FetchSerializedProperty()
+        private void FetchSerializedProperty()
         {
-            m_serializedObject.Update();
-            SerializedProperty nodes = m_serializedObject.FindProperty("m_nodes");
-            if (nodes.isArray)
-            {
-                int size = nodes.arraySize;
-                for (int i = 0; i < size; i++)
-                {
-                    SerializedProperty element = nodes.GetArrayElementAtIndex(i);
-                    SerializedProperty elementId = element.FindPropertyRelative("m_guid");
-                    if (elementId.stringValue == Node.id)
-                    {
-                        m_serializedProperty = element;
-                        m_indexInNodes = i;
-                        return i;
-                    }
-                }
-            }
+            _serializedObject.Update();
+            SerializedProperty nodes = _serializedObject.FindProperty("_nodes");
 
-            return -1;
+            if (!nodes.isArray) return;
+
+            int size = nodes.arraySize;
+            for (int i = 0; i < size; i++)
+            {
+                SerializedProperty element = nodes.GetArrayElementAtIndex(i);
+                SerializedProperty elementId = element.FindPropertyRelative("guid");
+
+                if (elementId.stringValue != Node.ID) continue;
+
+                _serializedProperty = element;
+                return;
+            }
         }
 
         private void CreateFlowInputPort()
@@ -242,12 +246,12 @@ namespace NodeSystem.Editor.Nodes
         private void CreateFlowOutputPort()
         {
             // m_outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(PortTypes.FlowPort));
-            m_outputPort = EditorNodePort.Create<NsEdge>(Orientation.Horizontal, Direction.Output, Port.Capacity.Single,
+            _outputPort = EditorNodePort.Create<NsEdge>(Orientation.Horizontal, Direction.Output, Port.Capacity.Single,
                 typeof(PortTypes.FlowPort));
-            m_outputPort.portName = "Out";
-            m_outputPort.tooltip = "The flow output";
-            m_outputPort.portColor = NodeSystemEditorConsts.PortColor_Out;
-            RegisterPort(m_outputPort, PropContainerLocation.OutputContainer);
+            _outputPort.portName = "Out";
+            _outputPort.tooltip = "The flow output";
+            _outputPort.portColor = NodeSystemEditorConsts.PortColor_Out;
+            RegisterPort(_outputPort, PropContainerLocation.OutputContainer);
             // m_ports.Add(m_outputPort);
             // outputContainer.Add(m_outputPort);
         }
@@ -289,14 +293,14 @@ namespace NodeSystem.Editor.Nodes
 
         public SerializedProperty GetSerializedPropertyOf(string linkedPropertyName)
         {
-            if (m_serializedProperty == null) FetchSerializedProperty();
-            if (m_serializedProperty == null)
+            if (_serializedProperty == null) FetchSerializedProperty();
+            if (_serializedProperty == null)
             {
                 Debug.LogError("Problem with exposed property creation (m_serializedProperty is null)");
                 return null;
             }
 
-            return m_serializedProperty.FindPropertyRelative(linkedPropertyName);
+            return _serializedProperty.FindPropertyRelative(linkedPropertyName);
         }
 
 
@@ -304,8 +308,6 @@ namespace NodeSystem.Editor.Nodes
 
         public void OnDoubleClicked(EventBase evt)
         {
-            // TODO
-            // F ME
             Type nodeType = Node.GetType();
             Debug.Log(nodeType);
             string nodeClass = nodeType.ToString().Split('.').Last();
