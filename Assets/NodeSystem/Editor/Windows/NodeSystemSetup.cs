@@ -113,8 +113,6 @@ namespace NodeSystem.Editor.Windows
             currentRect.y += VerticalOffset;
 
             {
-                // Create ReferenceManagers Button
-                // TODO
                 Rect createReferenceManagersButtonRect = new()
                 {
                     x = currentRect.x,
@@ -143,8 +141,6 @@ namespace NodeSystem.Editor.Windows
             currentRect.y += VerticalOffset;
 
             {
-                // Create Create reference Data Bank Button
-                // TODO
                 Rect createReferenceManagersButtonRect = new()
                 {
                     x = currentRect.x,
@@ -209,12 +205,6 @@ namespace NodeSystem.Editor.Windows
         {
             UpdateNodeSystemStatus();
         }
-
-        private void OnProjectChange()
-        {
-            throw new NotImplementedException();
-        }
-
 
         [MenuItem("Window/" + NodeSystemConsts.AddComponentMenuCategoryName + "/Node System Setup")]
         private static void Init()

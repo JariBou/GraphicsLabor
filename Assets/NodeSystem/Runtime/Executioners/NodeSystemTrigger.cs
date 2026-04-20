@@ -41,7 +41,7 @@ namespace NodeSystem.Runtime.Executioners
         public async Awaitable TickProcess()
         {
             if (_graphInstance == null || _currentExecNodeId == "") return;
-            ProcessInfo processInfo = await GetCurrentNode().OnProcess(new ExecContext(_graphInstance));
+            ProcessInfo processInfo = await GetCurrentNode().OnProcessAsync(new ExecContext(_graphInstance));
             Debug.Log("Ticking!");
             switch (processInfo.FlowType)
             {

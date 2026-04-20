@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using NodeSystem.Editor.Graph.View;
 using NodeSystem.Runtime;
-using NodeSystem.Runtime.Attributes.EditorTarget;
+using NodeSystem.Runtime.Attributes;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;

@@ -6,7 +6,7 @@
 //
 //
 using System;
-using NodeSystem.Runtime.Attributes.EditorTarget;
+using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.NodesLibrary.Events;
 using UnityEngine;
@@ -25,7 +25,7 @@ namespace NodeSystem.Generated.EventNodes
 		public override Awaitable Invoke(ExecContext ctx, MyCustomEventData data)
 		{
 			eventData = data;
-			return DefaultInvoke(ctx);
+			return DefaultInvokeAwaitAsync(ctx);
 		}
 	}
 }

@@ -10,7 +10,6 @@ using NodeSystem.Editor.Ports;
 using NodeSystem.Editor.Utils;
 using NodeSystem.Runtime;
 using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEditor;
@@ -191,8 +190,8 @@ namespace NodeSystem.Editor.Nodes
                     style =
                     {
                         height = Length.Percent(100),
-                        width = Length.Auto(), // TODO: IMPORTANT
-                        // width = Length.Percent(100), // TODO: IMPORTANT
+                        // width = Length.Auto(), // TODO: IMPORTANT
+                        width = Length.Percent(100), // TODO: IMPORTANT
                         // width = Length.Percent(80), // TODO: IMPORTANT
                         // width = Length.Pixels(200), // TODO: IMPORTANT
                         // width = Length.Pixels(port.layout.width), // TODO: IMPORTANT
@@ -301,6 +300,11 @@ namespace NodeSystem.Editor.Nodes
             }
 
             return _serializedProperty.FindPropertyRelative(linkedPropertyName);
+        }
+
+        public int GetIndexOfPort(Port port)
+        {
+            return Ports.IndexOf(port);
         }
 
 

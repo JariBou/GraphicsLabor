@@ -95,11 +95,7 @@ namespace NodeSystem.Editor.Ports
             {
                 m_EdgeConnector = new NsEdgeConnector<TEdge>(listener)
             };
-            // intentional compilation error;
-            // TODO;
-            // https://docs.unity3d.com/6000.3/Documentation/Manual/UIE-manipulators.html
-            // port.AddManipulator(new ListViewSelector());
-            // port.AddManipulator(new ClickSelector());
+            
             port.AddManipulator(port.m_EdgeConnector);
             return port;
         }

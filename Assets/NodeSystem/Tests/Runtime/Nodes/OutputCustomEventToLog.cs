@@ -1,7 +1,6 @@
 ﻿using System;
 using NodeSystem.Runtime;
 using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Core.PortConfigEnums;
 using NodeSystem.Runtime.Core.RefSystem;
@@ -19,7 +18,7 @@ namespace NodeSystem.Tests.Runtime
         [SerializeField, ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
         public MyCustomEventData eventData;
 
-        public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
+        public override async Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)
         {
             TMP_Text tmpText = (await GetValueOfProp<SerializableCompRef<TMP_Text>>(context, nameof(logField))).Get();
             MyCustomEventData data = await GetValueOfProp<MyCustomEventData>(context, nameof(eventData));

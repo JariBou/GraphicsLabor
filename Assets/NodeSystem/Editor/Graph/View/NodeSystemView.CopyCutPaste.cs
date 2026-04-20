@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NodeSystem.Editor.Graph.Elements;
 using NodeSystem.Editor.Nodes;
 using NodeSystem.Runtime;
+using NodeSystem.Runtime.Utils;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -13,6 +15,8 @@ namespace NodeSystem.Editor.Graph.View
     public partial class NodeSystemView
     {
         private readonly List<NodeSystemNode> _copiedNodesCache = new();
+        private readonly List<NodeSystemConnection> _copiedConnectionsCache = new();
+        
         private Rect _copiedElementsCompoundRect;
 
         private string CopyCutCallback(IEnumerable<GraphElement> elements)
@@ -21,30 +25,69 @@ namespace NodeSystem.Editor.Graph.View
             Debug.Log("Copy/Cut Callback: " + enumerable.Count());
             _copiedNodesCache.Clear();
             _copiedElementsCompoundRect = Rect.zero;
+            
+            Dictionary<string, string> oldNewGuid = new();
             foreach (GraphElement element in enumerable)
             {
                 if (_copiedElementsCompoundRect == Rect.zero) _copiedElementsCompoundRect = element.layout;
                 _copiedElementsCompoundRect = RectUtils.Encompass(element.layout, _copiedElementsCompoundRect);
-
-                if (element is NodeSystemEditorNode node)
+                
+                switch (element)
                 {
-                    string nodeTypename = node.Node.Typename;
-                    Type type = Type.GetType(nodeTypename);
-                    if (type != null)
+                    case NodeSystemEditorNode node:
                     {
-                        NodeSystemNode copy = (NodeSystemNode)Activator.CreateInstance(type);
-                        copy.CopyDataFrom(node.Node);
-                        _copiedNodesCache.Add(copy);
-                    }
+                        string nodeTypename = node.Node.Typename;
+                        Type type = Type.GetType(nodeTypename);
+                        if (type != null)
+                        {
+                            string newGuid = oldNewGuid.TryAddAndGet(node.Node.ID, GuidSystem.NewGuid);
+                            NodeSystemNode copy = (NodeSystemNode)Activator.CreateInstance(type);
+                            copy.ID = newGuid;
+                            copy.CopyDataFrom(node.Node);
+                            _copiedNodesCache.Add(copy);
+                        }
 
-                    // NodeSystemNode.CopyFrom(node.Node);
-                    // m_copiedNodesCache.Add(node.Node.CopyWithNewGuid());
-                }
-                else if (element is Edge _)
-                {
-                    // TODO: actually we should traverse everything and update node id's 
+                        break;
+                    }
+                    case Edge edge:
+                    {
+                        Port edgeInput = edge.input;
+                        Port edgeOutput = edge.output;
+                        NodeSystemEditorNode inputNode = (NodeSystemEditorNode)edgeInput.node;
+                        NodeSystemEditorNode outputNode = (NodeSystemEditorNode)edgeOutput.node;
+                        string inputGuid = oldNewGuid.TryAddAndGet(inputNode.Node.ID, GuidSystem.NewGuid);
+                        string outputGuid = oldNewGuid.TryAddAndGet(outputNode.Node.ID, GuidSystem.NewGuid);
+                    
+                        _copiedConnectionsCache.Add(new NodeSystemConnection(inputGuid, inputNode.GetIndexOfPort(edgeInput), outputGuid, outputNode.GetIndexOfPort(edgeOutput)));
+                        break;
+                    }
                 }
             }
+            // foreach (GraphElement element in enumerable)
+            // {
+            //     if (_copiedElementsCompoundRect == Rect.zero) _copiedElementsCompoundRect = element.layout;
+            //     _copiedElementsCompoundRect = RectUtils.Encompass(element.layout, _copiedElementsCompoundRect);
+            //
+            //     if (element is NodeSystemEditorNode node)
+            //     {
+            //         string nodeTypename = node.Node.Typename;
+            //         Type type = Type.GetType(nodeTypename);
+            //         if (type != null)
+            //         {
+            //             NodeSystemNode copy = (NodeSystemNode)Activator.CreateInstance(type);
+            //             copy.CopyDataFrom(node.Node);
+            //             _copiedNodesCache.Add(copy);
+            //         }
+            //
+            //         // NodeSystemNode.CopyFrom(node.Node);
+            //         // m_copiedNodesCache.Add(node.Node.CopyWithNewGuid());
+            //     }
+            //     else if (element is Edge _)
+            //     {
+            //         // TODO: actually we should traverse everything and update node id's 
+            //         CreateConnection();
+            //     }
+            // }
 
             return "";
         }
@@ -54,12 +97,21 @@ namespace NodeSystem.Editor.Graph.View
             Debug.Log("Paste callback: " + operationName);
             if (operationName != "Paste" || _copiedNodesCache.Count == 0) return;
 
+            RecordAction(operationName);
             Vector2 compoundRectCenter = _copiedElementsCompoundRect.center;
             Vector2 displacement = this.ChangeCoordinatesTo(contentViewContainer, _mousePos) - compoundRectCenter;
             foreach (NodeSystemNode node in _copiedNodesCache)
             {
                 node.Displace(displacement);
                 CopyBack(node);
+            }
+            
+            foreach (NsEdge edgeToCreate in _copiedConnectionsCache.Select(connection => new NsEdge(connection, GetNode)))
+            {
+                edgeToCreate.input.Connect(edgeToCreate);
+                edgeToCreate.output.Connect(edgeToCreate);
+                AddElement(edgeToCreate);
+                CreateConnection(edgeToCreate);
             }
         }
 

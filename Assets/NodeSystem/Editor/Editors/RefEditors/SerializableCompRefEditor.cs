@@ -167,10 +167,10 @@ namespace NodeSystem.Editor.Editors.RefEditors
 
             VisualElement container = new()
             {
-                style =
-                {
-                    flexGrow = 1
-                }
+                // style =
+                // {
+                //     flexGrow = 1
+                // }
             };
 
             SerializedProperty ownerIdProp = property.FindPropertyRelative("_ownerId");

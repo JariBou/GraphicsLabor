@@ -1,7 +1,7 @@
 ﻿using System;
 using NodeSystem.Runtime.Core.PortConfigEnums;
 
-namespace NodeSystem.Runtime.Attributes.EditorTarget
+namespace NodeSystem.Runtime.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class EventNodeInfoAttribute : NodeInfoAttribute

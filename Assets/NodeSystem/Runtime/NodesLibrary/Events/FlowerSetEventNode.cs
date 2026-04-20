@@ -1,5 +1,4 @@
 ﻿using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Core.PortConfigEnums;
 using NodeSystem.Runtime.Executioners;
@@ -27,7 +26,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Events
             leftFlower = eventData.leftFlower;
             rightFlower = eventData.rightFlower;
 
-            await NodeGlobalExecutioner.Instance.RunNode(ctx, this);
+            await NodeGlobalExecutioner.Instance.RunNodeNoAwaitAsync(ctx, this);
         }
     }
 }

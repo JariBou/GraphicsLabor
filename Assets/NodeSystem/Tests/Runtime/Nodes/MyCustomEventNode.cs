@@ -1,5 +1,5 @@
 ﻿using System;
-using NodeSystem.Runtime.Attributes.EditorTarget;
+using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.NodesLibrary.Events;
 using UnityEngine;
@@ -27,7 +27,7 @@ namespace NodeSystem.Tests.Runtime
             
             this.eventData= data;
             
-            return DefaultInvoke(ctx);
+            return DefaultInvokeNoAwaitAsync(ctx);
         }
     }
 }

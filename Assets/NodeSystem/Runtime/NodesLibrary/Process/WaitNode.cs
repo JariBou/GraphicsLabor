@@ -1,7 +1,8 @@
-﻿using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Attributes.EditorTarget;
+﻿using System.Threading.Tasks;
+using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Core.PortConfigEnums;
+using NodeSystem.Runtime.Executioners;
 using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Process
@@ -10,13 +11,19 @@ namespace NodeSystem.Runtime.NodesLibrary.Process
     public class WaitNode : NodeSystemNode
     {
         [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
-        public uint time;
+        public float time;
 
-        public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
+        public override async Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)
+        {
+            _ = DoWaitAndResume(context);
+            // return new ProcessInfo(id, GetNextNode(info.GraphInstance).id, ProcessInfo.ExecutionFlowType.Wait);
+            return await Task.FromResult(new ProcessInfo(ID, GetNextNode(context.GraphInstance).ID, ProcessInfo.ExecutionFlowType.Wait));
+        }
+
+        private async Awaitable DoWaitAndResume(ExecContext context)
         {
             await Awaitable.WaitForSecondsAsync(time);
-            // return new ProcessInfo(id, GetNextNode(info.GraphInstance).id, ProcessInfo.ExecutionFlowType.Wait);
-            return await ContinueExecution(GetNextNode(context.GraphInstance).ID);
+            _ = NodeGlobalExecutioner.Instance.RunNodeAwaitAsync(context, GetNextNode(context.GraphInstance));
         }
     }
 }

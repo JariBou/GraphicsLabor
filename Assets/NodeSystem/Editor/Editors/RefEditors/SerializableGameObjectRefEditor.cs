@@ -61,10 +61,10 @@ namespace NodeSystem.Editor.Editors.RefEditors
 
                 tooltip = property.tooltip,
                 label = property.displayName,
-                style =
-                {
-                    flexGrow = 1
-                }
+                // style =
+                // {
+                //     flexGrow = 1
+                // }
             };
 
             objectField.RegisterValueChangedCallback(evt =>

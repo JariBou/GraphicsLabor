@@ -1,5 +1,4 @@
 ﻿using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
@@ -15,10 +14,10 @@ namespace NodeSystem.Runtime.NodesLibrary.Utils
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public string outString;
 
-        public override Awaitable<ProcessInfo> OnProcess(ExecContext context)
+        public override Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)
         {
             outString = GetValueOfProp<int>(context, nameof(inInt)).ToString();
-            return base.OnProcess(context);
+            return base.OnProcessAsync(context);
         }
     }
 }

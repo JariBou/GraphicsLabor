@@ -1,5 +1,4 @@
 ﻿using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
@@ -19,12 +18,12 @@ namespace NodeSystem.Runtime.NodesLibrary.Blackboard
              preferredLocation: PropContainerLocation.OutputContainer, labelOnly: true)]
         public string value;
 
-        public override Awaitable<ProcessInfo> OnProcess(ExecContext context)
+        public override Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)
         {
             NodeSystemAsset graph = context.GraphInstance;
             value = graph.GetExposedVariableValue(name, out bool found);
             if (!found) value = "";
-            return base.OnProcess(context);
+            return base.OnProcessAsync(context);
         }
     }
 }

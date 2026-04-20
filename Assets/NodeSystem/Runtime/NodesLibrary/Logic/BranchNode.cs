@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
@@ -13,7 +12,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Logic
         [ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]
         public bool condition;
 
-        public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
+        public override async Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)
         {
             NodeSystemAsset graph = context.GraphInstance;
             NodeSystemNode nextNode =

@@ -1,5 +1,4 @@
 ﻿using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core.PortConfigEnums;
 using NodeSystem.Runtime.Core.RefSystem;
 using UnityEngine.Serialization;

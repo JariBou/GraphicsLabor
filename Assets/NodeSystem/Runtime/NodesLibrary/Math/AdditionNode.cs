@@ -1,5 +1,4 @@
 ﻿using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
@@ -19,11 +18,11 @@ namespace NodeSystem.Runtime.NodesLibrary.Math
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public int result;
 
-        public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
+        public override async Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)
         {
             result = await GetValueOfProp<int>(context, nameof(a)) + await GetValueOfProp<int>(context, nameof(b));
 
-            return await base.OnProcess(context);
+            return await base.OnProcessAsync(context);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using NodeSystem.Runtime.Attributes;
-using NodeSystem.Runtime.Attributes.EditorTarget;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Core.PortConfigEnums;
 using UnityEngine;
@@ -20,11 +19,11 @@ namespace NodeSystem.Runtime.NodesLibrary.Utils
              labelOnly: true)]
         public int value;
 
-        public override async Awaitable<ProcessInfo> OnProcess(ExecContext context)
+        public override async Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)
         {
             string valueOfProp = await GetValueOfProp<string>(context, nameof(inputString));
             int.TryParse(valueOfProp, out value);
-            return await base.OnProcess(context);
+            return await base.OnProcessAsync(context);
         }
     }
 }

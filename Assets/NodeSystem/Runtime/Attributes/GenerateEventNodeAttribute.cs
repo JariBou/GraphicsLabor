@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NodeSystem.Runtime.Attributes.EditorTarget
+namespace NodeSystem.Runtime.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class GenerateEventNodeAttribute : Attribute

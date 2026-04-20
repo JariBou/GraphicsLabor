@@ -5,7 +5,6 @@ using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime
 {
-    // TODO: see if this is fine in build
     public abstract partial class NodeSystemNode
     {
         public virtual void CopyDataFrom(NodeSystemNode node)

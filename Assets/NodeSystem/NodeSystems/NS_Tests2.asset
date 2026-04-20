@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NS_Tests2
   m_EditorClassIdentifier: 
   _graphId: 4b5907b2-ef54-4b62-8633-a65485280c04
-  m_nodes:
+  _nodes:
   - rid: 2224113340452962376
   - rid: 1463373357213024256
   - rid: 1463373357213024328
@@ -21,41 +21,61 @@ MonoBehaviour:
   - rid: 1463373357213024330
   - rid: 1463373402487128301
   - rid: 1463373402487128319
-  m_connections:
-  - InputPort:
-      NodeId: 08456930-943c-4869-b21a-faed25676d3b
-      PortIndex: 2
-    OutputPort:
-      NodeId: 51bb64fb-c78a-460f-a90f-3736219df948
-      PortIndex: 0
-  - InputPort:
-      NodeId: 08456930-943c-4869-b21a-faed25676d3b
-      PortIndex: 2
-    OutputPort:
-      NodeId: c86d75c7-e89e-4ab8-8367-e4c2b6f71a7b
-      PortIndex: 0
-  m_exposedProperties:
-  - PropertyName: Lol
-    PropertyValue: gougou
-  - PropertyName: New String
-    PropertyValue: New Value
+  - rid: 1463373475724918856
+  - rid: 1463373475724918857
+  - rid: 1463373475724918862
+  - rid: 1463373475724918863
+  _connections:
+  - inputPort:
+      nodeId: 08456930-943c-4869-b21a-faed25676d3b
+      portIndex: 2
+    outputPort:
+      nodeId: 51bb64fb-c78a-460f-a90f-3736219df948
+      portIndex: 0
+  - inputPort:
+      nodeId: 08456930-943c-4869-b21a-faed25676d3b
+      portIndex: 2
+    outputPort:
+      nodeId: c86d75c7-e89e-4ab8-8367-e4c2b6f71a7b
+      portIndex: 0
+  - inputPort:
+      nodeId: e8ae87dd-8957-4fc0-a24b-d458ae3f2c0e
+      portIndex: 0
+    outputPort:
+      nodeId: 453e0432-04d1-4c20-9a3b-add45bd9f548
+      portIndex: 1
+  - inputPort:
+      nodeId: 9ed27163-2442-42c8-810a-ff90abfc2dd9
+      portIndex: 2
+    outputPort:
+      nodeId: 0ab3d837-2230-4338-a71a-059324dc2a9c
+      portIndex: 0
+  - inputPort:
+      nodeId: 8734bb15-155e-49eb-96ab-251df08eaaed
+      portIndex: 2
+    outputPort:
+      nodeId: c12ab505-a05a-4749-b730-1f11377c65e9
+      portIndex: 0
+  _exposedProperties:
+  - propertyName: Lol
+    propertyValue: gougou
+  - propertyName: New String
+    propertyValue: New Value
   references:
     version: 2
     RefIds:
     - rid: 1463373357213024256
       type: {class: FlowerSetEventNode, ns: NodeSystem.Runtime.NodesLibrary.Events, asm: NodeSystem}
       data:
-        _position:
+        position:
           serializedVersion: 2
           x: -445
           y: -142
           width: 176
           height: 126
-        m_guid: c86d75c7-e89e-4ab8-8367-e4c2b6f71a7b
-        m_isPure: 0
-        typename: NodeSystem.Runtime.NodesLibrary.Events.FlowerSetEventNode, NodeSystem,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        m_ports:
+        guid: c86d75c7-e89e-4ab8-8367-e4c2b6f71a7b
+        isPure: 0
+        ports:
         - _exposedPropertyName: flower
           _ownerId: c86d75c7-e89e-4ab8-8367-e4c2b6f71a7b
           _portIndex: 1
@@ -68,75 +88,75 @@ MonoBehaviour:
           _ownerId: c86d75c7-e89e-4ab8-8367-e4c2b6f71a7b
           _portIndex: 3
           _portDirection: 2
-        m_pureExecutionDone: 1
+        _pureExecutionDone: 1
         flower: 
         leftFlower: 
         rightFlower: 
     - rid: 1463373357213024328
       type: {class: GameObjectSourceNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
       data:
-        _position:
+        position:
           serializedVersion: 2
           x: -456
           y: -16
           width: 194
           height: 77
-        m_guid: 51bb64fb-c78a-460f-a90f-3736219df948
-        m_isPure: 0
-        typename: NodeSystem.Runtime.NodesLibrary.Process.GameObjectSourceNode, NodeSystem,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        m_ports: []
-        m_pureExecutionDone: 1
-        Source: 
+        guid: 51bb64fb-c78a-460f-a90f-3736219df948
+        isPure: 0
+        ports:
+        - _exposedPropertyName: source
+          _ownerId: 51bb64fb-c78a-460f-a90f-3736219df948
+          _portIndex: 1
+          _portDirection: 2
+        _pureExecutionDone: 1
+        source:
+          _objectId: 
+          _refTypename: 
     - rid: 1463373357213024329
       type: {class: ObjectRefNode, ns: NodeSystem.Runtime.NodesLibrary, asm: NodeSystem}
       data:
-        _position:
+        position:
           serializedVersion: 2
           x: -468
           y: 82
           width: 301
           height: 73
-        m_guid: a8650aa4-585f-453a-867a-676ce4a379ab
-        m_isPure: 1
-        typename: NodeSystem.Runtime.NodesLibrary.ObjectRefNode, NodeSystem, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-        m_ports:
-        - _exposedPropertyName: Source
+        guid: a8650aa4-585f-453a-867a-676ce4a379ab
+        isPure: 1
+        ports:
+        - _exposedPropertyName: source
           _ownerId: a8650aa4-585f-453a-867a-676ce4a379ab
           _portIndex: 0
           _portDirection: 2
-        m_pureExecutionDone: 1
-        Source:
+        _pureExecutionDone: 1
+        source:
           _objectId: 2b0e546a-5f97-4389-9945-75b208b5aa34
           _refTypename: 
     - rid: 1463373357213024330
       type: {class: TestStartDiffNode, ns: NodeSystem.Runtime.NodesLibrary, asm: NodeSystem}
       data:
-        _position:
+        position:
           serializedVersion: 2
           x: 86
           y: 365
           width: 400
           height: 240
-        m_guid: c683d3cc-d61f-43cb-8c85-919649953c2d
-        m_isPure: 0
-        typename: NodeSystem.Runtime.NodesLibrary.TestStartDiffNode, NodeSystem,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        m_ports:
-        - _exposedPropertyName: TestCompRef
+        guid: c683d3cc-d61f-43cb-8c85-919649953c2d
+        isPure: 0
+        ports:
+        - _exposedPropertyName: testCompRef
           _ownerId: c683d3cc-d61f-43cb-8c85-919649953c2d
           _portIndex: 1
           _portDirection: 2
-        - _exposedPropertyName: TestCompRef2
+        - _exposedPropertyName: testCompRef2
           _ownerId: c683d3cc-d61f-43cb-8c85-919649953c2d
           _portIndex: 2
           _portDirection: 2
-        - _exposedPropertyName: TestIn
+        - _exposedPropertyName: testIn
           _ownerId: c683d3cc-d61f-43cb-8c85-919649953c2d
           _portIndex: 3
           _portDirection: 2
-        - _exposedPropertyName: TestIn2
+        - _exposedPropertyName: testIn2
           _ownerId: c683d3cc-d61f-43cb-8c85-919649953c2d
           _portIndex: 4
           _portDirection: 2
@@ -148,20 +168,26 @@ MonoBehaviour:
           _ownerId: c683d3cc-d61f-43cb-8c85-919649953c2d
           _portIndex: 6
           _portDirection: 2
-        m_pureExecutionDone: 1
-        Source: 
-        TestCompRef:
+        - _exposedPropertyName: source
+          _ownerId: c683d3cc-d61f-43cb-8c85-919649953c2d
+          _portIndex: 7
+          _portDirection: 2
+        _pureExecutionDone: 1
+        source:
+          _objectId: 
+          _refTypename: 
+        testCompRef:
           _compId: 20bb1a99-e621-4dc3-901d-12bce8fa30dc
           _ownerId: 
           _refTypename: 
-        TestCompRef2:
-          _compId: edfb6491-445e-4f6e-8e38-9fd18bfcbc41
-          _ownerId: 54319848-7338-46c9-b876-e60e5a8ac4e4
+        testCompRef2:
+          _compId: 95f1d185-7737-450e-abe3-1867012e6057
+          _ownerId: 792dd4ba-4868-44a1-91d1-a1e55cfe11e6
           _refTypename: 
-        TestIn:
-          _objectId: e3ef85b4-0fff-421c-b424-2aadd3a1b723
+        testIn:
+          _objectId: 
           _refTypename: 
-        TestIn2: {fileID: 0}
+        testIn2: {fileID: 11400000, guid: f952c082cb03451daed3ee968ac6c63e, type: 2}
         testList:
         - 3
         - dzqdqsdqzd
@@ -174,55 +200,142 @@ MonoBehaviour:
     - rid: 1463373402487128301
       type: {class: BranchNode, ns: NodeSystem.Runtime.NodesLibrary.Logic, asm: NodeSystem}
       data:
-        _position:
+        position:
           serializedVersion: 2
           x: 89
           y: -338
           width: 243
           height: 101
-        m_guid: 0ab3d837-2230-4338-a71a-059324dc2a9c
-        m_isPure: 0
-        typename: NodeSystem.Runtime.NodesLibrary.Logic.BranchNode, NodeSystem, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-        m_ports:
+        guid: 0ab3d837-2230-4338-a71a-059324dc2a9c
+        isPure: 0
+        ports:
         - _exposedPropertyName: condition
           _ownerId: 0ab3d837-2230-4338-a71a-059324dc2a9c
           _portIndex: 3
           _portDirection: 1
-        m_pureExecutionDone: 1
+        _pureExecutionDone: 1
         condition: 0
     - rid: 1463373402487128319
       type: {class: BranchNode, ns: NodeSystem.Runtime.NodesLibrary.Logic, asm: NodeSystem}
       data:
-        _position:
+        position:
           serializedVersion: 2
           x: 355
           y: -338
           width: 243
           height: 101
-        m_guid: 9ed27163-2442-42c8-810a-ff90abfc2dd9
-        m_isPure: 0
-        typename: NodeSystem.Runtime.NodesLibrary.Logic.BranchNode, NodeSystem, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-        m_ports:
+        guid: 9ed27163-2442-42c8-810a-ff90abfc2dd9
+        isPure: 0
+        ports:
         - _exposedPropertyName: condition
           _ownerId: 9ed27163-2442-42c8-810a-ff90abfc2dd9
           _portIndex: 3
           _portDirection: 1
-        m_pureExecutionDone: 1
+        _pureExecutionDone: 1
+        condition: 0
+    - rid: 1463373475724918856
+      type: {class: MyCustomEventNode, ns: NodeSystem.Generated.EventNodes, asm: Assembly-CSharp}
+      data:
+        position:
+          serializedVersion: 2
+          x: -1067
+          y: 249
+          width: 100
+          height: 93
+        guid: 453e0432-04d1-4c20-9a3b-add45bd9f548
+        isPure: 0
+        ports:
+        - _exposedPropertyName: eventData
+          _ownerId: 453e0432-04d1-4c20-9a3b-add45bd9f548
+          _portIndex: 1
+          _portDirection: 2
+        _pureExecutionDone: 1
+        eventData:
+          someInt: 0
+          someString: 
+          someBool: 0
+    - rid: 1463373475724918857
+      type: {class: BreakMyCustomEventDataNode, ns: NodeSystem.Generated.EventNodes.BreakNodes, asm: Assembly-CSharp}
+      data:
+        position:
+          serializedVersion: 2
+          x: -857
+          y: 265
+          width: 236
+          height: 101
+        guid: e8ae87dd-8957-4fc0-a24b-d458ae3f2c0e
+        isPure: 1
+        ports:
+        - _exposedPropertyName: eventData
+          _ownerId: e8ae87dd-8957-4fc0-a24b-d458ae3f2c0e
+          _portIndex: 0
+          _portDirection: 1
+        - _exposedPropertyName: someInt
+          _ownerId: e8ae87dd-8957-4fc0-a24b-d458ae3f2c0e
+          _portIndex: 1
+          _portDirection: 2
+        - _exposedPropertyName: someString
+          _ownerId: e8ae87dd-8957-4fc0-a24b-d458ae3f2c0e
+          _portIndex: 2
+          _portDirection: 2
+        - _exposedPropertyName: someBool
+          _ownerId: e8ae87dd-8957-4fc0-a24b-d458ae3f2c0e
+          _portIndex: 3
+          _portDirection: 2
+        _pureExecutionDone: 1
+        eventData:
+          someInt: 0
+          someString: 
+          someBool: 0
+        someInt: 0
+        someString: 
+        someBool: 0
+    - rid: 1463373475724918862
+      type: {class: BranchNode, ns: NodeSystem.Runtime.NodesLibrary.Logic, asm: NodeSystem}
+      data:
+        position:
+          serializedVersion: 2
+          x: 815
+          y: -268
+          width: 243
+          height: 101
+        guid: c12ab505-a05a-4749-b730-1f11377c65e9
+        isPure: 0
+        ports:
+        - _exposedPropertyName: condition
+          _ownerId: c12ab505-a05a-4749-b730-1f11377c65e9
+          _portIndex: 3
+          _portDirection: 1
+        _pureExecutionDone: 1
+        condition: 0
+    - rid: 1463373475724918863
+      type: {class: BranchNode, ns: NodeSystem.Runtime.NodesLibrary.Logic, asm: NodeSystem}
+      data:
+        position:
+          serializedVersion: 2
+          x: 1088
+          y: -268
+          width: 243
+          height: 101
+        guid: 8734bb15-155e-49eb-96ab-251df08eaaed
+        isPure: 0
+        ports:
+        - _exposedPropertyName: condition
+          _ownerId: 8734bb15-155e-49eb-96ab-251df08eaaed
+          _portIndex: 3
+          _portDirection: 1
+        _pureExecutionDone: 1
         condition: 0
     - rid: 2224113340452962376
       type: {class: StartNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
       data:
-        _position:
+        position:
           serializedVersion: 2
           x: -391
           y: -237
           width: 75
           height: 77
-        m_guid: 24a38d0d-9075-45d7-9aac-a5be4e3bc308
-        m_isPure: 0
-        typename: NodeSystem.Runtime.NodesLibrary.Process.StartNode, NodeSystem,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        m_ports: []
-        m_pureExecutionDone: 1
+        guid: 24a38d0d-9075-45d7-9aac-a5be4e3bc308
+        isPure: 0
+        ports: []
+        _pureExecutionDone: 1

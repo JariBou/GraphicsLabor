@@ -32,7 +32,14 @@ namespace NodeSystem.Runtime
 
         public string Typename => GetType().AssemblyQualifiedName;
 
-        public string ID => guid;
+        public string ID
+        {
+            get => guid;
+#if UNITY_EDITOR
+            set => guid = value;
+#endif
+        }
+
         public List<PortInfo> PortInfos => ports;
 
 
@@ -97,7 +104,7 @@ namespace NodeSystem.Runtime
             // Debug.Log(GetType() + " executing " + info.ExecId);
             _lastExecutionId = context.ExecId;
             //PureExecutionDone = true;
-            await OnProcess(context);
+            await OnProcessAsync(context);
         }
 
         private void NewGuid()
@@ -106,7 +113,7 @@ namespace NodeSystem.Runtime
         }
 
 
-        public virtual async Awaitable<ProcessInfo> OnProcess(ExecContext context)
+        public virtual async Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)
         {
             NodeSystemAsset graph = context.GraphInstance;
             NodeSystemNode nextNode = GetNextNode(graph);
@@ -117,6 +124,7 @@ namespace NodeSystem.Runtime
 
         public NodeSystemNode GetNextNode(NodeSystemAsset graph)
         {
+            //TODO: currently this doesn't check if it's a flow port...
             return GetNodeConnectedToPort(graph, 0);
         }
 

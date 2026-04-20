@@ -187,19 +187,16 @@ namespace NodeSystem.Editor.Graph.View
             List<NodeSystemConnection> neededConnections = new(_nodeSystem.Connections);
             List<NodeSystemConnection> graphConnections = new(_connectionsDictionary.Values);
 
-            foreach (NodeSystemConnection connection in _connectionsDictionary.Values)
-                if (neededConnections.Contains(connection))
-                {
-                    neededConnections.Remove(connection);
-                    graphConnections.Remove(connection);
-                }
+            foreach (NodeSystemConnection connection in _connectionsDictionary.Values.Where(neededConnections.Contains))
+            {
+                neededConnections.Remove(connection);
+                graphConnections.Remove(connection);
+            }
 
             if (graphConnections.Count > 0)
-                for (int i = 0; i < graphConnections.Count; i++)
+                foreach (Edge edgeToRemove in graphConnections.Select(con => _connectionsDictionary.Keys.ToList()[
+                             _connectionsDictionary.Values.ToList().IndexOf(con)]))
                 {
-                    Edge edgeToRemove =
-                        _connectionsDictionary.Keys.ToList()[
-                            _connectionsDictionary.Values.ToList().IndexOf(graphConnections[i])];
                     edgeToRemove.input.Disconnect(edgeToRemove);
                     edgeToRemove.output.Disconnect(edgeToRemove);
                     RemoveElement(edgeToRemove);
@@ -209,11 +206,12 @@ namespace NodeSystem.Editor.Graph.View
             if (neededConnections.Count > 0)
                 foreach (NodeSystemConnection connection in neededConnections)
                 {
-                    NsEdge edgeToCreate = new()
-                    {
-                        input = GetNode(connection.inputPort.nodeId).Ports[connection.inputPort.portIndex],
-                        output = GetNode(connection.outputPort.nodeId).Ports[connection.outputPort.portIndex]
-                    };
+                    NsEdge edgeToCreate = new(connection, GetNode);
+                    // NsEdge edgeToCreate = new()
+                    // {
+                    //     input = GetNode(connection.inputPort.nodeId).Ports[connection.inputPort.portIndex],
+                    //     output = GetNode(connection.outputPort.nodeId).Ports[connection.outputPort.portIndex]
+                    // };
                     edgeToCreate.input.Connect(edgeToCreate);
                     edgeToCreate.output.Connect(edgeToCreate);
                     AddElement(edgeToCreate);
@@ -226,10 +224,10 @@ namespace NodeSystem.Editor.Graph.View
         private void CreateConnection(Edge edge)
         {
             NodeSystemEditorNode inputNode = (NodeSystemEditorNode)edge.input.node;
-            int inputIndex = inputNode.Ports.IndexOf(edge.input);
+            int inputIndex = inputNode.GetIndexOfPort(edge.input);
 
             NodeSystemEditorNode outputNode = (NodeSystemEditorNode)edge.output.node;
-            int outputIndex = outputNode.Ports.IndexOf(edge.output);
+            int outputIndex = outputNode.GetIndexOfPort(edge.output);
 
             NodeSystemConnection connection = new(inputNode.Node.ID, inputIndex, outputNode.Node.ID, outputIndex);
             _nodeSystem.Connections.Add(connection);
