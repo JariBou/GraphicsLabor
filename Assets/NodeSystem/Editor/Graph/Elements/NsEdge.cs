@@ -19,7 +19,7 @@ namespace NodeSystem.Editor.Graph.Elements
 
             capabilities |= Capabilities.Selectable; // and registered back here
         }
-        
+
         public NsEdge(NodeSystemConnection connection, Func<string, NodeSystemEditorNode> nodeGetter) : this()
         {
             input = nodeGetter(connection.inputPort.nodeId).Ports[connection.inputPort.portIndex];
@@ -28,7 +28,7 @@ namespace NodeSystem.Editor.Graph.Elements
 
         protected virtual List<IManipulator> GetManipulatorsBeforeDefault()
         {
-            return new List<IManipulator> { new NsClickSelector() };
+            return new List<IManipulator> { new NsEdgeClickSelector() };
         }
 
         private void RegisterManipulatorsBeforeDefault()

@@ -16,7 +16,7 @@ using NodeSystem.Tests.Runtime;
 
 namespace NodeSystem.Generated.EventNodes.BreakNodes
 {
-	[NodeInfo("Break MyCustomEventData Node", "BreakNodes/BreakMyCustomEventDataNode", isPure: true), Serializable]
+	[NodeInfo("Break MyCustomEventData Node", "BreakNodes/Break MyCustomEventData Node", isPure: true), Serializable]
 	public class BreakMyCustomEventDataNode : NodeSystemNode
 	{
 		// Input

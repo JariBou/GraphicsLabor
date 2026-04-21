@@ -35,16 +35,16 @@ namespace NodeSystem.Runtime.Executioners
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         public async Awaitable RunNodeAwaitAsync(ExecContext ctx, NodeSystemNode node)
         {
             NodeSystemAsset graphInstance = ctx.GraphInstance;
             ExecContext newExecContext = new(graphInstance);
-            
+
             // Exec first
             ProcessInfo processInfo = await node.OnProcessAsync(newExecContext);
             NodeSystemNode nodeToPlay = graphInstance.GetNode(processInfo.NextNodeId);
-            
+
             // Exec next if any
             while (nodeToPlay != null)
             {

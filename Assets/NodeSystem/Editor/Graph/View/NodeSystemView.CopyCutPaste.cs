@@ -14,9 +14,9 @@ namespace NodeSystem.Editor.Graph.View
 {
     public partial class NodeSystemView
     {
-        private readonly List<NodeSystemNode> _copiedNodesCache = new();
         private readonly List<NodeSystemConnection> _copiedConnectionsCache = new();
-        
+        private readonly List<NodeSystemNode> _copiedNodesCache = new();
+
         private Rect _copiedElementsCompoundRect;
 
         private string CopyCutCallback(IEnumerable<GraphElement> elements)
@@ -25,13 +25,13 @@ namespace NodeSystem.Editor.Graph.View
             Debug.Log("Copy/Cut Callback: " + enumerable.Count());
             _copiedNodesCache.Clear();
             _copiedElementsCompoundRect = Rect.zero;
-            
+
             Dictionary<string, string> oldNewGuid = new();
             foreach (GraphElement element in enumerable)
             {
                 if (_copiedElementsCompoundRect == Rect.zero) _copiedElementsCompoundRect = element.layout;
                 _copiedElementsCompoundRect = RectUtils.Encompass(element.layout, _copiedElementsCompoundRect);
-                
+
                 switch (element)
                 {
                     case NodeSystemEditorNode node:
@@ -57,8 +57,9 @@ namespace NodeSystem.Editor.Graph.View
                         NodeSystemEditorNode outputNode = (NodeSystemEditorNode)edgeOutput.node;
                         string inputGuid = oldNewGuid.TryAddAndGet(inputNode.Node.ID, GuidSystem.NewGuid);
                         string outputGuid = oldNewGuid.TryAddAndGet(outputNode.Node.ID, GuidSystem.NewGuid);
-                    
-                        _copiedConnectionsCache.Add(new NodeSystemConnection(inputGuid, inputNode.GetIndexOfPort(edgeInput), outputGuid, outputNode.GetIndexOfPort(edgeOutput)));
+
+                        _copiedConnectionsCache.Add(new NodeSystemConnection(inputGuid,
+                            inputNode.GetIndexOfPort(edgeInput), outputGuid, outputNode.GetIndexOfPort(edgeOutput)));
                         break;
                     }
                 }
@@ -105,8 +106,9 @@ namespace NodeSystem.Editor.Graph.View
                 node.Displace(displacement);
                 CopyBack(node);
             }
-            
-            foreach (NsEdge edgeToCreate in _copiedConnectionsCache.Select(connection => new NsEdge(connection, GetNode)))
+
+            foreach (NsEdge edgeToCreate in
+                     _copiedConnectionsCache.Select(connection => new NsEdge(connection, GetNode)))
             {
                 edgeToCreate.input.Connect(edgeToCreate);
                 edgeToCreate.output.Connect(edgeToCreate);

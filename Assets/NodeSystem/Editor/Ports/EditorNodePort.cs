@@ -95,7 +95,7 @@ namespace NodeSystem.Editor.Ports
             {
                 m_EdgeConnector = new NsEdgeConnector<TEdge>(listener)
             };
-            
+
             port.AddManipulator(port.m_EdgeConnector);
             return port;
         }

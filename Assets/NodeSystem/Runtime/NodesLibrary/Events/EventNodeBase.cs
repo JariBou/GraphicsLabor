@@ -8,6 +8,8 @@ namespace NodeSystem.Runtime.NodesLibrary.Events
     //TODO: For now we will support only 1 node of each event type
     public abstract class EventNodeBase<T> : NodeSystemNode, IEventNode where T : EventData
     {
+        [SerializeField] public string eventName;
+
         public Type EventDataType => typeof(T);
 
         public abstract Awaitable Invoke(ExecContext ctx, T eventData);
@@ -16,7 +18,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Events
         {
             await NodeGlobalExecutioner.Instance.RunNodeNoAwaitAsync(ctx, this);
         }
-        
+
         protected async Awaitable DefaultInvokeAwaitAsync(ExecContext ctx)
         {
             await NodeGlobalExecutioner.Instance.RunNodeAwaitAsync(ctx, this);

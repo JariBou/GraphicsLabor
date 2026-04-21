@@ -60,7 +60,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
                 name = property.displayName,
 
                 tooltip = property.tooltip,
-                label = property.displayName,
+                label = property.displayName
                 // style =
                 // {
                 //     flexGrow = 1

@@ -1,5 +1,4 @@
-﻿using System;
-using NodeSystem.Runtime.References;
+﻿using NodeSystem.Runtime.References;
 using NodeSystem.Runtime.Utils;
 using UnityEditor;
 using UnityEngine;

@@ -8,10 +8,7 @@ namespace NodeSystem.Runtime.Utils
         public static TValue TryAddAndGet<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key,
             Func<TValue> addAction)
         {
-            if (dictionary.TryGetValue(key, out TValue value))
-            {
-                return value;
-            }
+            if (dictionary.TryGetValue(key, out TValue value)) return value;
 
             dictionary.Add(key, addAction.Invoke());
             return dictionary[key];

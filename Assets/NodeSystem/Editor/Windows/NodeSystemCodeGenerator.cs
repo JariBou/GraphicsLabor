@@ -1,12 +1,13 @@
-﻿using System;
+﻿#if GraphicsLaborImplemented
+using GraphicsLabor.Scripts.Editor.Utility;
+#endif
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-#if GraphicsLaborImplemented
-using GraphicsLabor.Scripts.Editor.Utility;
-#endif
+using System.Threading;
 using NodeSystem.Runtime;
 using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Utils;
@@ -28,15 +29,15 @@ namespace NodeSystem.Editor.Windows
                                                  "// To regenerate this file, look at the NodeSystem's Node System Code Generator in Editor\n" +
                                                  "//\n//\n";
 
-        [FormerlySerializedAs("_generatedPath"), SerializeField] 
+        [FormerlySerializedAs("_generatedPath"), SerializeField]
         private string _declsGeneratedPath = "Assets/NodeSystem/Generated";
 
         [SerializeField] private string _eventNodesGeneratedPath = "Assets/NodeSystem/Generated/EventNodes";
-        private float _verticalSpacing;
 
         private List<Type> _cachedGenEventDataTypes;
-        private Vector2 _scrollPos = Vector2.zero;
         private bool _foldoutState;
+        private Vector2 _scrollPos = Vector2.zero;
+        private float _verticalSpacing;
 
         private void OnGUI()
         {
@@ -88,19 +89,19 @@ namespace NodeSystem.Editor.Windows
                     width = position.width,
                     height = EditorGUIUtility.singleLineHeight
                 };
-                
+
                 if (GUI.Button(generateEventNodesButtonRect, "Generate All Event Nodes")) GenerateEventNodes();
 
                 lineNumber += 1;
-                
+
                 Rect foldoutRect = new()
                 {
                     x = currentRect.x + 5 * 3,
                     y = currentRect.y + lineNumber * _verticalSpacing,
                     width = position.width,
-                    height = _verticalSpacing,
+                    height = _verticalSpacing
                 };
-                
+
                 lineNumber++;
 
                 _foldoutState = EditorGUI.Foldout(foldoutRect, _foldoutState, "Individual Event Creation");
@@ -111,7 +112,7 @@ namespace NodeSystem.Editor.Windows
                         x = currentRect.x,
                         y = currentRect.y + lineNumber * _verticalSpacing,
                         width = position.width - 5,
-                        height = _verticalSpacing * 6,
+                        height = _verticalSpacing * 6
                     };
 
                     Rect scrollViewContentRect = new()
@@ -119,16 +120,16 @@ namespace NodeSystem.Editor.Windows
                         x = scrollViewRect.x,
                         y = scrollViewRect.y,
                         width = scrollViewRect.width - 15,
-                        height = _verticalSpacing * GetGenEventTypes().Count,
+                        height = _verticalSpacing * GetGenEventTypes().Count
                     };
 
                     lineNumber += GetGenEventTypes().Count;
-                    
+
                     GUI.Box(scrollViewRect, GUIContent.none);
 
                     _scrollPos = GUI.BeginScrollView(scrollViewRect, _scrollPos, scrollViewContentRect, false, true);
                     List<Type> list = GetGenEventTypes();
-                
+
                     for (int index = 0; index < list.Count; index++)
                     {
                         Rect content = new()
@@ -136,7 +137,7 @@ namespace NodeSystem.Editor.Windows
                             x = scrollViewRect.x,
                             y = scrollViewRect.y + _verticalSpacing * index,
                             width = scrollViewContentRect.width,
-                            height = _verticalSpacing,
+                            height = _verticalSpacing
                         };
                         Type type = list[index];
                         if (GUI.Button(content, $"Generate Nodes for '{type.Name}'"))
@@ -148,7 +149,7 @@ namespace NodeSystem.Editor.Windows
                             EditorUtility.FocusProjectWindow();
                         }
                     }
-                
+
                     GUI.EndScrollView();
                 }
             }
@@ -162,10 +163,17 @@ namespace NodeSystem.Editor.Windows
 
         private List<Type> GetGenEventTypes()
         {
-            _cachedGenEventDataTypes ??= AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => !assembly.GetName().Name.StartsWith("Unity"))
-                .SelectMany(assembly =>
-                    assembly.GetTypes().Where(type => type.IsDefined(typeof(GenerateEventNodeAttribute)))).ToList();
+            if (_cachedGenEventDataTypes == null)
+            {
+                int progressId = Progress.Start("Retrieving types...");
+                Progress.Report(progressId, 0.5f);
+                _cachedGenEventDataTypes = AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(assembly => !assembly.GetName().Name.StartsWith("Unity"))
+                    .SelectMany(assembly =>
+                        assembly.GetTypes().Where(type => type.IsDefined(typeof(GenerateEventNodeAttribute)))).ToList();
+                Progress.Remove(progressId);
+            }
+
             return _cachedGenEventDataTypes;
         }
 
@@ -174,6 +182,8 @@ namespace NodeSystem.Editor.Windows
             StringBuilder content = new();
 
             Assembly assembly = typeof(NodeSystemNode).Assembly;
+
+            EditorUtility.DisplayProgressBar("Generating internal decls", "Retrieving all Types...", 0.8f);
             Type[] types = assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(NodeSystemNode))).ToArray();
 
             content.Append(AutoGenDisclaimer);
@@ -201,7 +211,10 @@ namespace NodeSystem.Editor.Windows
                 currParentPath += $"/{pathParts[i]}";
             }
 #endif
+            EditorUtility.DisplayProgressBar("Generating internal decls", "Writing to file...", 0.9f);
             File.WriteAllText(_declsGeneratedPath + "/AssemblyDecls.cs", content.ToString());
+
+            EditorUtility.ClearProgressBar();
 
             AssetDatabase.Refresh();
         }
@@ -225,16 +238,23 @@ namespace NodeSystem.Editor.Windows
             }
 #endif
 
-            Type[] selectMany = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => !assembly.GetName().Name.StartsWith("Unity"))
-                .SelectMany(assembly =>
-                    assembly.GetTypes().Where(type => type.IsDefined(typeof(GenerateEventNodeAttribute)))).ToArray();
+            EditorUtility.DisplayProgressBar("Generating Nodes", "Retrieving all Types...", 0f);
+            Type[] selectMany = GetGenEventTypes().ToArray();
 
-            foreach (Type type in selectMany)
+            float typeCount = selectMany.Length;
+            for (int i = 0; i < typeCount; i++)
             {
+                Type type = selectMany[i];
+                EditorUtility.DisplayProgressBar("Generating Nodes", $"Generating Event node for type '{type.Name}'...",
+                    i / typeCount);
                 TryGenerateNodeForType(type);
+                EditorUtility.DisplayProgressBar("Generating Nodes", $"Generating Break node for type '{type.Name}'...",
+                    i / typeCount);
                 TryGenerateBreakNodeForType(type);
+                Thread.Sleep(500);
             }
+
+            EditorUtility.ClearProgressBar();
 
             AssetDatabase.Refresh();
             Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(_eventNodesGeneratedPath);
@@ -245,7 +265,7 @@ namespace NodeSystem.Editor.Windows
         {
             string className = "Break" + type.Name + "Node";
             string classTypeUsing = "using " + type.Namespace + ";\n";
-            
+
             StringBuilder content = new();
             content.Append(AutoGenDisclaimer);
             content.Append("using System;\n");
@@ -255,52 +275,57 @@ namespace NodeSystem.Editor.Windows
             content.Append("using NodeSystem.Runtime.Attributes;\n");
             content.Append("using UnityEngine;\n\n");
             content.Append($"{classTypeUsing}\n");
-            
+
             StringBuilder fields = new();
-            
+
             fields.Append("\t\t// Input\n");
-            fields.Append("\t\t[ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]\n");
+            fields.Append(
+                "\t\t[ExposedProperty(PropPortDirection.Input, preferredLocation: PropContainerLocation.InputContainer)]\n");
             fields.Append($"\t\tpublic {type.Name} eventData;\n\n");
             fields.Append("\t\t// Outputs\n");
-            
+
             StringBuilder methodBody = new();
-            methodBody.Append($"\t\t\t{type.Name} eventDataValue = await GetValueOfProp<{type.Name}>(context, nameof(eventData));\n\n");
-            
+            methodBody.Append(
+                $"\t\t\t{type.Name} eventDataValue = await GetValueOfProp<{type.Name}>(context, nameof(eventData));\n\n");
+
             foreach (FieldInfo fieldInfo in type.GetFields())
             {
                 string typeUsing = "using " + fieldInfo.FieldType.Namespace + ";\n";
-                
+
                 fields.Append("\t\t[EventExposedProperty]\n");
 
                 if (fieldInfo.FieldType == typeof(string))
                 {
                     fields.Append($"\t\tpublic string {fieldInfo.Name};\n");
-                } else if (fieldInfo.FieldType == typeof(int))
+                }
+                else if (fieldInfo.FieldType == typeof(int))
                 {
                     fields.Append($"\t\tpublic int {fieldInfo.Name};\n");
-                } else if (fieldInfo.FieldType == typeof(bool))
+                }
+                else if (fieldInfo.FieldType == typeof(bool))
                 {
                     fields.Append($"\t\tpublic bool {fieldInfo.Name};\n");
-                } else if (fieldInfo.FieldType == typeof(float))
+                }
+                else if (fieldInfo.FieldType == typeof(float))
                 {
                     fields.Append($"\t\tpublic float {fieldInfo.Name};\n");
-                } else
+                }
+                else
                 {
                     content.Append(typeUsing);
                     fields.Append($"\t\tpublic {fieldInfo.FieldType.Name} {fieldInfo.Name};\n");
                 }
 
                 methodBody.Append($"\t\t\t{fieldInfo.Name} = eventDataValue.{fieldInfo.Name};\n");
-
             }
 
             methodBody.Append("\t\t\treturn await base.OnProcessAsync(context);\n");
-            
+
             content.Append("namespace NodeSystem.Generated.EventNodes.BreakNodes\n");
             content.Append("{\n");
             {
                 content.Append($"\t[NodeInfo(\"Break {type.Name} Node\"," +
-                               $" \"BreakNodes/{className}\"," +
+                               $" \"BreakNodes/Break {type.Name} Node\"," +
                                " isPure: true), Serializable]\n");
                 content.Append($"\tpublic class {className} : NodeSystemNode\n");
                 content.Append("\t{\n");
@@ -310,7 +335,8 @@ namespace NodeSystem.Editor.Windows
                 }
                 content.Append("\n\n");
                 {
-                    content.Append($"\t\tpublic override async Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)\n");
+                    content.Append(
+                        "\t\tpublic override async Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)\n");
                     content.Append("\t\t{\n");
                     {
                         content.Append(methodBody);
@@ -338,9 +364,8 @@ namespace NodeSystem.Editor.Windows
                 currParentPath += $"/{pathParts[i]}";
             }
 #endif
-            
+
             File.WriteAllText(_eventNodesGeneratedPath + $"/BreakNodes/{className}.cs", content.ToString());
-            
         }
 
         private void TryGenerateNodeForType(Type type)

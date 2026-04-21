@@ -29,6 +29,7 @@ namespace NodeSystem.Editor.Graph.View
 
         public NodeSystemView(SerializedObject serializedObject, NodeSystemEditorWindow window)
         {
+            foreach (GraphElement graphElement in graphElements) RemoveElement(graphElement); // Justin Case
             SerializedObject = serializedObject;
             Window = window;
             _nodeSystem = (NodeSystemAsset)serializedObject.targetObject;

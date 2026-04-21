@@ -5,6 +5,7 @@ using System.Reflection;
 using NodeSystem.Editor.Editors.NodeEditors;
 using NodeSystem.Editor.Exceptions;
 using NodeSystem.Editor.Graph.Elements;
+using NodeSystem.Editor.Graph.Manipulators;
 using NodeSystem.Editor.Nodes.Manipulators;
 using NodeSystem.Editor.Ports;
 using NodeSystem.Editor.Utils;
@@ -24,7 +25,7 @@ namespace NodeSystem.Editor.Nodes
     public class NodeSystemEditorNode : Node
     {
         private const long DoubleClickDelayInMs = 200;
-        
+
         private static List<Assembly> _assemblies = new();
 
         private readonly SerializedObject _serializedObject;
@@ -64,7 +65,7 @@ namespace NodeSystem.Editor.Nodes
                 .SelectMany(a => a.GetTypes().Where(t =>
                     t.IsDefined(typeof(CustomNodeEditorAttribute)) && !t.IsAbstract &&
                     t.GetCustomAttribute<CustomNodeEditorAttribute>().TargetType == node.GetType()));
-            
+
             Type[] customEditors = editors as Type[] ?? editors.ToArray();
 
             if (customEditors.Any()) nodeEditor = Activator.CreateInstance(customEditors.First()) as NodeEditorBase;
@@ -79,10 +80,30 @@ namespace NodeSystem.Editor.Nodes
                 if (nodeEditor == null || !nodeEditor.AddInputPorts(this))
                     CreateFlowInputPort();
 
+            if (node.GetType().IsDefined(typeof(EventNodeInfoAttribute)))
+            {
+                TextField textField = new()
+                {
+                    value = "New event",
+                    tooltip = "Event Name",
+                    style =
+                    {
+                        width = Length.Pixels(125),
+                        height = Length.Pixels(20),
+                        alignSelf = new StyleEnum<Align>(Align.Center)
+                    }
+                };
+
+                titleContainer.Insert(1, textField);
+                Debug.Log("EventNodeInfo defined");
+            }
+
+
             CreateExposedVariables(typeInfo);
 
             RefreshExpandedState();
 
+            this.AddManipulator(new NsNodeClickSelector());
             this.AddManipulator(new DoubleClickable(OnDoubleClicked, DoubleClickDelayInMs));
         }
 
@@ -334,5 +355,12 @@ namespace NodeSystem.Editor.Nodes
         }
 
         #endregion
+
+        // Thanks Unity :clown:
+        public void ToggleCollapsed()
+        {
+            ToggleCollapse();
+            RefreshExpandedState();
+        }
     }
 }

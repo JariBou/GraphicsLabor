@@ -1,11 +1,12 @@
 ﻿using NodeSystem.Editor.Graph.View;
+using NodeSystem.Editor.Nodes;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace NodeSystem.Editor.Graph.Manipulators
 {
-    public class NsClickSelector : ClickSelector
+    public class NsNodeClickSelector : ClickSelector
     {
         public static bool WasSelectableDescendantHitByMouse(
             GraphElement currentTarget,
@@ -46,11 +47,10 @@ namespace NodeSystem.Editor.Graph.Manipulators
                 return;
             ISelection firstAncestorOfType = currentTarget.GetFirstAncestorOfType<ISelection>();
 
-            if (currentTarget is Edge edge)
-                if (e.altKey && firstAncestorOfType is NodeSystemView graphView)
+            if (currentTarget is NodeSystemEditorNode node)
+                if (e.shiftKey && firstAncestorOfType is NodeSystemView _)
                 {
-                    graphView.RecordAction("Deleted edge");
-                    graphView.DeleteConnection(edge);
+                    node.ToggleCollapsed();
                     return;
                 }
 
