@@ -212,7 +212,7 @@ namespace NodeSystem.Editor.Nodes
                     {
                         height = Length.Percent(100),
                         // width = Length.Auto(), // TODO: IMPORTANT
-                        width = Length.Percent(100), // TODO: IMPORTANT
+                        width = Length.Percent(95), // TODO: IMPORTANT
                         // width = Length.Percent(80), // TODO: IMPORTANT
                         // width = Length.Pixels(200), // TODO: IMPORTANT
                         // width = Length.Pixels(port.layout.width), // TODO: IMPORTANT

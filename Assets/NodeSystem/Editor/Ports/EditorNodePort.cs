@@ -16,7 +16,6 @@ namespace NodeSystem.Editor.Ports
         private EditorNodePort(Orientation portOrientation, Direction portDirection, Capacity portCapacity, Type type)
             : base(portOrientation, portDirection, portCapacity, type)
         {
-            // RegisterCallback<MouseDownEvent>(OnMouseDown);
         }
 
         public string LinkedPropertyName { get; set; }

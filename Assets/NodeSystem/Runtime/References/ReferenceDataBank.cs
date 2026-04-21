@@ -85,5 +85,16 @@ namespace NodeSystem.Runtime.References
             public GameObject Object => _go;
             public string Guid => _guid;
         }
+
+        public GameObject[] GetReferencedGameObjects()
+        {
+            GameObject[] list = new GameObject[_references.Count];
+            for (int i = 0; i < _references.Count; i++)
+            {
+                GameObjectReference reference = _references[i];
+                list[i] = reference.Object;
+            }
+            return list;
+        }
     }
 }

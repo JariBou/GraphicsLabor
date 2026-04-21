@@ -17,25 +17,26 @@ MonoBehaviour:
   - rid: 2224113392803119104
   - rid: 2224113392803119174
   - rid: 2224113392803119175
+  - rid: 2224113505865302086
   _connections:
-  - InputPort:
-      NodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
-      PortIndex: 3
-    OutputPort:
-      NodeId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
-      PortIndex: 4
-  - InputPort:
-      NodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
-      PortIndex: 1
-    OutputPort:
-      NodeId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
-      PortIndex: 0
-  - InputPort:
-      NodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
-      PortIndex: 1
-    OutputPort:
-      NodeId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
-      PortIndex: 0
+  - inputPort:
+      nodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
+      portIndex: 3
+    outputPort:
+      nodeId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+      portIndex: 4
+  - inputPort:
+      nodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
+      portIndex: 1
+    outputPort:
+      nodeId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+      portIndex: 0
+  - inputPort:
+      nodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
+      portIndex: 1
+    outputPort:
+      nodeId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+      portIndex: 0
   _exposedProperties: []
   references:
     version: 2
@@ -43,28 +44,28 @@ MonoBehaviour:
     - rid: 2224113392803119104
       type: {class: StartNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
       data:
-        _position:
+        position:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_guid: d2de0d24-91e4-4c1d-ab30-67577d14c343
-        m_isPure: 0
-        m_ports: []
-        m_pureExecutionDone: 1
+        guid: d2de0d24-91e4-4c1d-ab30-67577d14c343
+        isPure: 0
+        ports: []
+        _pureExecutionDone: 1
     - rid: 2224113392803119174
       type: {class: MyCustomEventNode, ns: NodeSystem.Tests.Runtime, asm: Assembly-CSharp}
       data:
-        _position:
+        position:
           serializedVersion: 2
           x: -147
           y: 170
           width: 180
           height: 125
-        m_guid: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
-        m_isPure: 0
-        m_ports:
+        guid: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
+        isPure: 0
+        ports:
         - _exposedPropertyName: someInt
           _ownerId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
           _portIndex: 1
@@ -81,7 +82,8 @@ MonoBehaviour:
           _ownerId: 805524ab-b3b9-473b-ad76-b4c4b11c1a7f
           _portIndex: 4
           _portDirection: 2
-        m_pureExecutionDone: 1
+        _pureExecutionDone: 1
+        eventName: 
         someInt: 0
         someString: 
         someBool: 0
@@ -92,15 +94,15 @@ MonoBehaviour:
     - rid: 2224113392803119175
       type: {class: OutputCustomEventToLog, ns: NodeSystem.Tests.Runtime, asm: Assembly-CSharp}
       data:
-        _position:
+        position:
           serializedVersion: 2
           x: 166
           y: 170
           width: 353
           height: 117
-        m_guid: ada5b5fe-50fe-444e-bc18-02ce119060e7
-        m_isPure: 0
-        m_ports:
+        guid: ada5b5fe-50fe-444e-bc18-02ce119060e7
+        isPure: 0
+        ports:
         - _exposedPropertyName: logField
           _ownerId: ada5b5fe-50fe-444e-bc18-02ce119060e7
           _portIndex: 2
@@ -109,7 +111,7 @@ MonoBehaviour:
           _ownerId: ada5b5fe-50fe-444e-bc18-02ce119060e7
           _portIndex: 3
           _portDirection: 1
-        m_pureExecutionDone: 1
+        _pureExecutionDone: 1
         logField:
           _compId: ccb57bad-ecb7-446f-85cc-d7312c26a41f
           _ownerId: 56eb561f-2386-4e97-83ec-9d271ac370ce
@@ -118,3 +120,61 @@ MonoBehaviour:
           someInt: 0
           someString: 
           someBool: 0
+    - rid: 2224113505865302086
+      type: {class: TestStartDiffNode, ns: NodeSystem.Runtime.NodesLibrary, asm: NodeSystem}
+      data:
+        position:
+          serializedVersion: 2
+          x: 439
+          y: 359
+          width: 0
+          height: 0
+        guid: ab7a6111-2933-4d96-815c-9003813ce1b2
+        isPure: 0
+        ports:
+        - _exposedPropertyName: testCompRef
+          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
+          _portIndex: 1
+          _portDirection: 2
+        - _exposedPropertyName: testCompRef2
+          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
+          _portIndex: 2
+          _portDirection: 2
+        - _exposedPropertyName: testIn
+          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
+          _portIndex: 3
+          _portDirection: 2
+        - _exposedPropertyName: testIn2
+          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
+          _portIndex: 4
+          _portDirection: 2
+        - _exposedPropertyName: testList
+          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
+          _portIndex: 5
+          _portDirection: 2
+        - _exposedPropertyName: testList2
+          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
+          _portIndex: 6
+          _portDirection: 2
+        - _exposedPropertyName: source
+          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
+          _portIndex: 7
+          _portDirection: 2
+        _pureExecutionDone: 1
+        source:
+          _objectId: 
+          _refTypename: 
+        testCompRef:
+          _compId: 
+          _ownerId: 
+          _refTypename: 
+        testCompRef2:
+          _compId: 
+          _ownerId: 
+          _refTypename: 
+        testIn:
+          _objectId: 
+          _refTypename: 
+        testIn2: {fileID: 0}
+        testList: []
+        testList2: []
