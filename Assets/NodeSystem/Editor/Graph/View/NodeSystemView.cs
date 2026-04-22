@@ -195,6 +195,7 @@ namespace NodeSystem.Editor.Graph.View
             }
 
             if (graphConnections.Count > 0)
+            {
                 foreach (Edge edgeToRemove in graphConnections.Select(con => _connectionsDictionary.Keys.ToList()[
                              _connectionsDictionary.Values.ToList().IndexOf(con)]))
                 {
@@ -203,8 +204,10 @@ namespace NodeSystem.Editor.Graph.View
                     RemoveElement(edgeToRemove);
                     RemoveConnection(edgeToRemove);
                 }
+            }
 
             if (neededConnections.Count > 0)
+            {
                 foreach (NodeSystemConnection connection in neededConnections)
                 {
                     NsEdge edgeToCreate = new(connection, GetNode);
@@ -218,6 +221,7 @@ namespace NodeSystem.Editor.Graph.View
                     AddElement(edgeToCreate);
                     _connectionsDictionary.Add(edgeToCreate, connection);
                 }
+            }
 
             #endregion
         }

@@ -45,10 +45,13 @@ namespace NodeSystem.Runtime
                 _nodeLookup.Add(node.ID, node);
 
                 // Event node lookup init
-                if (node is IEventNode eventNode)
-                    if (!_eventNodeLookup.TryAdd(eventNode.EventDataType, node))
-                        Debug.LogError(
-                            $"Found duplicate Event node for event of type '{eventNode.EventDataType}', only 1 event node per event type is supported.");
+                if (node is not IEventNode eventNode) continue;
+                
+                if (!_eventNodeLookup.TryAdd(eventNode.EventDataType, node))
+                {
+                    Debug.LogError($"Found duplicate Event node for event of type '{eventNode.EventDataType}'," +
+                                   $" only 1 event node per event type is supported.");
+                }
             }
         }
 

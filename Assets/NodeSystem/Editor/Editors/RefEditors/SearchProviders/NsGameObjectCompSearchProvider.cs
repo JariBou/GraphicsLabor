@@ -19,6 +19,7 @@ namespace NodeSystem.Editor.Editors.RefEditors.SearchProviders
             Func<SearchContext, List<SearchItem>, SearchProvider, object> fetchItemsHandler = null) :
             base(id, displayName, fetchItemsHandler)
         {
+            filterId =  FilterId;
             _compType = compType;
         }
 

@@ -33,6 +33,9 @@ namespace NodeSystem.Runtime.NodesLibrary
          ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public ScriptableObject testIn2;
 
+        [SerializeField, ExposedProperty(PropPortDirection.Input, typeof(GameObject), preferredLocation: PropContainerLocation.InputContainer)] 
+        private GameObject _go;
+
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.ExtensionContainer),
          Tooltip("HEEEEYAAAAA")]
         public List<string> testList;

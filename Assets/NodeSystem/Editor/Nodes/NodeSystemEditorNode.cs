@@ -33,6 +33,17 @@ namespace NodeSystem.Editor.Nodes
         private Port _outputPort;
         private SerializedProperty _serializedProperty;
 
+        public sealed override string title
+        {
+            get => base.title;
+            set => base.title = value;
+        }
+
+        public NodeSystemNode Node { get; }
+
+        public List<Port> Ports { get; }
+
+
 
         public NodeSystemEditorNode(NodeSystemNode node, SerializedObject serializedObject)
         {
@@ -106,24 +117,18 @@ namespace NodeSystem.Editor.Nodes
             this.AddManipulator(new NsNodeClickSelector());
             this.AddManipulator(new DoubleClickable(OnDoubleClicked, DoubleClickDelayInMs));
         }
-
-        public sealed override string title
-        {
-            get => base.title;
-            set => base.title = value;
-        }
-
-        public NodeSystemNode Node { get; }
-
-        public List<Port> Ports { get; }
-
-
+        
+        private const BindingFlags GetFieldsBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
         private void CreateExposedVariables(Type typeInfo)
         {
             Node.PortInfos.Clear();
-            foreach (FieldInfo fieldInfo in typeInfo.GetFields())
+            foreach (FieldInfo fieldInfo in typeInfo.GetFields(GetFieldsBindingFlags))
+            {
                 if (fieldInfo.GetCustomAttribute<ExposedPropertyAttribute>() is { } propertyAttribute)
+                {
                     HandleSourcePropertyAttribute(propertyAttribute, fieldInfo);
+                }
+            }
 
             RefreshPorts();
         }
@@ -160,10 +165,9 @@ namespace NodeSystem.Editor.Nodes
             port.LinkedPropertyName = fieldInfo.Name;
             port.portName = "";
             port.tooltip = propertyType.ToString();
+            port.style.height = new StyleLength(StyleKeyword.Auto);
             Ports.Add(port);
 
-            port.style.height = new StyleLength(StyleKeyword.Auto);
-            // port.style.width = Length.Percent(100);
 
             switch (propertyAttribute.PreferredLocation)
             {
@@ -211,16 +215,16 @@ namespace NodeSystem.Editor.Nodes
                     style =
                     {
                         height = Length.Percent(100),
-                        // width = Length.Auto(), // TODO: IMPORTANT
-                        width = Length.Percent(95), // TODO: IMPORTANT
-                        // width = Length.Percent(80), // TODO: IMPORTANT
-                        // width = Length.Pixels(200), // TODO: IMPORTANT
-                        // width = Length.Pixels(port.layout.width), // TODO: IMPORTANT
-                        minWidth = Length.Pixels(0),
-                        maxWidth = Length.Pixels(360)
+                        width = Length.Percent(90)
                     },
                     focusable = true
                 };
+
+                if (propertyAttribute.PreferredLocation != PropContainerLocation.ExtensionContainer)
+                {
+                    tempField.style.minWidth = Length.Pixels(0);
+                    tempField.style.maxWidth = Length.Pixels(360);
+                }
 
                 port.AddField(tempField);
             }
