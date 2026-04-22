@@ -51,6 +51,7 @@ namespace NodeSystem.Editor.Graph.Manipulators
                 if (e.shiftKey && firstAncestorOfType is NodeSystemView _)
                 {
                     node.ToggleCollapsed();
+                    e.StopImmediatePropagation();
                     return;
                 }
 
@@ -64,7 +65,7 @@ namespace NodeSystem.Editor.Graph.Manipulators
                 currentTarget.Select((VisualElement)firstAncestorOfType, e.actionKey);
             }
 
-            e.StopImmediatePropagation();
+            // e.StopImmediatePropagation();
         }
     }
 }
