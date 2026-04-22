@@ -148,17 +148,21 @@ MonoBehaviour:
           _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
           _portIndex: 4
           _portDirection: 2
-        - _exposedPropertyName: testList
+        - _exposedPropertyName: _go
           _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
           _portIndex: 5
-          _portDirection: 2
-        - _exposedPropertyName: testList2
+          _portDirection: 1
+        - _exposedPropertyName: testList
           _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
           _portIndex: 6
           _portDirection: 2
-        - _exposedPropertyName: source
+        - _exposedPropertyName: testList2
           _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
           _portIndex: 7
+          _portDirection: 2
+        - _exposedPropertyName: source
+          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
+          _portIndex: 8
           _portDirection: 2
         _pureExecutionDone: 1
         source:
@@ -169,12 +173,13 @@ MonoBehaviour:
           _ownerId: 
           _refTypename: 
         testCompRef2:
-          _compId: 
-          _ownerId: 
+          _compId: c10c2a57-331a-4879-a7d7-4803311ff5cf
+          _ownerId: 2d5604fe-d7f2-40c9-a474-2ad56e3350e6
           _refTypename: 
         testIn:
           _objectId: 
           _refTypename: 
         testIn2: {fileID: 0}
+        _go: {fileID: 0}
         testList: []
         testList2: []

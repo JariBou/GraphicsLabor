@@ -1,4 +1,5 @@
 ﻿using System;
+using NodeSystem.Editor.Editors.Fields;
 using NodeSystem.Editor.Editors.RefEditors.SearchProviders;
 using NodeSystem.Runtime.Core.RefSystem;
 using NodeSystem.Runtime.References;
@@ -21,86 +22,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
 
         private float _cellHeight;
 
-        // Idk why Here Unity uses the VisualElement one instead of this one but hey... Unity being Unity again I guess
-        /*public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            property.serializedObject.Update();
-            ISerializableTypedRef typedRef = (ISerializableTypedRef)property.boxedValue;
-
-            EditorGUI.BeginProperty(position, label, property);
-
-            EditorGUI.LabelField(position, label);
-            SerializedProperty ownerIdProp = property.FindPropertyRelative("_ownerId");
-            SerializedProperty compIdProp = property.FindPropertyRelative("_compId");
-            EditorGUI.BeginChangeCheck();
-
-            EditorGUI.BeginDisabledGroup(true);
-
-            GameObject ownerGo =  ownerIdProp.stringValue == ReferenceManager.NoneReference ? null : ReferenceManager.GetGameObject<GameObject>(ownerIdProp.stringValue);
-
-            float cellWidth = position.width / 3;
-            _cellHeight = 18f;
-            {
-                Rect drawRect = new Rect()
-                {
-                    x = position.x,
-                    y = position.y,
-                    width = position.width,
-                    height = _cellHeight,
-                };
-
-                EditorGUI.ObjectField(drawRect, ownerGo, typeof(GameObject), true);
-            }
-
-            EditorGUI.EndDisabledGroup();
-
-            GameObjectComponentReferenceBank refBank = ownerGo?.GetComponent<GameObjectComponentReferenceBank>();
-            Component displayedComp = refBank?.GetComp<Component>(compIdProp.stringValue);
-
-            Type refType = typedRef.GetRefType();
-            Object obj;
-            {
-                Rect drawRect = new Rect()
-                {
-                    x = position.x,
-                    y = position.y + _cellHeight,
-                    width = position.width,
-                    height = _cellHeight,
-                };
-
-                obj = EditorGUI.ObjectField(drawRect, displayedComp, refType, true);
-            }
-
-            if (EditorGUI.EndChangeCheck())
-            {
-                if (obj is Component comp)
-                {
-                    ownerIdProp.stringValue = ReferenceManager.GetGuidOf(comp.gameObject);
-                    GameObjectComponentReferenceBank gameObjectComponentReferenceBank = comp.gameObject.GetComponent<GameObjectComponentReferenceBank>();
-                    if (gameObjectComponentReferenceBank == null)
-                    {
-                        gameObjectComponentReferenceBank = comp.gameObject.AddComponent<GameObjectComponentReferenceBank>();
-                    }
-                    gameObjectComponentReferenceBank.LoadReferences();
-                    compIdProp.stringValue = gameObjectComponentReferenceBank.GetGuidOf(comp);
-                } else if (obj is null)
-                {
-                    ownerIdProp.stringValue = ReferenceManager.NoneReference;
-                    compIdProp.stringValue = ReferenceManager.NoneReference;
-                }
-
-                property.serializedObject.ApplyModifiedProperties();
-            }
-
-            EditorGUI.EndProperty();
-            // base.OnGUI(position, property, label);
-        }
-
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return base.GetPropertyHeight(property, label) * 2;
-        }*/
-
+        
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             Color colorSave = GUI.color;
@@ -232,7 +154,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
             {
                 property.serializedObject.Update();
                 // ownerIdProp.serializedObject.Update();
-
+                
                 Object obj = evt.newValue;
                 switch (obj)
                 {
@@ -264,9 +186,23 @@ namespace NodeSystem.Editor.Editors.RefEditors
                 // ownerIdProp.serializedObject.ApplyModifiedProperties();
                 property.serializedObject.ApplyModifiedProperties();
             });
-
+            
             container.Add(compField);
 
+            
+            //TODO, Remove: testing
+
+            NsObjectField testField = new NsObjectField("test")
+            {
+                ObjectType = typeof(GameObject),
+                Value = GameObject.FindAnyObjectByType(typeof(Transform)),
+                searchContext = searchContext,
+                searchViewFlags = SearchViewFlags,
+                searchViewState = searchViewState
+            };
+            container.Add(testField);
+            
+            
             return container;
         }
     }
