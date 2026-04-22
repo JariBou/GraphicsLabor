@@ -15,15 +15,17 @@ namespace NodeSystem.Runtime.References
 
         [SerializeField] private bool _autoRecord = true;
 
-        private void OnEnable()
+        public void OnEnable()
         {
             if (_autoRecord) ReferenceManager.Instance.RecordRefDataBank(this);
         }
 
         private void OnDisable()
         {
-            ReferenceManager.Instance.UnrecordHolder(this);
+            ReferenceManager.Instance.UnrecordRefDataBank(this);
         }
+
+        public event Action ReferencesChanged;
 
         public void LoadReferences()
         {
@@ -38,6 +40,7 @@ namespace NodeSystem.Runtime.References
                     refsToRemove.Remove(refsToRemove.Find(goRef => goRef.Object == go));
 
             foreach (GameObjectReference t in refsToRemove) _references.Remove(t);
+            TriggerReferencesChanged();
             Debug.Log("Load References");
         }
 
@@ -67,6 +70,23 @@ namespace NodeSystem.Runtime.References
             }
         }
 
+        public GameObject[] GetReferencedGameObjects()
+        {
+            GameObject[] list = new GameObject[_references.Count];
+            for (int i = 0; i < _references.Count; i++)
+            {
+                GameObjectReference reference = _references[i];
+                list[i] = reference.Object;
+            }
+
+            return list;
+        }
+
+        protected virtual void TriggerReferencesChanged()
+        {
+            ReferencesChanged?.Invoke();
+        }
+
         [Serializable]
         private class GameObjectReference
         {
@@ -84,17 +104,6 @@ namespace NodeSystem.Runtime.References
 
             public GameObject Object => _go;
             public string Guid => _guid;
-        }
-
-        public GameObject[] GetReferencedGameObjects()
-        {
-            GameObject[] list = new GameObject[_references.Count];
-            for (int i = 0; i < _references.Count; i++)
-            {
-                GameObjectReference reference = _references[i];
-                list[i] = reference.Object;
-            }
-            return list;
         }
     }
 }

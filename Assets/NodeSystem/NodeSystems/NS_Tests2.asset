@@ -56,6 +56,12 @@ MonoBehaviour:
     outputPort:
       nodeId: c12ab505-a05a-4749-b730-1f11377c65e9
       portIndex: 0
+  - inputPort:
+      nodeId: 9ed27163-2442-42c8-810a-ff90abfc2dd9
+      portIndex: 2
+    outputPort:
+      nodeId: 0ab3d837-2230-4338-a71a-059324dc2a9c
+      portIndex: 0
   _exposedProperties:
   - propertyName: Lol
     propertyValue: gougou
@@ -138,8 +144,8 @@ MonoBehaviour:
       data:
         position:
           serializedVersion: 2
-          x: -45
-          y: 61
+          x: -23
+          y: -71
           width: 400
           height: 260
         guid: c683d3cc-d61f-43cb-8c85-919649953c2d
@@ -178,15 +184,15 @@ MonoBehaviour:
           _objectId: 
           _refTypename: 
         testCompRef:
-          _compId: 20bb1a99-e621-4dc3-901d-12bce8fa30dc
-          _ownerId: 
+          _compId: 2aa0029b-692e-4922-b91b-4381502b481e
+          _ownerId: f0007441-4ab6-44d2-bb73-e671c006261e
           _refTypename: 
         testCompRef2:
-          _compId: 95f1d185-7737-450e-abe3-1867012e6057
-          _ownerId: 792dd4ba-4868-44a1-91d1-a1e55cfe11e6
+          _compId: 
+          _ownerId: 
           _refTypename: 
         testIn:
-          _objectId: 
+          _objectId: 792dd4ba-4868-44a1-91d1-a1e55cfe11e6
           _refTypename: 
         testIn2: {fileID: 11400000, guid: f952c082cb03451daed3ee968ac6c63e, type: 2}
         testList:

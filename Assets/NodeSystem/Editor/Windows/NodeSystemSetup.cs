@@ -164,6 +164,7 @@ namespace NodeSystem.Editor.Windows
                         name = "[Node System] - Reference Data Bank"
                     };
                     ReferenceDataBank referenceDataBank = newRefDataBank.AddComponent<ReferenceDataBank>();
+                    referenceDataBank.OnEnable();
                     referenceDataBank.LoadReferences();
 
                     UpdateNodeSystemStatus(); // Just to check if for whatever reason it failed to create it wont say that it's ok

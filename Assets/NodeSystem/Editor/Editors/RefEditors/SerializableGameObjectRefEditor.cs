@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using NodeSystem.Editor.Editors.RefEditors.SearchProviders;
+﻿using NodeSystem.Editor.Editors.RefEditors.SearchProviders;
 using NodeSystem.Runtime.Core.RefSystem;
 using NodeSystem.Runtime.References;
-using NodeSystem.Runtime.Utils;
 using UnityEditor;
 using UnityEditor.Search;
 using UnityEngine;
@@ -16,6 +13,11 @@ namespace NodeSystem.Editor.Editors.RefEditors
     [CustomPropertyDrawer(typeof(SerializableGameObjectRef))]
     public class SerializableGameObjectRefEditor : PropertyDrawer
     {
+        private const SearchViewFlags SearchViewFlags = UnityEngine.Search.SearchViewFlags.Borderless |
+                                                        UnityEngine.Search.SearchViewFlags.GridView |
+                                                        UnityEngine.Search.SearchViewFlags.DisableSavedSearchQuery |
+                                                        UnityEngine.Search.SearchViewFlags.OpenInspectorPreview;
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             property.serializedObject.Update();
@@ -58,14 +60,16 @@ namespace NodeSystem.Editor.Editors.RefEditors
                 ? null
                 : ReferenceManager.GetGameObject<GameObject>(objectIdProp.stringValue);
 
-        
-            // TODO: find a way  to activate it by default
-            NsGameObjectSearchProvider searchProvider = new NsGameObjectSearchProvider("RefSearchProvider");
+
+            NsGameObjectSearchProvider searchProvider = new("RefSearchProvider");
             SearchContext searchContext = SearchService.CreateContext(searchProvider);
-            var searchViewFlags = SearchViewFlags.Borderless | SearchViewFlags.GridView | SearchViewFlags.DisableSavedSearchQuery;
-            var searchViewState = new SearchViewState(searchContext, searchViewFlags);
-            searchViewState.group = "all"; // Group that shows all results plus the "None" item. This is the default.
-            
+            SearchViewState searchViewState = new(searchContext, SearchViewFlags)
+            {
+                hideTabs = true,
+                title = "Select a referenced GameObject...",
+                windowTitle = new GUIContent("Select a referenced GameObject...") // Great, doesn't work... thanks Unity
+            };
+
             /*
             // Create a SearchContext for our object selector.
             var provider = CreateProvider();
@@ -80,7 +84,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
             // Set the group we want to show
             searchViewState.group = "all"; // Group that shows all results plus the "None" item. This is the default.
             */
-            
+
             ObjectField objectField = new()
             {
                 objectType = typeof(GameObject),
@@ -90,10 +94,10 @@ namespace NodeSystem.Editor.Editors.RefEditors
 
                 tooltip = property.tooltip,
                 label = property.displayName,
-                
+
                 searchContext = searchContext,
-                searchViewFlags = searchViewFlags,
-                searchViewState = searchViewState,
+                searchViewFlags = SearchViewFlags,
+                searchViewState = searchViewState
                 // style =
                 // {
                 //     flexGrow = 1
@@ -126,70 +130,5 @@ namespace NodeSystem.Editor.Editors.RefEditors
 
             return objectField;
         }
-        
-        
-    static QueryEngine<GameObject> CreateQueryEngine()
-    {
-        var qe = new QueryEngine<GameObject>(new QueryValidationOptions() { validateFilters = true });
-        qe.AddFilter<string>("t", FilterObjectType, new[] { "=", ":" });
-        return qe;
-    }
-
-    SearchProvider CreateProvider()
-    {
-        return new SearchProvider("MyProviderId", "My Provider") { fetchItems = FetchItems, toObject = ToObject, active = true };
-    }
-
-    static Object ToObject(SearchItem item, Type type)
-    {
-        return item.data as UnityEngine.Object;
-    }
-
-    IEnumerable<SearchItem> FetchItems(SearchContext context, List<SearchItem> items, SearchProvider provider)
-    {
-        var parsedQuery = CreateQueryEngine().ParseQuery(context.searchQuery);
-        if (!parsedQuery.valid)
-        {
-            foreach (var parsedQueryError in parsedQuery.errors)
-            {
-                context.AddSearchQueryError(new SearchQueryError(parsedQueryError, context, provider));
-            }
-            yield break;
-        }
-
-        parsedQuery.returnPayloadIfEmpty = true;
-        var results = parsedQuery.Apply(SearchUtils.FetchGameObjects());
-        foreach (var gameObject in results)
-        {
-            yield return provider.CreateItem(context, gameObject.name, gameObject.name, null, null, gameObject);
-        }
-    }
-
-    static bool FilterObjectType(GameObject obj, string op, string value)
-    {
-        var valueLowerCase = value.ToLowerInvariant();
-        var components = obj.GetComponents<Component>();
-        foreach (var component in components)
-        {
-            var componentType = component.GetType();
-            var componentName = componentType.Name.ToLowerInvariant();
-            var componentFullName = componentType.FullName.ToLowerInvariant();
-            if (op == "=")
-            {
-                if (componentName == valueLowerCase || componentFullName == valueLowerCase)
-                {
-                    return true;
-                }
-            }
-            else if (op == ":")
-            {
-                if (componentName.Contains(valueLowerCase) || componentFullName.Contains(valueLowerCase))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
     }
 }

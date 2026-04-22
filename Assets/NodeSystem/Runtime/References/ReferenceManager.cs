@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -50,6 +51,19 @@ namespace NodeSystem.Runtime.References
             if (Instance == this) _instance = null;
         }
 
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            foreach (ReferenceDataBank dataBank in _referenceDataBanks)
+            {
+                dataBank.ReferencesChanged -= ReferenceDataBankOnReferencesChanged;
+                dataBank.ReferencesChanged += ReferenceDataBankOnReferencesChanged;
+            }
+        }
+#endif
+
+        public static event Action RefDataBanksChanged;
+
         public static ReferenceDataBank[] GetAvailableDataBanks()
         {
             return FindObjectsByType<ReferenceDataBank>(FindObjectsInactive.Include, FindObjectsSortMode.None);
@@ -58,11 +72,20 @@ namespace NodeSystem.Runtime.References
         public void RecordRefDataBank(ReferenceDataBank referenceDataBank)
         {
             Debug.Log("Recording " + referenceDataBank.name);
+            referenceDataBank.ReferencesChanged += ReferenceDataBankOnReferencesChanged;
+            TriggerRefDataBankChanged();
             _referenceDataBanks.Add(referenceDataBank);
         }
 
-        public void UnrecordHolder(ReferenceDataBank referenceDataBank)
+        private static void ReferenceDataBankOnReferencesChanged()
         {
+            TriggerRefDataBankChanged();
+        }
+
+        public void UnrecordRefDataBank(ReferenceDataBank referenceDataBank)
+        {
+            referenceDataBank.ReferencesChanged -= ReferenceDataBankOnReferencesChanged;
+            TriggerRefDataBankChanged();
             _referenceDataBanks.Remove(referenceDataBank);
         }
 
@@ -83,10 +106,13 @@ namespace NodeSystem.Runtime.References
             ReferenceDataBank[] referenceDataBanks =
                 Application.isEditor ? GetAvailableDataBanks() : Instance._referenceDataBanks.ToArray();
 
-            foreach (string guidOf in referenceDataBanks.Select(mHolder => mHolder.GetGuidOf(obj))
-                         .Where(guidOf => guidOf != "")) return guidOf;
+            return referenceDataBanks.Select(mHolder => mHolder.GetGuidOf(obj))
+                .FirstOrDefault(guidOf => guidOf != "") ?? "";
+        }
 
-            return "";
+        private static void TriggerRefDataBankChanged()
+        {
+            RefDataBanksChanged?.Invoke();
         }
     }
 }

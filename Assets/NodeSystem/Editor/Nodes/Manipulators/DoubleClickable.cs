@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace NodeSystem.Editor.Nodes.Manipulators
@@ -47,7 +46,6 @@ namespace NodeSystem.Editor.Nodes.Manipulators
 
         private void OnTimer(TimerState obj)
         {
-            Debug.Log("On Timer");
             _clicked = false;
         }
 

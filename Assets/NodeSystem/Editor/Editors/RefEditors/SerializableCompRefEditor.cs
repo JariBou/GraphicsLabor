@@ -1,9 +1,11 @@
 ﻿using System;
+using NodeSystem.Editor.Editors.RefEditors.SearchProviders;
 using NodeSystem.Runtime.Core.RefSystem;
 using NodeSystem.Runtime.References;
 using UnityEditor;
-using UnityEditor.UIElements;
+using UnityEditor.Search;
 using UnityEngine;
+using UnityEngine.Search;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
@@ -12,6 +14,11 @@ namespace NodeSystem.Editor.Editors.RefEditors
     [CustomPropertyDrawer(typeof(SerializableCompRef<>))]
     public class SerializableCompRefEditor : PropertyDrawer
     {
+        private const SearchViewFlags SearchViewFlags = UnityEngine.Search.SearchViewFlags.Borderless |
+                                                        UnityEngine.Search.SearchViewFlags.GridView |
+                                                        UnityEngine.Search.SearchViewFlags.DisableSavedSearchQuery |
+                                                        UnityEngine.Search.SearchViewFlags.OpenInspectorPreview;
+
         private float _cellHeight;
 
         // Idk why Here Unity uses the VisualElement one instead of this one but hey... Unity being Unity again I guess
@@ -199,13 +206,26 @@ namespace NodeSystem.Editor.Editors.RefEditors
             Component displayedComp = refBank?.GetComp<Component>(compIdProp.stringValue);
             Type refType = typedRef.GetRefType();
 
+            NsGameObjectCompSearchProvider searchProvider = new("RefSearchCompProvider", refType);
+            SearchContext searchContext = SearchService.CreateContext(searchProvider);
+            SearchViewState searchViewState = new(searchContext, SearchViewFlags)
+            {
+                hideTabs = true,
+                title = "Select a referenced GameObject...",
+                windowTitle = new GUIContent("Select a referenced GameObject...") // Great, doesn't work... thanks Unity
+            };
+
             ObjectField compField = new()
             {
                 objectType = refType,
                 value = displayedComp,
                 label = property.displayName,
                 focusable = true,
-                tooltip = property.tooltip
+                tooltip = property.tooltip,
+
+                searchContext = searchContext,
+                searchViewFlags = SearchViewFlags,
+                searchViewState = searchViewState
             };
 
             compField.RegisterValueChangedCallback(evt =>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NodeSystem.Runtime.References;
+using UnityEditor;
 using UnityEditor.Search;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -9,9 +10,9 @@ namespace NodeSystem.Editor.Editors.RefEditors.SearchProviders
 {
     public class NsGameObjectSearchProvider : SearchProvider
     {
-        private const string FilterId = "refgo:";
-        private ReferenceDataBank[] _availableDataBanks;
-        private List<GameObject> _gameObjects = new();
+        protected const string FilterId = "refgo:";
+        protected ReferenceDataBank[] _availableDataBanks;
+        protected List<GameObject> _gameObjects = new();
 
         public NsGameObjectSearchProvider(string id, string displayName = "NsGameObjectSearchProvider",
             Func<SearchContext, List<SearchItem>, SearchProvider, object> fetchItemsHandler = null) :
@@ -19,97 +20,84 @@ namespace NodeSystem.Editor.Editors.RefEditors.SearchProviders
         {
             filterId = FilterId;
             fetchItems = FetchItems;
+            fetchDescription = FetchDescription;
             toObject = ToObject; // Yeah so this is hella important
+            fetchThumbnail = FetchThumbnail;
             // fetchLabel = FetchLabel;
             onEnable = OnEnable;
             onDisable = OnDisable;
-            // 
-            
         }
 
-        private Object ToObject(SearchItem item, Type t)
+        protected virtual Texture2D FetchThumbnail(SearchItem item, SearchContext ctx)
         {
-            return ((GameObject)item.data);
+            return PrefabUtility.GetIconForGameObject((GameObject)item.data);
         }
 
-        private string FetchLabel(SearchItem item, SearchContext context)
+        protected virtual string FetchDescription(SearchItem item, SearchContext ctx)
         {
-            return ((GameObject)item.data).name;
-        }
+            GameObject go = (GameObject)item.data;
 
-        private void OnDisable()
-        {
-            
-        }
-
-        private void OnEnable()
-        {
-            _availableDataBanks = ReferenceManager.GetAvailableDataBanks();
-            foreach (ReferenceDataBank dataBank in _availableDataBanks)
+            bool goActive = go.activeSelf;
+            Transform parent = go.transform.parent;
+            List<Transform> parentTransforms = new();
+            while (parent != null)
             {
-                _gameObjects.AddRange(dataBank.GetReferencedGameObjects());
+                parentTransforms.Add(parent);
+                parent = parent.parent;
             }
+
+            string path = "Scene/";
+            for (int i = parentTransforms.Count - 1; i >= 0; i--)
+            {
+                parent = parentTransforms[i];
+                path += parent.name + "/";
+            }
+
+            path += go.name;
+
+            string description = $"IsActive: {goActive}\nPath: {path}";
+
+            return description;
         }
 
-        private IEnumerable<SearchItem> FetchItems(SearchContext ctx, List<SearchItem> items, SearchProvider provider)
+        protected virtual Object ToObject(SearchItem item, Type t)
         {
-            // new GameObject("Test1")
+            return (GameObject)item.data;
+        }
+
+        protected virtual void OnDisable()
+        {
+            ReferenceManager.RefDataBanksChanged -= ReferenceManagerOnRefDataBanksChanged;
+        }
+
+        protected virtual void OnEnable()
+        {
+            ReferenceManager.RefDataBanksChanged += ReferenceManagerOnRefDataBanksChanged;
+            UpdateCachedData();
+        }
+
+        protected virtual void ReferenceManagerOnRefDataBanksChanged()
+        {
+            UpdateCachedData();
+        }
+
+        protected virtual IEnumerable<SearchItem> FetchItems(SearchContext ctx, List<SearchItem> items,
+            SearchProvider provider)
+        {
             for (int index = 0; index < _gameObjects.Count; index++)
             {
-                Debug.Log(_gameObjects[index].name);
                 GameObject obj = _gameObjects[index];
-                // SearchItem searchItem = new SearchItem($"item_{index}")
-                // {
-                //     data = obj,
-                //     provider = this,
-                //     label = obj.name,
-                //     description = obj.name,
-                // };
-                // items.Add(searchItem);
+                if (!obj.name.Contains(ctx.searchText, StringComparison.InvariantCultureIgnoreCase)) continue;
                 yield return provider.CreateItem(ctx, $"{index}_{obj.name}", obj.name, null, null, obj);
             }
-
-            // return null;
-        }
-    }
-
-    public class NsGameObjectSearchProvider2
-    {
-        private const string id = "NsGameObjectSearchProvider";
-        private const string displayName = "Referenced Game Objects";
-        private const string filterId = "refgo:";
-
-
-        [SearchItemProvider]
-        static SearchProvider CreateProvider()
-        {
-            return new SearchProvider(id, displayName)
-            {
-                filterId = filterId,
-                priority = 10,
-                fetchItems = FetchItems
-            };
         }
 
-        private static IEnumerable<SearchItem> FetchItems(SearchContext context, List<SearchItem> _, SearchProvider provider)
+        protected virtual void UpdateCachedData()
         {
-            if (context.empty)
-            {
-                yield break;
-            }
-            
-            List<GameObject> gameObjects = new();
-            foreach (ReferenceDataBank dataBank in ReferenceManager.GetAvailableDataBanks())
-            {
-                gameObjects.AddRange(dataBank.GetReferencedGameObjects());
-            }
-            for (int index = 0; index < gameObjects.Count; index++)
-            {
-                Debug.Log(gameObjects[index].name);
-                GameObject obj = gameObjects[index];
-
-                yield return provider.CreateItem(context, $"{index}_{obj.name}", obj.name, null, null, obj);
-            }
+            _gameObjects = new List<GameObject>();
+            _availableDataBanks = ReferenceManager.GetAvailableDataBanks();
+            foreach (ReferenceDataBank dataBank in _availableDataBanks)
+                _gameObjects.AddRange(dataBank.GetReferencedGameObjects());
         }
     }
 }

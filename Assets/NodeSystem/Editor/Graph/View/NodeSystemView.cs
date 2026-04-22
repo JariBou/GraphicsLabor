@@ -63,7 +63,7 @@ namespace NodeSystem.Editor.Graph.View
             SetupZoom(0.4f, 2.0f);
 
             AddMinimap(window);
-            GenerateBlackBoard();
+            // GenerateBlackBoard();
 
             DrawNodes();
             DrawConnections();
@@ -371,7 +371,7 @@ namespace NodeSystem.Editor.Graph.View
 
         public void UnsubscribeFromEvents()
         {
-            _blackboard.UnsubscribeFromEvents();
+            _blackboard?.UnsubscribeFromEvents();
             Undo.undoRedoEvent -= OnUndoRedo;
             graphViewChanged -= OnGraphViewChangedEvent;
 

@@ -26,5 +26,5 @@ using UnityEngine;
 [assembly: MakeSerializable(typeof(NodeSystem.Runtime.NodesLibrary.Logic.BranchNode))]
 [assembly: MakeSerializable(typeof(NodeSystem.Runtime.NodesLibrary.Logic.EqualsNode))]
 [assembly: MakeSerializable(typeof(NodeSystem.Runtime.NodesLibrary.Events.FlowerSetEventNode))]
-[assembly: MakeSerializable(typeof(NodeSystem.Runtime.NodesLibrary.Blackboard.ExposedVariableNode))]
-[assembly: MakeSerializable(typeof(NodeSystem.Runtime.NodesLibrary.Blackboard.SetExposedVariableNode))]
+// [assembly: MakeSerializable(typeof(NodeSystem.Runtime.NodesLibrary.Blackboard.ExposedVariableNode))]
+// [assembly: MakeSerializable(typeof(NodeSystem.Runtime.NodesLibrary.Blackboard.SetExposedVariableNode))]
