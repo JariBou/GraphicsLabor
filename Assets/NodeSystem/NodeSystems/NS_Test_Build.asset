@@ -17,7 +17,7 @@ MonoBehaviour:
   - rid: 2224113392803119104
   - rid: 2224113392803119174
   - rid: 2224113392803119175
-  - rid: 2224113505865302086
+  - rid: 2224113551694626885
   _connections:
   - inputPort:
       nodeId: ada5b5fe-50fe-444e-bc18-02ce119060e7
@@ -83,7 +83,7 @@ MonoBehaviour:
           _portIndex: 4
           _portDirection: 2
         _pureExecutionDone: 1
-        eventName: 
+        _eventName: 
         someInt: 0
         someString: 
         someBool: 0
@@ -120,66 +120,21 @@ MonoBehaviour:
           someInt: 0
           someString: 
           someBool: 0
-    - rid: 2224113505865302086
-      type: {class: TestStartDiffNode, ns: NodeSystem.Runtime.NodesLibrary, asm: NodeSystem}
+    - rid: 2224113551694626885
+      type: {class: BranchNode, ns: NodeSystem.Runtime.NodesLibrary.Logic, asm: NodeSystem}
       data:
         position:
           serializedVersion: 2
-          x: 439
-          y: 359
+          x: 658
+          y: 265
           width: 0
           height: 0
-        guid: ab7a6111-2933-4d96-815c-9003813ce1b2
+        guid: d3750106-19bf-47e9-abc3-4c7679b651e8
         isPure: 0
         ports:
-        - _exposedPropertyName: testCompRef
-          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
-          _portIndex: 1
-          _portDirection: 2
-        - _exposedPropertyName: testCompRef2
-          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
-          _portIndex: 2
-          _portDirection: 2
-        - _exposedPropertyName: testIn
-          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
+        - _exposedPropertyName: condition
+          _ownerId: d3750106-19bf-47e9-abc3-4c7679b651e8
           _portIndex: 3
-          _portDirection: 2
-        - _exposedPropertyName: testIn2
-          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
-          _portIndex: 4
-          _portDirection: 2
-        - _exposedPropertyName: _go
-          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
-          _portIndex: 5
           _portDirection: 1
-        - _exposedPropertyName: testList
-          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
-          _portIndex: 6
-          _portDirection: 2
-        - _exposedPropertyName: testList2
-          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
-          _portIndex: 7
-          _portDirection: 2
-        - _exposedPropertyName: source
-          _ownerId: ab7a6111-2933-4d96-815c-9003813ce1b2
-          _portIndex: 8
-          _portDirection: 2
         _pureExecutionDone: 1
-        source:
-          _objectId: 
-          _refTypename: 
-        testCompRef:
-          _compId: 
-          _ownerId: 
-          _refTypename: 
-        testCompRef2:
-          _compId: e6085512-61ea-460f-97ff-dcc71534a39a
-          _ownerId: 792dd4ba-4868-44a1-91d1-a1e55cfe11e6
-          _refTypename: 
-        testIn:
-          _objectId: 
-          _refTypename: 
-        testIn2: {fileID: 0}
-        _go: {fileID: 0}
-        testList: []
-        testList2: []
+        condition: 0

@@ -8,7 +8,12 @@ namespace NodeSystem.Runtime.NodesLibrary.Events
     //TODO: For now we will support only 1 node of each event type
     public abstract class EventNodeBase<T> : NodeSystemNode, IEventNode where T : EventData
     {
-        [SerializeField] public string eventName;
+        [SerializeField] private string _eventName = "New Event";
+        public string EventName
+        {
+            get => _eventName;
+            set => _eventName = value;
+        }
 
         public Type EventDataType => typeof(T);
 

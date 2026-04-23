@@ -13,6 +13,7 @@ using NodeSystem.Runtime;
 using NodeSystem.Runtime.Attributes;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.Core.PortConfigEnums;
+using NodeSystem.Runtime.NodesLibrary.Events;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -91,12 +92,14 @@ namespace NodeSystem.Editor.Nodes
                 if (nodeEditor == null || !nodeEditor.AddInputPorts(this))
                     CreateFlowInputPort();
 
-            if (node.GetType().IsDefined(typeof(EventNodeInfoAttribute)))
+            if (node is IEventNode eventNode)
             {
+                SerializedProperty property = GetSerializedPropertyOf("_eventName");
                 TextField textField = new()
                 {
-                    value = "New event",
+                    value = eventNode.EventName,
                     tooltip = "Event Name",
+                    bindingPath = property.propertyPath,
                     style =
                     {
                         width = Length.Pixels(125),
@@ -104,6 +107,12 @@ namespace NodeSystem.Editor.Nodes
                         alignSelf = new StyleEnum<Align>(Align.Center)
                     }
                 };
+
+                textField.RegisterValueChangedCallback(evt =>
+                {
+                    string newVal = evt.newValue;
+                    eventNode.EventName = newVal;
+                });
 
                 titleContainer.Insert(1, textField);
                 Debug.Log("EventNodeInfo defined");

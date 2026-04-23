@@ -27,6 +27,7 @@ namespace NodeSystem.Runtime
         private List<BlackboardProperty> _exposedProperties = new();
 
         private readonly Dictionary<Type, NodeSystemNode> _eventNodeLookup = new();
+        private readonly Dictionary<Type, Dictionary<string, NodeSystemNode>> _eventNodeLookup2 = new();
 
         private readonly Dictionary<string, NodeSystemNode> _nodeLookup = new();
 
@@ -46,7 +47,10 @@ namespace NodeSystem.Runtime
 
                 // Event node lookup init
                 if (node is not IEventNode eventNode) continue;
-                
+
+                Dictionary<string, NodeSystemNode> nodeContainer = _eventNodeLookup2.TryAddAndGet(eventNode.EventDataType, new Dictionary<string, NodeSystemNode>());
+                nodeContainer.TryAdd(eventNode.EventName, node);
+
                 if (!_eventNodeLookup.TryAdd(eventNode.EventDataType, node))
                 {
                     Debug.LogError($"Found duplicate Event node for event of type '{eventNode.EventDataType}'," +
@@ -154,14 +158,45 @@ namespace NodeSystem.Runtime
         }
 
         /// <summary>
-        ///     Gets the <see cref="EventNodeBase{T}" /> in the graph with event type T
+        ///     Gets the first <see cref="EventNodeBase{T}" /> in the graph with event type T
         /// </summary>
         /// <typeparam name="T"> The type of the event </typeparam>
         /// <returns> The node or null </returns>
         public EventNodeBase<T> FindEventNode<T>() where T : EventData
         {
-            if (_eventNodeLookup.TryGetValue(typeof(T), out NodeSystemNode node)) return node as EventNodeBase<T>;
+            // if (_eventNodeLookup.TryGetValue(typeof(T), out NodeSystemNode node)) return node as EventNodeBase<T>;
 
+            if (_eventNodeLookup2.TryGetValue(typeof(T), out Dictionary<string, NodeSystemNode> container))
+            {
+                if (container.Count > 0)
+                {
+                    return container.First().Value as EventNodeBase<T>;
+                }
+            }
+
+            return null;
+        }
+        
+        /// <summary>
+        ///     Gets the <see cref="EventNodeBase{T}" /> in the graph with event type T  and eventName
+        /// </summary>
+        /// <typeparam name="T"> The type of the event </typeparam>
+        /// <returns> The node or null </returns>
+        public EventNodeBase<T> FindEventNode<T>(string eventName) where T : EventData
+        {
+            // if (_eventNodeLookup.TryGetValue(typeof(T), out NodeSystemNode node)) return node as EventNodeBase<T>;
+
+            if (_eventNodeLookup2.TryGetValue(typeof(T), out Dictionary<string, NodeSystemNode> container))
+            {
+                if (container.Count > 0)
+                {
+                    if (container.TryGetValue(eventName, out NodeSystemNode eventNode))
+                    {
+                        return eventNode as EventNodeBase<T>;
+                    }
+                }
+            }
+            
             return null;
         }
     }
