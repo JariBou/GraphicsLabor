@@ -137,25 +137,82 @@ namespace NodeSystem.Editor.Editors.RefEditors
                 windowTitle = new GUIContent("Select a referenced GameObject...") // Great, doesn't work... thanks Unity
             };
 
-            ObjectField compField = new()
-            {
-                objectType = refType,
-                value = displayedComp,
-                label = property.displayName,
-                focusable = true,
-                tooltip = property.tooltip,
+            // ObjectField compField = new()
+            // {
+            //     objectType = refType,
+            //     value = displayedComp,
+            //     label = property.displayName,
+            //     focusable = true,
+            //     tooltip = property.tooltip,
+            //
+            //     searchContext = searchContext,
+            //     searchViewFlags = SearchViewFlags,
+            //     searchViewState = searchViewState
+            // };
+            //
+            // compField.RegisterValueChangedCallback(evt =>
+            // {
+            //     property.serializedObject.Update();
+            //     // ownerIdProp.serializedObject.Update();
+            //     
+            //     Object obj = evt.newValue;
+            //     switch (obj)
+            //     {
+            //         case Component comp:
+            //         {
+            //             ownerIdProp.stringValue = ReferenceManager.GetGuidOf(comp.gameObject);
+            //             GameObjectComponentReferenceBank gameObjectComponentReferenceBank =
+            //                 comp.gameObject.GetComponent<GameObjectComponentReferenceBank>();
+            //             if (gameObjectComponentReferenceBank == null)
+            //                 gameObjectComponentReferenceBank =
+            //                     comp.gameObject.AddComponent<GameObjectComponentReferenceBank>();
+            //
+            //             gameObjectComponentReferenceBank.LoadReferences();
+            //             compIdProp.stringValue = gameObjectComponentReferenceBank.GetGuidOf(comp);
+            //             objectField.SetValueWithoutNotify(comp
+            //                 .gameObject); // This is soooo weird, I can't stress it enough but hey... it works
+            //             break;
+            //         }
+            //         case null:
+            //         {
+            //             ownerIdProp.stringValue = ReferenceManager.NoneReference;
+            //             compIdProp.stringValue = ReferenceManager.NoneReference;
+            //             objectField.SetValueWithoutNotify(null);
+            //             break;
+            //         }
+            //     }
+            //
+            //     compIdProp.serializedObject.ApplyModifiedProperties();
+            //     // ownerIdProp.serializedObject.ApplyModifiedProperties();
+            //     property.serializedObject.ApplyModifiedProperties();
+            // });
+            //
+            // container.Add(compField);
 
-                searchContext = searchContext,
-                searchViewFlags = SearchViewFlags,
-                searchViewState = searchViewState
+            
+            //TODO, Remove: testing
+
+            NsObjectField testField = new NsObjectField(property.displayName)
+            {
+                ObjectType = refType,
+                Value = displayedComp,
+                tooltip = property.tooltip,
+                
+                HideTabs = true,
+                WindowTitle = new GUIContent("Select a referenced GameObject..."),
+                SearchProvider = searchProvider,
+                SearchViewFlags = SearchViewFlags,
             };
 
-            compField.RegisterValueChangedCallback(evt =>
+            testField.RegisterSelectionCallback((obj, cancelled) =>
             {
+                if (cancelled)
+                {
+                    return;
+                }
                 property.serializedObject.Update();
                 // ownerIdProp.serializedObject.Update();
                 
-                Object obj = evt.newValue;
                 switch (obj)
                 {
                     case Component comp:
@@ -187,19 +244,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
                 property.serializedObject.ApplyModifiedProperties();
             });
             
-            container.Add(compField);
-
             
-            //TODO, Remove: testing
-
-            NsObjectField testField = new NsObjectField("test")
-            {
-                ObjectType = typeof(GameObject),
-                Value = GameObject.FindAnyObjectByType(typeof(Transform)),
-                searchContext = searchContext,
-                searchViewFlags = SearchViewFlags,
-                searchViewState = searchViewState
-            };
             container.Add(testField);
             
             

@@ -10,176 +10,204 @@ namespace NodeSystem.Editor.Editors.Fields
 {
     public class NsObjectField : VisualElement
     {
-        // ===============================================
+        private const string USSClassName = "unity-object-field";
+        private const string LabelUssClassName = USSClassName + "__label";
+        private const string InputUssClassName = USSClassName + "__input";
+        private const string ObjectUssClassName = USSClassName + "__object";
+        private const string SelectorUssClassName = USSClassName + "__selector";
 
-        internal new static readonly string ussClassName = "unity-object-field";
-        internal new static readonly string labelUssClassName = ussClassName + "__label";
-        internal new static readonly string inputUssClassName = ussClassName + "__input";
-        internal static readonly string objectUssClassName = ussClassName + "__object";
-        internal static readonly string selectorUssClassName = ussClassName + "__selector";
         private readonly NsObjectFieldDisplay _nsObjectField;
 
-        private readonly Action m_AsyncOnProjectOrHierarchyChangedCallback;
-        private readonly Action m_OnProjectOrHierarchyChangedCallback;
-        public Type objectType;
+        private readonly Action _onProjectOrHierarchyChangedCallback;
+        private Type _objectType;
 
-        public Object value;
+        private Object _value;
 
 
         public NsObjectField(string label)
         {
-            AddToClassList(Utils.ussClassName);
+            AddToClassList(BaseFieldConsts.USSClassName);
 
 
-            AddToClassList(ussClassName);
-            Label labelElement = new(label);
-            labelElement.focusable = false;
+            AddToClassList(USSClassName);
+            Label labelElement = new(label)
+            {
+                focusable = false
+            };
+
             Add(labelElement);
-            labelElement.AddToClassList(Utils.labelUssClassName);
-            labelElement.AddToClassList(labelUssClassName);
+            labelElement.AddToClassList(BaseFieldConsts.LabelUssClassName);
+            labelElement.AddToClassList(LabelUssClassName);
 
             VisualElement container = new();
-            container.AddToClassList(inputUssClassName);
+            container.AddToClassList(InputUssClassName);
+            container.AddToClassList(BaseFieldConsts.InputUssClassName);
 
-            _nsObjectField = new NsObjectFieldDisplay(this);
-            _nsObjectField.focusable = true;
-            _nsObjectField.AddToClassList(objectUssClassName);
+            _nsObjectField = new NsObjectFieldDisplay(this)
+            {
+                focusable = true
+            };
+            _nsObjectField.AddToClassList(ObjectUssClassName);
             container.Add(_nsObjectField);
 
             ObjectFieldSelector child = new(this);
-            child.AddToClassList(selectorUssClassName);
+            child.AddToClassList(SelectorUssClassName);
             container.Add(child);
 
             Add(container);
 
-            m_AsyncOnProjectOrHierarchyChangedCallback = () => schedule.Execute(m_OnProjectOrHierarchyChangedCallback);
-            m_OnProjectOrHierarchyChangedCallback = () => _nsObjectField.Update();
-            RegisterCallback((EventCallback<AttachToPanelEvent>)(evt =>
+            Action asyncOnProjectOrHierarchyChangedCallback =
+                () => schedule.Execute(_onProjectOrHierarchyChangedCallback);
+            _onProjectOrHierarchyChangedCallback = () =>
             {
-                EditorApplication.projectChanged += m_AsyncOnProjectOrHierarchyChangedCallback;
-                EditorApplication.hierarchyChanged += m_AsyncOnProjectOrHierarchyChangedCallback;
+                ResetSearchService();
+                EnsureSearchServiceReady();
+                _nsObjectField.Update();
+            };
+            RegisterCallback((EventCallback<AttachToPanelEvent>)(_ =>
+            {
+                EditorApplication.projectChanged += asyncOnProjectOrHierarchyChangedCallback;
+                EditorApplication.hierarchyChanged += asyncOnProjectOrHierarchyChangedCallback;
             }));
-            RegisterCallback((EventCallback<DetachFromPanelEvent>)(evt =>
+            RegisterCallback((EventCallback<DetachFromPanelEvent>)(_ =>
             {
-                EditorApplication.projectChanged -= m_AsyncOnProjectOrHierarchyChangedCallback;
-                EditorApplication.hierarchyChanged -= m_AsyncOnProjectOrHierarchyChangedCallback;
+                EditorApplication.projectChanged -= asyncOnProjectOrHierarchyChangedCallback;
+                EditorApplication.hierarchyChanged -= asyncOnProjectOrHierarchyChangedCallback;
             }));
         }
 
 
         /// <summary>
-        ///   <para>Search query context used to populate the object picker.</para>
+        ///     <para>Search query context used to populate the object picker.</para>
         /// </summary>
-        public SearchContext searchContext { get; set; }
+        private SearchContext SearchContext { get; set; }
 
         /// <summary>
-        ///   <para>Search flags used to open the search picker window.</para>
+        ///     <para>Search flags used to open the search picker window.</para>
         /// </summary>
-        public SearchViewFlags searchViewFlags { get; set; }
-        
+        public SearchViewFlags SearchViewFlags { get; set; }
+
         /// <summary>
-        ///   <para>SearchViewState|Search view state used to configure the object picker.</para>
+        ///     <para>SearchViewState|Search view state used to configure the object picker.</para>
         /// </summary>
-        public SearchViewState searchViewState { get; set; }
+        private SearchViewState SearchViewState { get; set; }
 
 
         public Type ObjectType
         {
-            get => objectType;
+            get => _objectType;
             set
             {
-                if (value == objectType) return;
-                objectType = value;
+                if (value == _objectType) return;
+                _objectType = value;
                 _nsObjectField.Update();
             }
         }
 
         public Object Value
         {
-            get => value;
+            get => _value;
             set
             {
-                if (value == this.value) return;
-                this.value = value;
+                if (value == _value) return;
+                if (!ObjectType.IsAssignableFrom(value.GetType())) return;
+                _value = value;
                 _nsObjectField.Update();
-                OnSelection(value, false);
+                DoSelectionCallbacks(value, false);
             }
         }
 
-        static UnityEngine.Object ToObject(SearchItem item, System.Type filterType)
+        public SearchProvider SearchProvider { get; set; }
+
+        public bool HideTabs { get; set; }
+        public GUIContent WindowTitle { get; set; }
+
+        private Action<Object, bool> OnSelectionCallback { get; set; }
+        // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global Justification: User can set these
+        public bool PreventDefaultSelectionHandler { get; set; } = false;
+        public Action<Object> OnTrackCallback { get; set; } = null;
+        public bool PreventDefaultTrackingHandler { get; set; } = false;
+        // ReSharper restore AutoPropertyCanBeMadeGetOnly.Global
+
+        private void ResetSearchService()
         {
-            if (item == null || item.provider == null)
-                return (UnityEngine.Object) null;
-            Func<SearchItem, System.Type, UnityEngine.Object> toObject = item.provider.toObject;
-            return toObject != null ? toObject(item, filterType) : (UnityEngine.Object) null;
+            SearchContext = null;
+            SearchViewState = null;
+        }
+
+        public static Object ToObject(SearchItem item, Type filterType)
+        {
+            Func<SearchItem, Type, Object> toObject = item?.provider?.toObject;
+            return toObject?.Invoke(item, filterType);
         }
 
         internal void ShowObjectSelector()
         {
-            if (this.searchContext == null)
-                this.searchContext = SearchService.CreateContext("", SearchFlags.None);
+            ResetSearchService();
+            EnsureSearchServiceReady();
 
-            searchViewState.selectHandler = (item, b) => OnSelection(ToObject(item, objectType), b);
-            searchViewState.trackingHandler = item => OnObjectChanged(ToObject(item, objectType));
-            // SearchContext searchContext1 = searchViewState?.context ?? this.searchContext;
-            // SearchContext searchContext2 = new(searchContext1.providers, searchContext1.searchText,
-                // searchContext1.options);
-            // string title = ObjectNames.NicifyVariableName(objectType.Name);
-            // SearchViewState pickerState = SearchViewState.CreatePickerState(title, searchContext2,
-            //     this.OnSelection, this.OnObjectChanged,
-            //     objectType.ToString(), objectType, this.searchViewFlags);
-            
-            // if (searchViewState != null)
-            // {
-            //     pickerState.Assign(searchViewState, searchContext2);
-            //     pickerState.SetSearchViewFlags(pickerState.flags | SearchViewFlags.ObjectPicker | this.searchViewFlags);
-            //     pickerState.title = title;
-            // }
-            SearchService.ShowPicker(searchViewState);
+            SearchService.ShowPicker(SearchViewState);
         }
 
-        private void OnObjectChanged(Object obj)
+        private void EnsureSearchServiceReady()
         {
-            Debug.Log(obj.name);
+            SearchContext ??= SearchProvider == null
+                ? SearchService.CreateContext("", SearchFlags.None)
+                : SearchService.CreateContext(SearchProvider);
+
+            SearchViewState ??= new SearchViewState(SearchContext, SearchViewFlags | SearchViewFlags.ObjectPicker)
+            {
+                hideTabs = HideTabs,
+                windowTitle = WindowTitle ?? new GUIContent($"Select a {ObjectType.Name}"),
+                selectHandler = DoSelectionCallbacks,
+                trackingHandler = item =>
+                {
+                    if (!PreventDefaultTrackingHandler) OnObjectChanged(ToObject(item, _objectType));
+
+                    OnTrackCallback?.Invoke(ToObject(item, _objectType));
+                }
+            };
         }
 
-        private void OnSelection(Object arg1, bool arg2)
+        private void DoSelectionCallbacks(SearchItem item, bool cancelled)
         {
-            Debug.Log($"Ouaaaaais, arrete  de te brrrrr | {arg1.name}");
+            if (!PreventDefaultSelectionHandler) OnSelection(ToObject(item, _objectType), cancelled);
+            OnSelectionCallback?.Invoke(ToObject(item, _objectType), cancelled);
         }
 
-        // =========== BaseFieldT ========================
-        private static class Utils
+        private void DoSelectionCallbacks(Object obj, bool cancelled)
         {
-            public static readonly string ussClassName = "unity-base-field";
-            public static readonly string labelUssClassName = ussClassName + "__label";
-            public static readonly string inputUssClassName = ussClassName + "__input";
-            public static readonly string noLabelVariantUssClassName = ussClassName + "--no-label";
+            if (!PreventDefaultSelectionHandler) OnSelection(obj, cancelled);
+            OnSelectionCallback?.Invoke(obj, cancelled);
+        }
 
-            public static readonly string labelDraggerVariantUssClassName =
-                labelUssClassName + "--with-dragger";
+        private void OnObjectChanged(Object _)
+        {
+        }
 
-            public static readonly string mixedValueLabelUssClassName =
-                labelUssClassName + "--mixed-value";
+        private void OnSelection(Object obj, bool cancelled)
+        {
+            if (cancelled)
+            {
+                return;
+            }
 
-            public static readonly string alignedFieldUssClassName = ussClassName + "__aligned";
+            _value = obj;
+            _nsObjectField.Update();
+        }
 
-            public static readonly string inspectorFieldUssClassName =
-                ussClassName + "__inspector-field";
+        public void SetValueWithoutNotify(Object newValue)
+        {
+            if (newValue == _value) return;
+            if (!ObjectType.IsAssignableFrom(newValue.GetType())) return;
+            MarkDirtyRepaint();
+            _value = newValue;
+            _nsObjectField.Update();
+        }
 
-            public static readonly string mixedValueString = "—";
-
-            public static readonly PropertyName serializedPropertyCopyName =
-                (PropertyName)"SerializedPropertyCopyName";
-
-            private static CustomStyleProperty<float> s_LabelWidthRatioProperty =
-                new("--unity-property-field-label-width-ratio");
-
-            private static CustomStyleProperty<float> s_LabelExtraPaddingProperty =
-                new("--unity-property-field-label-extra-padding");
-
-            private static CustomStyleProperty<float> s_LabelBaseMinWidthProperty =
-                new("--unity-property-field-label-base-min-width");
+        public void RegisterSelectionCallback(Action<Object /*newValue*/, bool /*cancelled*/> callback)
+        {
+            OnSelectionCallback = callback;
         }
     }
 }
