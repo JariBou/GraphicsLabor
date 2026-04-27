@@ -6,25 +6,6 @@ namespace NodeSystem.Runtime.Attributes
     [AttributeUsage(AttributeTargets.Field)]
     public class ExposedPropertyAttribute : Attribute
     {
-        public ExposedPropertyAttribute(
-            PropPortDirection portDirection,
-            Type portType = null,
-            string overrideDisplayName = "",
-            PropContainerLocation preferredLocation = PropContainerLocation.ExtensionContainer,
-            PropPortCapacity portCapacity = PropPortCapacity.Single,
-            bool disableInputWhenConnected = false,
-            bool labelOnly = false)
-        {
-            PortType = portType ?? typeof(string);
-            PortDirection = portDirection;
-            OverrideDisplayName = overrideDisplayName;
-            PreferredLocation = preferredLocation;
-            AutoTyping = portType == null;
-            PortCapacity = portCapacity;
-            DisableInputWhenConnected = disableInputWhenConnected;
-            LabelOnly = labelOnly;
-        }
-
         public bool HasOutPort => PortDirection == PropPortDirection.Output;
         public bool HasInPort => PortDirection == PropPortDirection.Input;
         public Type PortType { get; }
@@ -35,6 +16,24 @@ namespace NodeSystem.Runtime.Attributes
         public bool DisableInputWhenConnected { get; }
         public bool AutoTyping { get; }
         public bool LabelOnly { get; }
+
+        public ExposedPropertyAttribute(PropPortDirection portDirection,
+                                        Type portType = null,
+                                        string overrideDisplayName = "",
+                                        PropContainerLocation preferredLocation = PropContainerLocation.ExtensionContainer,
+                                        PropPortCapacity portCapacity = PropPortCapacity.Single,
+                                        bool disableInputWhenConnected = false,
+                                        bool labelOnly = false)
+        {
+            PortType = portType ?? typeof(string);
+            PortDirection = portDirection;
+            OverrideDisplayName = overrideDisplayName;
+            PreferredLocation = preferredLocation;
+            AutoTyping = portType == null;
+            PortCapacity = portCapacity;
+            DisableInputWhenConnected = disableInputWhenConnected;
+            LabelOnly = labelOnly;
+        }
     }
 
     // For Editor-only graph, but is here for ease of use

@@ -4,6 +4,6 @@
     {
         None,
         Input,
-        Output
+        Output,
     }
 }

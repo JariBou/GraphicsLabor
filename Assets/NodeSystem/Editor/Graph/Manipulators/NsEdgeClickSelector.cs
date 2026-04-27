@@ -7,20 +7,20 @@ namespace NodeSystem.Editor.Graph.Manipulators
 {
     public class NsEdgeClickSelector : ClickSelector
     {
-        public static bool WasSelectableDescendantHitByMouse(
-            GraphElement currentTarget,
-            MouseDownEvent evt)
+        public static bool WasSelectableDescendantHitByMouse(GraphElement currentTarget,
+                                                             MouseDownEvent evt)
         {
-            if (!(evt.target is VisualElement target) || currentTarget == target)
-                return false;
+            if (evt.target is not VisualElement target || currentTarget == target) return false;
+
             for (VisualElement dest = target; dest != null && currentTarget != dest; dest = dest.parent)
-                if (dest is GraphElement graphElement && graphElement.enabledInHierarchy &&
-                    graphElement.pickingMode != PickingMode.Ignore && graphElement.IsSelectable())
-                {
-                    Vector2 localPoint = currentTarget.ChangeCoordinatesTo(dest, evt.localMousePosition);
-                    if (graphElement.HitTest(localPoint))
-                        return true;
-                }
+            {
+                if (dest is not GraphElement { enabledInHierarchy: true } graphElement ||
+                    graphElement.pickingMode == PickingMode.Ignore || !graphElement.IsSelectable())
+                    continue;
+
+                Vector2 localPoint = currentTarget.ChangeCoordinatesTo(dest, evt.localMousePosition);
+                if (graphElement.HitTest(localPoint)) return true;
+            }
 
             return false;
         }
@@ -44,25 +44,25 @@ namespace NodeSystem.Editor.Graph.Manipulators
                 !currentTarget.IsSelectable() || !currentTarget.HitTest(e.localMousePosition) ||
                 WasSelectableDescendantHitByMouse(currentTarget, e))
                 return;
+
             ISelection firstAncestorOfType = currentTarget.GetFirstAncestorOfType<ISelection>();
 
             if (currentTarget is Edge edge)
+            {
                 if (e.altKey && firstAncestorOfType is NodeSystemView graphView)
                 {
                     graphView.RecordAction("Deleted edge");
                     graphView.DeleteConnection(edge);
                     return;
                 }
+            }
 
             if (currentTarget.IsSelected((VisualElement)firstAncestorOfType))
             {
-                if (e.actionKey)
-                    currentTarget.Unselect((VisualElement)firstAncestorOfType);
+                if (e.actionKey) currentTarget.Unselect((VisualElement)firstAncestorOfType);
             }
             else
-            {
                 currentTarget.Select((VisualElement)firstAncestorOfType, e.actionKey);
-            }
 
             e.StopImmediatePropagation();
         }

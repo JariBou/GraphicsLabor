@@ -26,10 +26,20 @@ namespace NodeSystem.Editor.Graph.View
         private NodeSystemBlackboard _blackboard;
         private Vector2 _mousePos;
 
+        public NodeSystemEditorWindow Window { get; }
+
+        public List<BlackboardProperty> ExposedProperties { get; }
+
+        private SerializedObject SerializedObject { get; }
+
 
         public NodeSystemView(SerializedObject serializedObject, NodeSystemEditorWindow window)
         {
-            foreach (GraphElement graphElement in graphElements) RemoveElement(graphElement); // Justin Case
+            foreach (GraphElement graphElement in graphElements)
+            {
+                RemoveElement(graphElement); // Justin Case
+            }
+
             SerializedObject = serializedObject;
             Window = window;
             _nodeSystem = (NodeSystemAsset)serializedObject.targetObject;
@@ -43,13 +53,12 @@ namespace NodeSystem.Editor.Graph.View
             _searchProvider.graph = this;
             nodeCreationRequest = ShowSearchWindow;
 
-            StyleSheet styleSheet =
-                AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/NodeSystem/Editor/USS/NodeSystemEditor.uss");
+            StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/NodeSystem/Editor/USS/NodeSystemEditor.uss");
             styleSheets.Add(styleSheet);
 
             GridBackground background = new()
             {
-                name = "Grid"
+                name = "Grid",
             };
             Add(background);
             background.SendToBack();
@@ -71,34 +80,19 @@ namespace NodeSystem.Editor.Graph.View
             graphViewChanged += OnGraphViewChangedEvent;
             Undo.undoRedoEvent += OnUndoRedo;
 
-            // schedule.Execute(_ => FrameAll());
-            // Neither work smh
-            // EditorApplication.delayCall += () =>
-            // {
-            //     FrameAll();
-            // };
-            // schedule.Execute(() => { FrameAll(); });
-
             SubscribeToCopyCutPaste();
         }
-
-        public NodeSystemEditorWindow Window { get; }
-
-        public List<BlackboardProperty> ExposedProperties { get; }
-
-        private SerializedObject SerializedObject { get; }
 
         private void OnMouseMoved(MouseMoveEvent evt)
         {
             _mousePos = evt.localMousePosition;
         }
 
-
         private void AddMinimap(NodeSystemEditorWindow editorWindow)
         {
             MiniMap miniMap = new()
             {
-                anchored = false
+                anchored = false,
             };
             miniMap.SetPosition(new Rect(editorWindow.position.width - 200 - 15, 20, 200, 180));
             Add(miniMap);
@@ -106,12 +100,14 @@ namespace NodeSystem.Editor.Graph.View
 
         private GraphViewChange OnGraphViewChangedEvent(GraphViewChange graphViewChange)
         {
-            // Debug.Log("OnGraphViewChangedEvent");
             if (graphViewChange.movedElements != null)
             {
                 RecordAction("Moved Nodes");
                 foreach (NodeSystemEditorNode editorNode in
-                         graphViewChange.movedElements.OfType<NodeSystemEditorNode>()) editorNode.UpdatePosition();
+                         graphViewChange.movedElements.OfType<NodeSystemEditorNode>())
+                {
+                    editorNode.UpdatePosition();
+                }
             }
 
             if (graphViewChange.elementsToRemove != null)
@@ -121,7 +117,10 @@ namespace NodeSystem.Editor.Graph.View
                 if (nodesToRemove.Count > 0)
                 {
                     RecordAction("Removed Node");
-                    for (int i = nodesToRemove.Count - 1; i >= 0; i--) RemoveNode(nodesToRemove[i]);
+                    for (int i = nodesToRemove.Count - 1; i >= 0; i--)
+                    {
+                        RemoveNode(nodesToRemove[i]);
+                    }
                 }
 
                 List<Edge> edgesToRemove = graphViewChange.elementsToRemove.OfType<Edge>().ToList();
@@ -139,7 +138,10 @@ namespace NodeSystem.Editor.Graph.View
             if (graphViewChange.edgesToCreate != null)
             {
                 RecordAction("Connected Nodes");
-                foreach (Edge edge in graphViewChange.edgesToCreate) CreateConnection(edge);
+                foreach (Edge edge in graphViewChange.edgesToCreate)
+                {
+                    CreateConnection(edge);
+                }
             }
 
             SerializedObject.Update();
@@ -155,31 +157,34 @@ namespace NodeSystem.Editor.Graph.View
 
             List<NodeSystemEditorNode> currentEditorNodes = new(_graphNodes);
             List<NodeSystemNode> neededNodesList = new(_nodeSystem.Nodes);
-            for (int i = 0; i < _graphNodes.Count; i++)
+            foreach (NodeSystemEditorNode editorNode in _graphNodes)
             {
-                NodeSystemEditorNode editorNode = _graphNodes[i];
-                if (_nodeSystem.Nodes.Contains(editorNode.Node))
-                {
-                    NodeSystemNode nodeSystemNode = neededNodesList.Find(systemNode => systemNode == editorNode.Node);
-                    editorNode.SetPosition(nodeSystemNode.Position);
-                    neededNodesList.Remove(editorNode.Node);
-                    currentEditorNodes.Remove(editorNode);
-                }
+                if (!_nodeSystem.Nodes.Contains(editorNode.Node)) continue;
+
+                NodeSystemEditorNode node = editorNode;
+                NodeSystemNode nodeSystemNode = neededNodesList.Find(systemNode => systemNode == node.Node);
+                editorNode.SetPosition(nodeSystemNode.Position);
+                neededNodesList.Remove(editorNode.Node);
+                currentEditorNodes.Remove(editorNode);
             }
 
             if (neededNodesList.Count > 0)
+            {
                 foreach (NodeSystemNode node in neededNodesList)
                 {
                     AddNodeToGraph(node);
                     BindToSerializedObject();
                 }
+            }
 
             if (currentEditorNodes.Count > 0)
+            {
                 foreach (NodeSystemEditorNode editorNode in currentEditorNodes)
                 {
                     RemoveElement(editorNode);
                     RemoveNode(editorNode);
                 }
+            }
 
             #endregion
 
@@ -197,7 +202,8 @@ namespace NodeSystem.Editor.Graph.View
             if (graphConnections.Count > 0)
             {
                 foreach (Edge edgeToRemove in graphConnections.Select(con => _connectionsDictionary.Keys.ToList()[
-                             _connectionsDictionary.Values.ToList().IndexOf(con)]))
+                                                                          _connectionsDictionary.Values.ToList()
+                                                                                                .IndexOf(con)]))
                 {
                     edgeToRemove.input.Disconnect(edgeToRemove);
                     edgeToRemove.output.Disconnect(edgeToRemove);
@@ -211,11 +217,6 @@ namespace NodeSystem.Editor.Graph.View
                 foreach (NodeSystemConnection connection in neededConnections)
                 {
                     NsEdge edgeToCreate = new(connection, GetNode);
-                    // NsEdge edgeToCreate = new()
-                    // {
-                    //     input = GetNode(connection.inputPort.nodeId).Ports[connection.inputPort.portIndex],
-                    //     output = GetNode(connection.outputPort.nodeId).Ports[connection.outputPort.portIndex]
-                    // };
                     edgeToCreate.input.Connect(edgeToCreate);
                     edgeToCreate.output.Connect(edgeToCreate);
                     AddElement(edgeToCreate);
@@ -247,18 +248,20 @@ namespace NodeSystem.Editor.Graph.View
             SerializedObject.Update();
         }
 
-        internal void RemoveConnection(Edge edge)
+        private void RemoveConnection(Edge edge)
         {
-            if (_connectionsDictionary.TryGetValue(edge, out NodeSystemConnection connection))
-            {
-                _nodeSystem.Connections.Remove(connection);
-                _connectionsDictionary.Remove(edge);
-            }
+            if (!_connectionsDictionary.TryGetValue(edge, out NodeSystemConnection connection)) return;
+
+            _nodeSystem.Connections.Remove(connection);
+            _connectionsDictionary.Remove(edge);
         }
 
         private void DrawNodes()
         {
-            foreach (NodeSystemNode node in _nodeSystem.Nodes) AddNodeToGraph(node);
+            foreach (NodeSystemNode node in _nodeSystem.Nodes)
+            {
+                AddNodeToGraph(node);
+            }
 
             if (_nodeSystem.Nodes.Count == 0)
             {
@@ -274,13 +277,17 @@ namespace NodeSystem.Editor.Graph.View
         {
             if (_nodeSystem.Connections == null) return;
 
-            foreach (NodeSystemConnection connection in _nodeSystem.Connections) DrawConnection(connection);
+            foreach (NodeSystemConnection connection in _nodeSystem.Connections)
+            {
+                DrawConnection(connection);
+            }
         }
 
         private void DrawConnection(NodeSystemConnection connection)
         {
             NodeSystemEditorNode inputNode = GetNode(connection.inputPort.nodeId);
             if (inputNode == null) return;
+
             NodeSystemEditorNode outputNode = GetNode(connection.outputPort.nodeId);
             if (outputNode == null) return;
 
@@ -294,8 +301,7 @@ namespace NodeSystem.Editor.Graph.View
 
         private NodeSystemEditorNode GetNode(string nodeId)
         {
-            NodeSystemEditorNode node;
-            _nodeDictionary.TryGetValue(nodeId, out node);
+            _nodeDictionary.TryGetValue(nodeId, out NodeSystemEditorNode node);
             return node;
         }
 
@@ -305,26 +311,24 @@ namespace NodeSystem.Editor.Graph.View
             List<Port> validPorts = new();
 
 
-            foreach (NodeSystemEditorNode editorNode in _graphNodes) allPorts.AddRange(editorNode.Ports);
-
-            foreach (Port port in allPorts)
+            foreach (NodeSystemEditorNode editorNode in _graphNodes)
             {
-                if (port == startPort) continue;
-                if (port.node == startPort.node) continue;
-                if (port.direction == startPort.direction) continue;
+                allPorts.AddRange(editorNode.Ports);
+            }
 
+            foreach (Port port in from port in allPorts
+                                  where port != startPort
+                                  where port.node != startPort.node
+                                  where port.direction != startPort.direction
+                                  select port)
+            {
                 switch (startPort.direction)
                 {
                     case Direction.Input:
-                        if (port.portType == startPort.portType ||
-                            port.portType.IsSubclassOf(startPort
-                                .portType) /*|| startPort.portType.IsSubclassOf(typeof(Ref<>))*/) validPorts.Add(port);
+                        if (port.portType == startPort.portType || port.portType.IsSubclassOf(startPort.portType)) validPorts.Add(port);
                         break;
                     case Direction.Output:
-                        if (port.portType == startPort.portType ||
-                            startPort.portType
-                                .IsSubclassOf(port.portType) /*|| startPort.portType.IsSubclassOf(typeof(Ref<>))*/
-                           ) validPorts.Add(port);
+                        if (port.portType == startPort.portType || startPort.portType.IsSubclassOf(port.portType)) validPorts.Add(port);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

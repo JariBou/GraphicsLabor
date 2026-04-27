@@ -15,11 +15,12 @@ namespace NodeSystem.Editor.Editors.RefEditors.SearchProviders
         private readonly Dictionary<GameObject, Component> _goCompDic = new();
 
         public NsGameObjectCompSearchProvider(string id, Type compType,
-            string displayName = "NsGameObjectCompSearchProvider",
-            Func<SearchContext, List<SearchItem>, SearchProvider, object> fetchItemsHandler = null) :
+                                              string displayName = "NsGameObjectCompSearchProvider",
+                                              Func<SearchContext, List<SearchItem>, SearchProvider, object>
+                                                  fetchItemsHandler = null) :
             base(id, displayName, fetchItemsHandler)
         {
-            filterId =  FilterId;
+            filterId = FilterId;
             _compType = compType;
         }
 
@@ -41,9 +42,9 @@ namespace NodeSystem.Editor.Editors.RefEditors.SearchProviders
 
         protected override void UpdateCachedData()
         {
-            _gameObjects = new List<GameObject>();
-            _availableDataBanks = ReferenceManager.GetAvailableDataBanks();
-            foreach (ReferenceDataBank dataBank in _availableDataBanks)
+            gameObjects = new List<GameObject>();
+            availableDataBanks = ReferenceManager.GetAvailableDataBanks();
+            foreach (ReferenceDataBank dataBank in availableDataBanks)
             {
                 GameObject[] referencedGameObjects = dataBank.GetReferencedGameObjects();
                 foreach (GameObject referencedGameObject in referencedGameObjects)
@@ -51,7 +52,7 @@ namespace NodeSystem.Editor.Editors.RefEditors.SearchProviders
                     Component component = referencedGameObject.GetComponent(_compType);
                     if (component == null) continue;
 
-                    _gameObjects.Add(referencedGameObject);
+                    gameObjects.Add(referencedGameObject);
                     _goCompDic.TryAdd(referencedGameObject, component);
                 }
             }

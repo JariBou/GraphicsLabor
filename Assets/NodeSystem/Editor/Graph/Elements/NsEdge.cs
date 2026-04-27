@@ -33,7 +33,10 @@ namespace NodeSystem.Editor.Graph.Elements
 
         private void RegisterManipulatorsBeforeDefault()
         {
-            foreach (IManipulator manipulator in GetManipulatorsBeforeDefault()) this.AddManipulator(manipulator);
+            foreach (IManipulator manipulator in GetManipulatorsBeforeDefault())
+            {
+                this.AddManipulator(manipulator);
+            }
         }
     }
 }

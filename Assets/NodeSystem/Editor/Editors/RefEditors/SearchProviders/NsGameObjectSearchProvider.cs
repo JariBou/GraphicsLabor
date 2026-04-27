@@ -11,12 +11,12 @@ namespace NodeSystem.Editor.Editors.RefEditors.SearchProviders
     public class NsGameObjectSearchProvider : SearchProvider
     {
         protected const string FilterId = "refgo:";
-        protected ReferenceDataBank[] _availableDataBanks;
-        protected List<GameObject> _gameObjects = new();
+        protected ReferenceDataBank[] availableDataBanks;
+        protected List<GameObject> gameObjects = new();
 
         public NsGameObjectSearchProvider(string id, string displayName = "NsGameObjectSearchProvider",
-            Func<SearchContext, List<SearchItem>, SearchProvider, object> fetchItemsHandler = null) :
-            base(id, displayName, fetchItemsHandler)
+                                          Func<SearchContext, List<SearchItem>, SearchProvider, object>
+                                              fetchItemsHandler = null) : base(id, displayName, fetchItemsHandler)
         {
             filterId = FilterId;
             fetchItems = FetchItems;
@@ -82,22 +82,25 @@ namespace NodeSystem.Editor.Editors.RefEditors.SearchProviders
         }
 
         protected virtual IEnumerable<SearchItem> FetchItems(SearchContext ctx, List<SearchItem> items,
-            SearchProvider provider)
+                                                             SearchProvider provider)
         {
-            for (int index = 0; index < _gameObjects.Count; index++)
+            for (int index = 0; index < gameObjects.Count; index++)
             {
-                GameObject obj = _gameObjects[index];
+                GameObject obj = gameObjects[index];
                 if (!obj.name.Contains(ctx.searchText, StringComparison.InvariantCultureIgnoreCase)) continue;
+
                 yield return provider.CreateItem(ctx, $"{index}_{obj.name}", obj.name, null, null, obj);
             }
         }
 
         protected virtual void UpdateCachedData()
         {
-            _gameObjects = new List<GameObject>();
-            _availableDataBanks = ReferenceManager.GetAvailableDataBanks();
-            foreach (ReferenceDataBank dataBank in _availableDataBanks)
-                _gameObjects.AddRange(dataBank.GetReferencedGameObjects());
+            gameObjects = new List<GameObject>();
+            availableDataBanks = ReferenceManager.GetAvailableDataBanks();
+            foreach (ReferenceDataBank dataBank in availableDataBanks)
+            {
+                gameObjects.AddRange(dataBank.GetReferencedGameObjects());
+            }
         }
     }
 }

@@ -3,6 +3,6 @@
     public enum PropPortCapacity
     {
         Single,
-        Multi
+        Multi,
     }
 }

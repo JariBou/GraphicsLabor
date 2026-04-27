@@ -14,21 +14,21 @@ namespace NodeSystem.Runtime.Core.RefSystem
         public string ObjectId
         {
             get => _objectId;
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
             set => _objectId = value;
-#else
+        #else
             private set => _objectId = value;
-#endif
+        #endif
         }
 
         public string RefTypename
         {
             get => _refTypename;
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
             set => _refTypename = value;
-#else
+        #else
             private set => _refTypename = value;
-#endif
+        #endif
         }
 
         public Type GetRefType()

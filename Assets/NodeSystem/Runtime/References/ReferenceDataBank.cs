@@ -30,16 +30,22 @@ namespace NodeSystem.Runtime.References
         public void LoadReferences()
         {
             GameObject[] objectsInScene = FindObjectsByType<GameObject>(FindObjectsInactive.Include,
-                FindObjectsSortMode.None);
+                                                                        FindObjectsSortMode.None);
 
             List<GameObjectReference> refsToRemove = new(_references);
             foreach (GameObject go in objectsInScene)
+            {
                 if (_references.Find(goRef => goRef.Object == go) == null)
                     _references.Add(new GameObjectReference(go));
                 else
                     refsToRemove.Remove(refsToRemove.Find(goRef => goRef.Object == go));
+            }
 
-            foreach (GameObjectReference t in refsToRemove) _references.Remove(t);
+            foreach (GameObjectReference t in refsToRemove)
+            {
+                _references.Remove(t);
+            }
+
             TriggerReferencesChanged();
             Debug.Log("Load References");
         }
@@ -96,14 +102,14 @@ namespace NodeSystem.Runtime.References
             [FormerlySerializedAs("m_guid"), SerializeField]
             private string _guid;
 
+            public GameObject Object => _go;
+            public string Guid => _guid;
+
             public GameObjectReference(GameObject go)
             {
                 _go = go;
                 _guid = GuidSystem.NewGuid();
             }
-
-            public GameObject Object => _go;
-            public string Guid => _guid;
         }
     }
 }

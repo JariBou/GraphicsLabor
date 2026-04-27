@@ -13,9 +13,7 @@ namespace NodeSystem.Runtime.References
         private void Awake()
         {
             if (_instance != null)
-            {
                 Destroy(gameObject);
-            }
             else
             {
                 _instance = this;
@@ -27,6 +25,7 @@ namespace NodeSystem.Runtime.References
         public static NodeSystemAsset GetGraphInstance(string guid)
         {
             if (_instance._bank.TryGetGraph(guid, out NodeSystemAsset graph)) return graph;
+
             Debug.LogError("No Graph with id '" + guid + "' was found.");
             return null;
         }
@@ -35,6 +34,7 @@ namespace NodeSystem.Runtime.References
         {
             string guid = baseGraph.GraphId;
             if (_instance._bank.TryGetGraph(guid, out NodeSystemAsset graph)) return graph;
+
             Debug.Log("Registering graph");
             return _instance._bank.RegisterGraph(baseGraph);
         }

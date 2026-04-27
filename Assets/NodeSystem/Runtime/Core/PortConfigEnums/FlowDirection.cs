@@ -8,6 +8,6 @@ namespace NodeSystem.Runtime.Core.PortConfigEnums
         None = 0,
         Input = 1 << 0,
         Output = 1 << 1,
-        Both = Input | Output
+        Both = Input | Output,
     }
 }

@@ -20,7 +20,7 @@ namespace NodeSystem.Runtime.Core
         {
             ExecuteNext,
             Wait,
-            EndExecution
+            EndExecution,
         }
     }
 }

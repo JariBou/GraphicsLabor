@@ -10,6 +10,7 @@ namespace NodeSystem.Editor.Graph.View
 {
     public partial class NodeSystemView
     {
+        [Obsolete]
         public void AddBlackboardProperty(BlackboardProperty blackboardProperty, bool b)
         {
             // doesn't work for some reason?
@@ -17,35 +18,26 @@ namespace NodeSystem.Editor.Graph.View
             _blackboard.AddProperty(blackboardProperty, b);
         }
 
+        [Obsolete]
         private void GenerateBlackBoard()
         {
             NodeSystemBlackboard blackboard = new(this)
             {
-                addItemRequested = _ =>
-                {
-                    Debug.Log("ahah");
-                    AddBlackboardProperty(new BlackboardProperty(), false);
-                },
-                editTextRequested = (_, element, newValue) =>
+                addItemRequested = _ => AddBlackboardProperty(new BlackboardProperty(), false), editTextRequested = (_, element, newValue) =>
                 {
                     string oldPropertyName = ((BlackboardField)element).text;
                     if (ExposedProperties.Any(x => x.propertyName == newValue))
                     {
                         EditorUtility.DisplayDialog("Error",
-                            "This property name already exists, please chose another one.",
-                            "OK");
+                                                    "This property name already exists, please chose another one.",
+                                                    "OK");
                         return;
                     }
 
                     int targetIndex = ExposedProperties.FindIndex(x => x.propertyName == oldPropertyName);
                     ExposedProperties[targetIndex].propertyName = newValue;
-
-                    // m_currentView.ModifyExposedProperties(exposedProperties =>
-                    // {
-                    //     exposedProperties[targetIndex].PropertyName = newValue;
-                    // });
                     ((BlackboardField)element).text = newValue;
-                }
+                },
             };
 
             blackboard.SetPosition(new Rect(10, 30, 200, 300));
@@ -53,12 +45,7 @@ namespace NodeSystem.Editor.Graph.View
             _blackboard = blackboard;
         }
 
-        // Not used anymore
-        public NodeSystemBlackboard GetNodeSystemBlackboard()
-        {
-            return _blackboard;
-        }
-
+        [Obsolete]
         public void ClearBlackBoardAndExposedProperties()
         {
             //ExposedProperties.Clear();

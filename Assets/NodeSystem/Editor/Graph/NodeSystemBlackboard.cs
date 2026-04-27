@@ -7,9 +7,12 @@ using UnityEngine.UIElements;
 
 namespace NodeSystem.Editor.Graph
 {
+    [Obsolete]
     public class NodeSystemBlackboard : Blackboard
     {
         private readonly NodeSystemView _associatedGraphView;
+
+        public Action<NodeSystemBlackboard> AddItemRequested { get; set; }
 
         public NodeSystemBlackboard(NodeSystemView associatedGraphView) : base(associatedGraphView)
         {
@@ -19,12 +22,13 @@ namespace NodeSystem.Editor.Graph
 
             Add(new BlackboardSection { title = "Exposed Variables" });
 
-            foreach (BlackboardProperty property in associatedGraphView.ExposedProperties) AddProperty(property, true);
+            foreach (BlackboardProperty property in associatedGraphView.ExposedProperties)
+            {
+                AddProperty(property, true);
+            }
 
             // moveItemRequested += MoveItemRequested;
         }
-
-        public Action<NodeSystemBlackboard> AddItemRequested { get; set; }
 
         // private void MoveItemRequested(Blackboard arg1, int arg2, VisualElement arg3)
         // {
@@ -37,13 +41,16 @@ namespace NodeSystem.Editor.Graph
             string localPropertyName = blackboardProperty.propertyName;
             string localPropertyValue = blackboardProperty.propertyValue;
             if (!loadMode)
+            {
                 while (_associatedGraphView.ExposedProperties.Any(x => x.propertyName == localPropertyName))
+                {
                     localPropertyName = $"{localPropertyName}(1)";
+                }
+            }
 
             BlackboardProperty item = new()
             {
-                propertyName = localPropertyName,
-                propertyValue = localPropertyValue
+                propertyName = localPropertyName, propertyValue = localPropertyValue,
             };
 
 
@@ -56,7 +63,7 @@ namespace NodeSystem.Editor.Graph
 
             TextField propertyValueTextField = new("Value:")
             {
-                value = localPropertyValue
+                value = localPropertyValue,
             };
             propertyValueTextField.RegisterValueChangedCallback(evt =>
             {

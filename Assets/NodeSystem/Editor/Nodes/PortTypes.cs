@@ -1,6 +1,6 @@
 ﻿namespace NodeSystem.Editor.Nodes
 {
-    public class PortTypes
+    public static class PortTypes
     {
         public class FlowPort
         {

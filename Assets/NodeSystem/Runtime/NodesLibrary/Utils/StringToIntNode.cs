@@ -10,13 +10,13 @@ namespace NodeSystem.Runtime.NodesLibrary.Utils
     public class StringToIntNode : NodeSystemNode
     {
         [FormerlySerializedAs("string"), FormerlySerializedAs("m_string"), ExposedProperty(PropPortDirection.Input,
-             preferredLocation: PropContainerLocation.InputContainer,
-             disableInputWhenConnected: true)]
+                                                                                           preferredLocation: PropContainerLocation.InputContainer,
+                                                                                           disableInputWhenConnected: true)]
         public string inputString;
 
         [FormerlySerializedAs("m_Value"), ExposedProperty(PropPortDirection.Output,
-             preferredLocation: PropContainerLocation.OutputContainer,
-             labelOnly: true)]
+                                                          preferredLocation: PropContainerLocation.OutputContainer,
+                                                          labelOnly: true)]
         public int value;
 
         public override async Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)

@@ -16,12 +16,17 @@ namespace NodeSystem.Runtime.References
             Component[] currentComponents = GetComponents<Component>();
             List<GameObjectComponentReference> refsToRemove = new(_references);
             foreach (Component comp in currentComponents)
+            {
                 if (_references.Find(x => x.Comp == comp) == null)
                     _references.Add(new GameObjectComponentReference(comp));
                 else
                     refsToRemove.Remove(refsToRemove.Find(x => x.Comp == comp));
+            }
 
-            foreach (GameObjectComponentReference t in refsToRemove) _references.Remove(t);
+            foreach (GameObjectComponentReference t in refsToRemove)
+            {
+                _references.Remove(t);
+            }
         }
 
         public T GetComp<T>(string guid) where T : Component
@@ -56,14 +61,14 @@ namespace NodeSystem.Runtime.References
             [SerializeField] private Component _comp;
             [SerializeField] private string _guid;
 
+            public Component Comp => _comp;
+            public string Guid => _guid;
+
             public GameObjectComponentReference(Component comp)
             {
                 _comp = comp;
                 _guid = GuidSystem.NewGuid();
             }
-
-            public Component Comp => _comp;
-            public string Guid => _guid;
         }
     }
 }

@@ -10,14 +10,15 @@ namespace NodeSystem.Runtime
         public virtual void CopyDataFrom(NodeSystemNode node)
         {
             ports = node.ports.Select(portInfo =>
-                    new PortInfo(portInfo.ExposedPropertyName, guid, portInfo.PortIndex, portInfo.PortDirection))
-                .ToList();
+                                          new PortInfo(portInfo.ExposedPropertyName, guid, portInfo.PortIndex,
+                                                       portInfo.PortDirection))
+                        .ToList();
             IsPure = node.IsPure;
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
             position = node.position;
-#endif
+        #endif
         }
-#if UNITY_EDITOR
+    #if UNITY_EDITOR
         /// <summary>
         ///     Only available in editor
         /// </summary>
@@ -49,6 +50,6 @@ namespace NodeSystem.Runtime
             position.y += displacement.y;
         }
 
-#endif
+    #endif
     }
 }

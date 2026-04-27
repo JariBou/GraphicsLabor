@@ -12,7 +12,7 @@ namespace NodeSystem.Editor.Editors
             GameObjectComponentReferenceBank referenceDataBank = (GameObjectComponentReferenceBank)target;
             base.OnInspectorGUI();
 
-            if (GUILayout.Button("Add Reference")) referenceDataBank.LoadReferences();
+            if (GUILayout.Button("Update References")) referenceDataBank.LoadReferences();
         }
     }
 }

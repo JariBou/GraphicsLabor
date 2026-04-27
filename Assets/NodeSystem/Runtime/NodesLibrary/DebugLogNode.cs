@@ -10,8 +10,8 @@ namespace NodeSystem.Runtime.NodesLibrary
     public class DebugLogNode : NodeSystemNode
     {
         [FormerlySerializedAs("LogMessage"), ExposedProperty(PropPortDirection.Input,
-             preferredLocation: PropContainerLocation.InputContainer,
-             disableInputWhenConnected: true)]
+                                                             preferredLocation: PropContainerLocation.InputContainer,
+                                                             disableInputWhenConnected: true)]
         public string logMessage;
 
         public override Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)

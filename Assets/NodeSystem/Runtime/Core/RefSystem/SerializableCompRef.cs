@@ -1,4 +1,5 @@
 ﻿using System;
+using NodeSystem.Runtime.Extensions;
 using NodeSystem.Runtime.References;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -18,32 +19,32 @@ namespace NodeSystem.Runtime.Core.RefSystem
         public string CompId
         {
             get => _compId;
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
             set => _compId = value;
-#else
+        #else
             private set => _compId = value;
-#endif
+        #endif
         }
 
         public string OwnerId
         {
             get => _ownerId;
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
             set => _ownerId = value;
-#else
+        #else
             private set => _ownerId = value;
-#endif
+        #endif
         }
 
         [Obsolete]
         public string RefTypename
         {
             get => _refTypename;
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
             set => _refTypename = value;
-#else
+        #else
             private set => _refTypename = value;
-#endif
+        #endif
         }
 
         public Type GetRefType()
@@ -54,16 +55,17 @@ namespace NodeSystem.Runtime.Core.RefSystem
         public T Get()
         {
             GameObject owner = ReferenceManager.GetGameObject<GameObject>(_ownerId);
-            if (owner == null) return null;
-
-            GameObjectComponentReferenceBank compRefBank = owner.GetComponent<GameObjectComponentReferenceBank>();
-            if (compRefBank == null)
-            {
-                Debug.LogError($"Missing GameObjectComponentReferenceBank on GameObject '{owner.name}'");
-                return null;
-            }
-
-            return compRefBank.GetComp<T>(_compId);
+            return owner.GetReferencedComponent<T>(_compId);
+            // if (owner == null) return null;
+            //
+            // GameObjectComponentReferenceBank compRefBank = owner.GetComponent<GameObjectComponentReferenceBank>();
+            // if (compRefBank == null)
+            // {
+            //     Debug.LogError($"Missing GameObjectComponentReferenceBank on GameObject '{owner.name}'");
+            //     return null;
+            // }
+            //
+            // return compRefBank.GetComp<T>(_compId);
         }
     }
 }

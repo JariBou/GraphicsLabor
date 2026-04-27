@@ -14,11 +14,11 @@ namespace NodeSystem.Runtime.Core.RefSystem
         public string ObjectId
         {
             get => _objectId;
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
             set => _objectId = value;
-#else
+        #else
             private set => _objectId = value;
-#endif
+        #endif
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)

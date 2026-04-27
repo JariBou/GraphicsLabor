@@ -12,6 +12,11 @@ namespace NodeSystem.Runtime.NodesLibrary
     [NodeInfo("Test Start Diff Node", "WIP/Test Start Diff Node", FlowDirection.Output)]
     public class TestStartDiffNode : GameObjectSourceNode
     {
+        [SerializeField,
+         ExposedProperty(PropPortDirection.Input, typeof(GameObject),
+                         preferredLocation: PropContainerLocation.InputContainer)]
+        private GameObject _go;
+
         [FormerlySerializedAs("TestCompRef"),
          ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer),
          Tooltip("HEEEEYAAAAA")]
@@ -32,9 +37,6 @@ namespace NodeSystem.Runtime.NodesLibrary
         [FormerlySerializedAs("TestIn2"),
          ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer)]
         public ScriptableObject testIn2;
-
-        [SerializeField, ExposedProperty(PropPortDirection.Input, typeof(GameObject), preferredLocation: PropContainerLocation.InputContainer)] 
-        private GameObject _go;
 
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.ExtensionContainer),
          Tooltip("HEEEEYAAAAA")]

@@ -28,18 +28,19 @@ namespace NodeSystem.Editor.Graph
             _elements = new List<SearchContextElement>();
 
             IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => !assembly.GetName().Name.StartsWith("Unity"));
+                                                        .Where(assembly => !assembly.GetName().Name
+                                                                                    .StartsWith("Unity"));
 
             foreach (Assembly assembly in assemblies)
             foreach (Type type in assembly.GetTypes())
             {
                 NodeInfoAttribute attribute = type.GetCustomAttribute<NodeInfoAttribute>();
-                if (attribute != null)
-                {
-                    object node = Activator.CreateInstance(type); // Suspect n°1
-                    if (string.IsNullOrEmpty(attribute.MenuItem)) continue;
-                    _elements.Add(new SearchContextElement(node, attribute.MenuItem));
-                }
+                if (attribute == null) continue;
+
+                object node = Activator.CreateInstance(type); // Suspect n°1
+                if (string.IsNullOrEmpty(attribute.MenuItem)) continue;
+
+                _elements.Add(new SearchContextElement(node, attribute.MenuItem));
             }
 
             //Sort by name
@@ -58,6 +59,7 @@ namespace NodeSystem.Editor.Graph
                     // Leaves go before nodes
                     if (splits1.Length != splits2.Length && (i == splits1.Length - 1 || i == splits2.Length - 1))
                         return splits1.Length < splits2.Length ? 1 : -1;
+
                     return value;
                 }
 
@@ -87,8 +89,7 @@ namespace NodeSystem.Editor.Graph
 
                 SearchTreeEntry entry = new(new GUIContent(entryTitle.Last()))
                 {
-                    level = entryTitle.Length,
-                    userData = new SearchContextElement(element.Target, element.Title)
+                    level = entryTitle.Length, userData = new SearchContextElement(element.Target, element.Title),
                 };
                 tree.Add(entry);
             }

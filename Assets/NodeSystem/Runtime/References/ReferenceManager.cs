@@ -51,7 +51,7 @@ namespace NodeSystem.Runtime.References
             if (Instance == this) _instance = null;
         }
 
-#if UNITY_EDITOR
+    #if UNITY_EDITOR
         private void OnValidate()
         {
             foreach (ReferenceDataBank dataBank in _referenceDataBanks)
@@ -60,7 +60,7 @@ namespace NodeSystem.Runtime.References
                 dataBank.ReferencesChanged += ReferenceDataBankOnReferencesChanged;
             }
         }
-#endif
+    #endif
 
         public static event Action RefDataBanksChanged;
 
@@ -89,9 +89,15 @@ namespace NodeSystem.Runtime.References
             _referenceDataBanks.Remove(referenceDataBank);
         }
 
+        public static GameObject GetGameObject(string guid)
+        {
+            return GetGameObject<GameObject>(guid);
+        }
+
         public static T GetGameObject<T>(string guid) where T : Object
         {
             if (guid == "") return null;
+
             // return GetAvailableDataBanks().Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
             // return Instance._referenceDataBanks.Select(holder => holder.GetGameObject<T>(guid)).FirstOrDefault(obj => obj);
             ReferenceDataBank[] referenceDataBanks =
@@ -107,7 +113,7 @@ namespace NodeSystem.Runtime.References
                 Application.isEditor ? GetAvailableDataBanks() : Instance._referenceDataBanks.ToArray();
 
             return referenceDataBanks.Select(mHolder => mHolder.GetGuidOf(obj))
-                .FirstOrDefault(guidOf => guidOf != "") ?? "";
+                                     .FirstOrDefault(guidOf => guidOf != "") ?? "";
         }
 
         private static void TriggerRefDataBankChanged()

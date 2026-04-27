@@ -25,19 +25,14 @@ namespace NodeSystem.Runtime
 
         private string _lastExecutionId = "";
 
-        protected NodeSystemNode()
-        {
-            NewGuid();
-        }
-
         public string Typename => GetType().AssemblyQualifiedName;
 
         public string ID
         {
             get => guid;
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
             set => guid = value;
-#endif
+        #endif
         }
 
         public List<PortInfo> PortInfos => ports;
@@ -46,21 +41,26 @@ namespace NodeSystem.Runtime
         public bool PureExecutionDone
         {
             get => _pureExecutionDone;
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
             set => _pureExecutionDone = value;
-#else
+        #else
             protected set => m_pureExecutionDone = value;
-#endif
+        #endif
         }
 
         public bool IsPure
         {
             get => isPure;
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
             set => isPure = value;
-#else
+        #else
             protected set => m_isPure = value;
-#endif
+        #endif
+        }
+
+        protected NodeSystemNode()
+        {
+            NewGuid();
         }
 
         protected PortInfo GetExposedPropertyPortInfo(string propName)
@@ -70,7 +70,7 @@ namespace NodeSystem.Runtime
         }
 
         protected NodeSystemNode GetNodeConnectedToInputPort(NodeSystemAsset graph, PortInfo exposedPropInfo,
-            out int connectedPortIndex)
+                                                             out int connectedPortIndex)
         {
             bool found = graph.GetConnectionToPort(exposedPropInfo, out NodeSystemConnection connectionToInputPort);
             connectedPortIndex = found ? connectionToInputPort.outputPort.portIndex : -1;
@@ -82,16 +82,16 @@ namespace NodeSystem.Runtime
         {
             PortInfo exposedPropertyPortInfo = GetExposedPropertyPortInfo(exposedPropName);
             NodeSystemNode connectedNode = GetNodeConnectedToInputPort(context.GraphInstance, exposedPropertyPortInfo,
-                out int connectedPortIndex);
-            if (connectedNode != null)
-            {
-                await connectedNode.EnsurePureExecution(context);
-                PortInfo connectedNodePortInfo = connectedNode.GetPort(connectedPortIndex);
-                object value = connectedNode.GetType().GetField(connectedNodePortInfo.ExposedPropertyName)
-                    .GetValue(connectedNode);
-                // object value = connectedNode.GetValueOfProp<T>(info, connectedNodePortInfo.ExposedPropertyName);
-                if (value != null) return (T)value;
-            }
+                                                                       out int connectedPortIndex);
+            
+            if (connectedNode == null) return (T)GetType().GetField(exposedPropName).GetValue(this);
+
+            await connectedNode.EnsurePureExecution(context);
+            PortInfo connectedNodePortInfo = connectedNode.GetPort(connectedPortIndex);
+            object value = connectedNode.GetType().GetField(connectedNodePortInfo.ExposedPropertyName)
+                                        .GetValue(connectedNode);
+            // object value = connectedNode.GetValueOfProp<T>(info, connectedNodePortInfo.ExposedPropertyName);
+            if (value != null) return (T)value;
 
             return (T)GetType().GetField(exposedPropName).GetValue(this);
         }
@@ -111,7 +111,6 @@ namespace NodeSystem.Runtime
         {
             guid = GuidSystem.NewGuid();
         }
-
 
         public virtual async Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)
         {
@@ -136,6 +135,7 @@ namespace NodeSystem.Runtime
         public bool Equals(NodeSystemNode obj)
         {
             if (obj != null) return obj.ID == ID;
+
             return false;
         }
 
@@ -167,68 +167,10 @@ namespace NodeSystem.Runtime
             NodeSystemAsset graph = ctx.GraphInstance;
             NodeSystemNode nextNode = GetNextNode(graph);
             if (nextNode != null) return await ContinueExecution(nextNode.ID);
+
             return await EndExecution();
         }
 
         #endregion
-
-        // public abstract NodeSystemNode CopyWithNewGuid();
-
-        // public static TNode CopyFrom<TNode>(TNode src) where TNode : NodeSystemNode, new()
-        // {
-        //     TNode copy = new();
-        //     return src.CopyToWithNewGuid(copy);
-        // }
-        //
-        // public NodeSystemNode CopyToWithNewGuid(NodeSystemNode target)
-        // {
-        //     string newGuid = GuidSystem.NewGuid();
-        //     target.m_guid = newGuid;
-        //     target.m_ports = m_ports.Select(portInfo =>
-        //             new PortInfo(portInfo.ExposedPropertyName, newGuid, portInfo.PortIndex, portInfo.PortDirection))
-        //         .ToList();
-        //     target.IsPure = m_isPure;
-        //     target._position = _position;
-        //     return target;
-        // }
-        //
-        // public TNode CopyToWithNewGuid<TNode>(TNode target) where TNode : NodeSystemNode, new()
-        // {
-        //     string newGuid = GuidSystem.NewGuid();
-        //     target.m_guid = newGuid;
-        //     target.m_ports = m_ports.Select(portInfo =>
-        //             new PortInfo(portInfo.ExposedPropertyName, newGuid, portInfo.PortIndex, portInfo.PortDirection))
-        //         .ToList();
-        //     target.IsPure = m_isPure;
-        //     target._position = _position;
-        //     return target;
-        // }
-
-        // public NodeSystemNode CopyWithNewGuid()
-        // {
-        //     string newGuid = GuidSystem.NewGuid();
-        //     NodeSystemNode copy = new()
-        //     {
-        //         m_guid = newGuid,
-        //         _position = _position,
-        //         IsPure = m_isPure,
-        //         m_ports = m_ports.Select(portInfo => new PortInfo(portInfo.ExposedPropertyName, newGuid, portInfo.PortIndex, portInfo.PortDirection)).ToList(),
-        //     };
-        //     return copy;
-        // }
     }
-
-    // public abstract class NodeSystemNode<TNode> : NodeSystemNode where TNode : NodeSystemNode, new()
-    // {
-    //     public override NodeSystemNode CopyWithNewGuid()
-    //     {
-    //         return CopyWithNewGuid_Impl();
-    //     }
-    //
-    //     public virtual TNode CopyWithNewGuid_Impl()
-    //     {
-    //         TNode copy = new();
-    //         return CopyToWithNewGuid(copy);
-    //     }
-    // }
 }

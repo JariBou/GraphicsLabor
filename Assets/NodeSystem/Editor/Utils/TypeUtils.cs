@@ -62,13 +62,11 @@ namespace NodeSystem.Editor.Utils
                 {
                     string elementName = element[..element.IndexOf("[", StringComparison.Ordinal)];
                     int index = Convert.ToInt32(element[element.IndexOf("[", StringComparison.Ordinal)..]
-                        .Replace("[", "").Replace("]", ""));
+                                                .Replace("[", "").Replace("]", ""));
                     obj = GetValue(obj, elementName, index);
                 }
                 else
-                {
                     obj = GetValue(obj, element);
-                }
             }
 
             return obj;
@@ -89,11 +87,12 @@ namespace NodeSystem.Editor.Utils
             while (type != null)
             {
                 FieldInfo field = type.GetField(name,
-                    BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                                                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
                 if (field != null) return field.GetValue(source);
 
                 PropertyInfo property = type.GetProperty(name,
-                    BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                                                         BindingFlags.NonPublic | BindingFlags.Public |
+                                                         BindingFlags.Instance | BindingFlags.IgnoreCase);
                 if (property != null) return property.GetValue(source, null);
 
                 type = type.BaseType;
@@ -116,8 +115,9 @@ namespace NodeSystem.Editor.Utils
             IEnumerator enumerator = enumerable.GetEnumerator();
             using IDisposable disposableEnumerator = enumerator as IDisposable;
             for (int i = 0; i <= index; i++)
-                if (!enumerator.MoveNext())
-                    return null;
+            {
+                if (!enumerator.MoveNext()) return null;
+            }
 
             return enumerator.Current;
         }

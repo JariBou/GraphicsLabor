@@ -7,8 +7,10 @@ namespace NodeSystem.Runtime.Attributes
     public class EventExposedPropertyAttribute : ExposedPropertyAttribute
     {
         public EventExposedPropertyAttribute(Type portType = null, string overrideDisplayName = "",
-            PropContainerLocation preferredLocation = PropContainerLocation.OutputContainer,
-            PropPortCapacity portCapacity = PropPortCapacity.Multi, bool disableInputWhenConnected = false) : base(
+                                             PropContainerLocation preferredLocation =
+                                                 PropContainerLocation.OutputContainer,
+                                             PropPortCapacity portCapacity = PropPortCapacity.Multi,
+                                             bool disableInputWhenConnected = false) : base(
             PropPortDirection.Output, portType, overrideDisplayName, preferredLocation, portCapacity,
             disableInputWhenConnected, true)
         {

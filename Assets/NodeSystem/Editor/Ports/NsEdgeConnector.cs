@@ -13,6 +13,8 @@ namespace NodeSystem.Editor.Ports
         protected Edge edgeCandidate;
         protected Vector2 mouseDownPosition;
 
+        public override EdgeDragHelper edgeDragHelper { get; }
+
 
         public NsEdgeConnector(IEdgeConnectorListener listener)
         {
@@ -20,11 +22,9 @@ namespace NodeSystem.Editor.Ports
             active = false;
             activators.Add(new ManipulatorActivationFilter
             {
-                button = MouseButton.LeftMouse
+                button = MouseButton.LeftMouse,
             });
         }
-
-        public override EdgeDragHelper edgeDragHelper { get; }
 
         protected override void RegisterCallbacksOnTarget()
         {
@@ -54,8 +54,8 @@ namespace NodeSystem.Editor.Ports
 
         protected virtual void OnMouseDown(MouseDownEvent e)
         {
-            if (!CanStartManipulation(e))
-                return;
+            if (!CanStartManipulation(e)) return;
+
             OnPointerOrMouseDown(e, e.localMousePosition);
         }
 
@@ -64,24 +64,24 @@ namespace NodeSystem.Editor.Ports
             if ((e.pointerId != PointerId.mousePointerId && e.pointerType != PointerType.touch) ||
                 !CanStartManipulation(e))
                 return;
+
             OnPointerOrMouseDown(e, e.localPosition);
         }
 
         protected virtual void OnPointerOrMouseDown(EventBase e, Vector2 localPosition)
         {
             if (active)
-            {
                 e.StopImmediatePropagation();
-            }
             else
             {
-                if (target is not Port portTarget)
-                    return;
+                if (target is not Port portTarget) return;
+
                 mouseDownPosition = localPosition;
                 edgeCandidate = new TEdge();
                 edgeDragHelper.draggedPort = portTarget;
                 edgeDragHelper.edgeCandidate = edgeCandidate;
                 if (!portTarget.ContainsPoint(localPosition)) return;
+
                 switch (e)
                 {
                     case PointerDownEvent evt1:
@@ -124,8 +124,8 @@ namespace NodeSystem.Editor.Ports
         protected virtual void OnCaptureOut()
         {
             active = false;
-            if (edgeCandidate == null)
-                return;
+            if (edgeCandidate == null) return;
+
             Abort();
         }
 
@@ -141,13 +141,13 @@ namespace NodeSystem.Editor.Ports
 
         protected virtual void OnPointerOrMouseMove(EventBase e, Vector2 position)
         {
-            if (!active)
-                return;
+            if (!active) return;
+
             switch (e)
             {
                 case PointerMoveEvent evt1:
-                    if (!target.HasPointerCapture(evt1.pointerId))
-                        return;
+                    if (!target.HasPointerCapture(evt1.pointerId)) return;
+
                     edgeDragHelper.HandlePointerMove(evt1);
                     break;
                 case MouseMoveEvent evt2:
@@ -162,16 +162,16 @@ namespace NodeSystem.Editor.Ports
 
         protected virtual void OnPointerUp(PointerUpEvent e)
         {
-            if (!active || !CanStopManipulation(e))
-                return;
+            if (!active || !CanStopManipulation(e)) return;
+
             OnPointerOrMouseUp(e, e.localPosition);
             target.ReleasePointer(e.pointerId);
         }
 
         protected virtual void OnMouseUp(MouseUpEvent e)
         {
-            if (!active || !CanStopManipulation(e))
-                return;
+            if (!active || !CanStopManipulation(e)) return;
+
             OnPointerOrMouseUp(e, e.localMousePosition);
             target.ReleaseMouse();
         }
@@ -179,6 +179,7 @@ namespace NodeSystem.Editor.Ports
         protected virtual void OnPointerOrMouseUp(EventBase e, Vector2 localPosition)
         {
             if (CanPerformConnection(localPosition))
+            {
                 switch (e)
                 {
                     case PointerUpEvent evt1:
@@ -188,6 +189,7 @@ namespace NodeSystem.Editor.Ports
                         edgeDragHelper.HandleMouseUp(evt2);
                         break;
                 }
+            }
             else
                 Abort();
 
@@ -198,8 +200,8 @@ namespace NodeSystem.Editor.Ports
 
         protected virtual void OnKeyDown(KeyDownEvent e)
         {
-            if (e.keyCode != KeyCode.Escape || !active)
-                return;
+            if (e.keyCode != KeyCode.Escape || !active) return;
+
             Abort();
             active = false;
             target.ReleaseMouse();

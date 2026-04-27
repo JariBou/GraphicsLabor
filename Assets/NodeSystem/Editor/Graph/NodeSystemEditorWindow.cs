@@ -37,11 +37,13 @@ namespace NodeSystem.Editor.Graph
         {
             NodeSystemEditorWindow[] windows = Resources.FindObjectsOfTypeAll<NodeSystemEditorWindow>();
             foreach (NodeSystemEditorWindow window in windows)
+            {
                 if (window.CurrentGraph == graph)
                 {
                     window.Focus();
                     return;
                 }
+            }
 
             NodeSystemEditorWindow newWindow =
                 CreateWindow<NodeSystemEditorWindow>(typeof(NodeSystemEditorWindow), typeof(SceneView));

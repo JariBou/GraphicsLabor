@@ -18,8 +18,11 @@ namespace NodeSystem.Runtime.NodesLibrary.Logic
             NodeSystemNode nextNode =
                 GetNodeConnectedToPort(graph, await GetValueOfProp<bool>(context, nameof(condition)) ? 0 : 1);
             if (nextNode != null)
+            {
                 return await Task.FromResult(
                     new ProcessInfo(ID, nextNode.ID, ProcessInfo.ExecutionFlowType.ExecuteNext));
+            }
+
             return await EndExecution();
         }
     }

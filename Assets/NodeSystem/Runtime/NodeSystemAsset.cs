@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using NodeSystem.Runtime.BlackBoard;
 using NodeSystem.Runtime.Core;
 using NodeSystem.Runtime.NodesLibrary.Events;
@@ -42,20 +43,23 @@ namespace NodeSystem.Runtime
         {
             foreach (NodeSystemNode node in Nodes)
             {
-                // Node lookup init
+                // == Node lookup init ==
                 _nodeLookup.Add(node.ID, node);
+                // ==========================
 
-                // Event node lookup init
+                // == Event node lookup init ==
                 if (node is not IEventNode eventNode) continue;
 
-                Dictionary<string, NodeSystemNode> nodeContainer = _eventNodeLookup2.TryAddAndGet(eventNode.EventDataType, new Dictionary<string, NodeSystemNode>());
+                Dictionary<string, NodeSystemNode> nodeContainer =
+                    _eventNodeLookup2.TryAddAndGet(eventNode.EventDataType, new Dictionary<string, NodeSystemNode>());
                 nodeContainer.TryAdd(eventNode.EventName, node);
 
                 if (!_eventNodeLookup.TryAdd(eventNode.EventDataType, node))
                 {
-                    Debug.LogError($"Found duplicate Event node for event of type '{eventNode.EventDataType}'," +
-                                   $" only 1 event node per event type is supported.");
+                    Debug.LogError(
+                        $"Found duplicate Event node for event of type '{eventNode.EventDataType}', only 1 event node per event type is supported.");
                 }
+                // ==========================
             }
         }
 
@@ -67,19 +71,19 @@ namespace NodeSystem.Runtime
         /// <returns></returns>
         public bool GetConnectionToPort(PortInfo portInfo, out NodeSystemConnection outConnection)
         {
-            foreach (NodeSystemConnection connection in Connections)
-                if (connection.inputPort.nodeId == portInfo.OwnerId &&
-                    connection.inputPort.portIndex == portInfo.PortIndex)
-                {
-                    outConnection = connection;
-                    return true;
-                }
+            foreach (NodeSystemConnection connection in Connections.Where(connection => connection.inputPort.nodeId == portInfo.OwnerId &&
+                                                                                        connection.inputPort.portIndex == portInfo.PortIndex))
+            {
+                outConnection = connection;
+                return true;
+            }
 
             outConnection = default;
             return false;
             // return Connections.Find(connection => connection.outputPort.nodeId == portInfo.OwnerId && connection.outputPort.portIndex == portInfo.PortIndex);
         }
 
+        [Obsolete]
         public void ModifyExposedVariable(string propertyName, string newValue)
         {
             BlackboardProperty property = ExposedProperties.Find(bgProp => bgProp.propertyName == propertyName);
@@ -99,18 +103,14 @@ namespace NodeSystem.Runtime
 
         public NodeSystemNode GetNodeFromOutputConnection(string startingNodeId, int outputPortIndex)
         {
-            foreach (NodeSystemConnection connection in Connections)
-                if (connection.outputPort.nodeId == startingNodeId &&
-                    connection.outputPort.portIndex == outputPortIndex)
-                {
-                    string nodeId = connection.inputPort.nodeId;
-                    NodeSystemNode node = _nodeLookup[nodeId];
-                    return node;
-                }
-
-            return null;
+            return (from connection in Connections
+                    where connection.outputPort.nodeId == startingNodeId && connection.outputPort.portIndex == outputPortIndex
+                    select connection.inputPort.nodeId
+                    into nodeId
+                    select _nodeLookup[nodeId]).FirstOrDefault();
         }
 
+        [Obsolete]
         public string GetExposedVariableValue(string variableName, out bool found)
         {
             BlackboardProperty blackboardProperty =
@@ -125,6 +125,7 @@ namespace NodeSystem.Runtime
             return blackboardProperty.propertyValue;
         }
 
+        [Obsolete]
         public string SetExposedVariableValue(string variableName, string newVal, out bool found)
         {
             BlackboardProperty blackboardProperty =
@@ -148,13 +149,7 @@ namespace NodeSystem.Runtime
         public NodeSystemNode GetNodeToPlayFromSource(GameObject gameObject)
         {
             string guid = ReferenceManager.GetGuidOf(gameObject);
-            if (guid == "") return null;
-            foreach (NodeSystemNode node in _nodes)
-                if (node is GameObjectSourceNode sourceNode)
-                    if (sourceNode.source.ObjectId == guid)
-                        return node;
-
-            return null;
+            return guid == "" ? null : _nodes.OfType<GameObjectSourceNode>().FirstOrDefault(node => node.source.ObjectId == guid);
         }
 
         /// <summary>
@@ -162,42 +157,37 @@ namespace NodeSystem.Runtime
         /// </summary>
         /// <typeparam name="T"> The type of the event </typeparam>
         /// <returns> The node or null </returns>
+        [CanBeNull]
         public EventNodeBase<T> FindEventNode<T>() where T : EventData
         {
-            // if (_eventNodeLookup.TryGetValue(typeof(T), out NodeSystemNode node)) return node as EventNodeBase<T>;
-
-            if (_eventNodeLookup2.TryGetValue(typeof(T), out Dictionary<string, NodeSystemNode> container))
-            {
-                if (container.Count > 0)
-                {
-                    return container.First().Value as EventNodeBase<T>;
-                }
-            }
-
-            return null;
+            if (!_eventNodeLookup2.TryGetValue(typeof(T), out Dictionary<string, NodeSystemNode> container)) return null;
+            return container.FirstOrDefault().Value as EventNodeBase<T>;
+            // if (container.Count > 0) return container.FirstOrDefault().Value as EventNodeBase<T>;
+            //
+            // return null;
         }
-        
+
         /// <summary>
         ///     Gets the <see cref="EventNodeBase{T}" /> in the graph with event type T  and eventName
         /// </summary>
         /// <typeparam name="T"> The type of the event </typeparam>
         /// <returns> The node or null </returns>
+        [CanBeNull]
         public EventNodeBase<T> FindEventNode<T>(string eventName) where T : EventData
         {
-            // if (_eventNodeLookup.TryGetValue(typeof(T), out NodeSystemNode node)) return node as EventNodeBase<T>;
+            if (!_eventNodeLookup2.TryGetValue(typeof(T), out Dictionary<string, NodeSystemNode> container)) return null;
+            if (container.TryGetValue(eventName, out NodeSystemNode eventNode)) return eventNode as EventNodeBase<T>;
 
-            if (_eventNodeLookup2.TryGetValue(typeof(T), out Dictionary<string, NodeSystemNode> container))
-            {
-                if (container.Count > 0)
-                {
-                    if (container.TryGetValue(eventName, out NodeSystemNode eventNode))
-                    {
-                        return eventNode as EventNodeBase<T>;
-                    }
-                }
-            }
-            
             return null;
+            // if (_eventNodeLookup2.TryGetValue(typeof(T), out Dictionary<string, NodeSystemNode> container))
+            // {
+            //     if (container.Count > 0)
+            //     {
+            //         if (container.TryGetValue(eventName, out NodeSystemNode eventNode)) return eventNode as EventNodeBase<T>;
+            //     }
+            // }
+            //
+            // return null;
         }
     }
 }

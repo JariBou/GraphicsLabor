@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NodeSystem.Runtime.Utils;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ namespace NodeSystem.Runtime.References
         public NodeSystemAsset RegisterGraph(NodeSystemAsset graph)
         {
             // TODO: shouldn't  be a concern for now but since GraphId is serialized, there is a possibility that, on creation, a graph gets the same Id as another one
+            // For now we just log an error
+            int duplicateIdCount = _nodeSystems.Count(asset => asset.GraphId == graph.GraphId);
+            if (duplicateIdCount > 0) Debug.LogError($"Found duplicate graphId '{graph.GraphId}'! Duplicate count: {duplicateIdCount}");
             string graphId = graph.GraphId;
             NodeSystemAsset newGraph = Instantiate(graph);
             newGraph.Init();
@@ -28,9 +32,10 @@ namespace NodeSystem.Runtime.References
         public void Initialize()
         {
             _graphBank = new Dictionary<string, NodeSystemAsset>(_nodeSystems.Count);
-            foreach (NodeSystemAsset graph in _nodeSystems)
-                if (graph != null)
-                    RegisterGraph(graph);
+            foreach (NodeSystemAsset graph in _nodeSystems.Where(graph => graph != null))
+            {
+                RegisterGraph(graph);
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Process
             _ = DoWaitAndResume(context);
             // return new ProcessInfo(id, GetNextNode(info.GraphInstance).id, ProcessInfo.ExecutionFlowType.Wait);
             return await Task.FromResult(new ProcessInfo(ID, GetNextNode(context.GraphInstance).ID,
-                ProcessInfo.ExecutionFlowType.Wait));
+                                                         ProcessInfo.ExecutionFlowType.Wait));
         }
 
         private async Awaitable DoWaitAndResume(ExecContext context)

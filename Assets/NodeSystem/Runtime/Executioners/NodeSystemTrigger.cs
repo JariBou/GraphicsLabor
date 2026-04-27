@@ -22,8 +22,10 @@ namespace NodeSystem.Runtime.Executioners
         {
             _graphInstance = NodeSystemBank.GetGraphInstance(_graph);
             if (_gameObjectToTrigger == null) _gameObjectToTrigger = gameObject;
+
             _nodeToPlay = _graphInstance.GetNodeToPlayFromSource(_gameObjectToTrigger);
             if (_nodeToPlay == null) return;
+
             _currentExecNodeId = _nodeToPlay.ID;
         }
 
@@ -41,6 +43,7 @@ namespace NodeSystem.Runtime.Executioners
         public async Awaitable TickProcess()
         {
             if (_graphInstance == null || _currentExecNodeId == "") return;
+
             ProcessInfo processInfo = await GetCurrentNode().OnProcessAsync(new ExecContext(_graphInstance));
             Debug.Log("Ticking!");
             switch (processInfo.FlowType)

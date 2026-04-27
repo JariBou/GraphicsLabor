@@ -15,7 +15,7 @@ namespace NodeSystem.Editor.Nodes.Manipulators
             _doubleClickDelayInMs = doubleClickDelayInMs;
             activators.Add(new ManipulatorActivationFilter
             {
-                button = MouseButton.LeftMouse
+                button = MouseButton.LeftMouse,
             });
         }
 

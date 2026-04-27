@@ -7,7 +7,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Utils
     public class IntNode : NodeSystemNode
     {
         [ExposedProperty(PropPortDirection.Output, preferredLocation: PropContainerLocation.OutputContainer,
-            disableInputWhenConnected: false)]
+                         disableInputWhenConnected: false)]
         public int outInt;
     }
 }

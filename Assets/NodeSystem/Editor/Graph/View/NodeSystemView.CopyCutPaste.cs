@@ -59,36 +59,13 @@ namespace NodeSystem.Editor.Graph.View
                         string outputGuid = oldNewGuid.TryAddAndGet(outputNode.Node.ID, GuidSystem.NewGuid);
 
                         _copiedConnectionsCache.Add(new NodeSystemConnection(inputGuid,
-                            inputNode.GetIndexOfPort(edgeInput), outputGuid, outputNode.GetIndexOfPort(edgeOutput)));
+                                                                             inputNode.GetIndexOfPort(edgeInput),
+                                                                             outputGuid,
+                                                                             outputNode.GetIndexOfPort(edgeOutput)));
                         break;
                     }
                 }
             }
-            // foreach (GraphElement element in enumerable)
-            // {
-            //     if (_copiedElementsCompoundRect == Rect.zero) _copiedElementsCompoundRect = element.layout;
-            //     _copiedElementsCompoundRect = RectUtils.Encompass(element.layout, _copiedElementsCompoundRect);
-            //
-            //     if (element is NodeSystemEditorNode node)
-            //     {
-            //         string nodeTypename = node.Node.Typename;
-            //         Type type = Type.GetType(nodeTypename);
-            //         if (type != null)
-            //         {
-            //             NodeSystemNode copy = (NodeSystemNode)Activator.CreateInstance(type);
-            //             copy.CopyDataFrom(node.Node);
-            //             _copiedNodesCache.Add(copy);
-            //         }
-            //
-            //         // NodeSystemNode.CopyFrom(node.Node);
-            //         // m_copiedNodesCache.Add(node.Node.CopyWithNewGuid());
-            //     }
-            //     else if (element is Edge _)
-            //     {
-            //         // TODO: actually we should traverse everything and update node id's 
-            //         CreateConnection();
-            //     }
-            // }
 
             return "";
         }

@@ -42,6 +42,6 @@ namespace NodeSystem.Runtime.NodesLibrary
         Test1 = 1 << 0,
         Test2 = 1 << 1,
         Test4 = 1 << 2,
-        Test16 = 1 << 3
+        Test16 = 1 << 3,
     }
 }

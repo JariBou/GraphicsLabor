@@ -24,6 +24,56 @@ namespace NodeSystem.Editor.Editors.Fields
         private Object _value;
 
 
+        /// <summary>
+        ///     <para>Search query context used to populate the object picker.</para>
+        /// </summary>
+        private SearchContext SearchContext { get; set; }
+
+        /// <summary>
+        ///     <para>Search flags used to open the search picker window.</para>
+        /// </summary>
+        public SearchViewFlags SearchViewFlags { get; set; }
+
+        /// <summary>
+        ///     <para>SearchViewState|Search view state used to configure the object picker.</para>
+        /// </summary>
+        private SearchViewState SearchViewState { get; set; }
+
+
+        public Type ObjectType
+        {
+            get => _objectType;
+            set
+            {
+                if (value == _objectType) return;
+
+                _objectType = value;
+                _nsObjectField.Update();
+            }
+        }
+
+        public Object Value
+        {
+            get => _value;
+            set
+            {
+                if (value == _value) return;
+                if (!ObjectType.IsAssignableFrom(value.GetType())) return;
+
+                _value = value;
+                _nsObjectField.Update();
+                DoSelectionCallbacks(value, false);
+            }
+        }
+
+        public SearchProvider SearchProvider { get; set; }
+
+        public bool HideTabs { get; set; }
+        public GUIContent WindowTitle { get; set; }
+
+        private Action<Object, bool> OnSelectionCallback { get; set; }
+
+
         public NsObjectField(string label)
         {
             AddToClassList(BaseFieldConsts.USSClassName);
@@ -32,7 +82,7 @@ namespace NodeSystem.Editor.Editors.Fields
             AddToClassList(USSClassName);
             Label labelElement = new(label)
             {
-                focusable = false
+                focusable = false,
             };
 
             Add(labelElement);
@@ -45,7 +95,7 @@ namespace NodeSystem.Editor.Editors.Fields
 
             _nsObjectField = new NsObjectFieldDisplay(this)
             {
-                focusable = true
+                focusable = true,
             };
             _nsObjectField.AddToClassList(ObjectUssClassName);
             container.Add(_nsObjectField);
@@ -76,56 +126,10 @@ namespace NodeSystem.Editor.Editors.Fields
             }));
         }
 
-
-        /// <summary>
-        ///     <para>Search query context used to populate the object picker.</para>
-        /// </summary>
-        private SearchContext SearchContext { get; set; }
-
-        /// <summary>
-        ///     <para>Search flags used to open the search picker window.</para>
-        /// </summary>
-        public SearchViewFlags SearchViewFlags { get; set; }
-
-        /// <summary>
-        ///     <para>SearchViewState|Search view state used to configure the object picker.</para>
-        /// </summary>
-        private SearchViewState SearchViewState { get; set; }
-
-
-        public Type ObjectType
-        {
-            get => _objectType;
-            set
-            {
-                if (value == _objectType) return;
-                _objectType = value;
-                _nsObjectField.Update();
-            }
-        }
-
-        public Object Value
-        {
-            get => _value;
-            set
-            {
-                if (value == _value) return;
-                if (!ObjectType.IsAssignableFrom(value.GetType())) return;
-                _value = value;
-                _nsObjectField.Update();
-                DoSelectionCallbacks(value, false);
-            }
-        }
-
-        public SearchProvider SearchProvider { get; set; }
-
-        public bool HideTabs { get; set; }
-        public GUIContent WindowTitle { get; set; }
-
-        private Action<Object, bool> OnSelectionCallback { get; set; }
         // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global Justification: User can set these
         public bool PreventDefaultSelectionHandler { get; set; } = false;
         public Action<Object> OnTrackCallback { get; set; } = null;
+
         public bool PreventDefaultTrackingHandler { get; set; } = false;
         // ReSharper restore AutoPropertyCanBeMadeGetOnly.Global
 
@@ -157,15 +161,13 @@ namespace NodeSystem.Editor.Editors.Fields
 
             SearchViewState ??= new SearchViewState(SearchContext, SearchViewFlags | SearchViewFlags.ObjectPicker)
             {
-                hideTabs = HideTabs,
-                windowTitle = WindowTitle ?? new GUIContent($"Select a {ObjectType.Name}"),
-                selectHandler = DoSelectionCallbacks,
+                hideTabs = HideTabs, windowTitle = WindowTitle ?? new GUIContent($"Select a {ObjectType.Name}"), selectHandler = DoSelectionCallbacks,
                 trackingHandler = item =>
                 {
                     if (!PreventDefaultTrackingHandler) OnObjectChanged(ToObject(item, _objectType));
 
                     OnTrackCallback?.Invoke(ToObject(item, _objectType));
-                }
+                },
             };
         }
 
@@ -187,10 +189,7 @@ namespace NodeSystem.Editor.Editors.Fields
 
         private void OnSelection(Object obj, bool cancelled)
         {
-            if (cancelled)
-            {
-                return;
-            }
+            if (cancelled) return;
 
             _value = obj;
             _nsObjectField.Update();
@@ -200,6 +199,7 @@ namespace NodeSystem.Editor.Editors.Fields
         {
             if (newValue == _value) return;
             if (!ObjectType.IsAssignableFrom(newValue.GetType())) return;
+
             MarkDirtyRepaint();
             _value = newValue;
             _nsObjectField.Update();

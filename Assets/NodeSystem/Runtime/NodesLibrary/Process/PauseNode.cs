@@ -11,7 +11,7 @@ namespace NodeSystem.Runtime.NodesLibrary.Process
         public override async Awaitable<ProcessInfo> OnProcessAsync(ExecContext context)
         {
             return await Task.FromResult(new ProcessInfo(ID, GetNextNode(context.GraphInstance).ID,
-                ProcessInfo.ExecutionFlowType.Wait));
+                                                         ProcessInfo.ExecutionFlowType.Wait));
         }
     }
 }

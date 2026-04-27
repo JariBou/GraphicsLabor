@@ -25,14 +25,12 @@ namespace NodeSystem.Editor.Editors.RefEditors
             EditorGUI.BeginProperty(position, label, property);
             SerializableGameObjectRef src = (SerializableGameObjectRef)property.boxedValue;
             SerializedProperty objIdProp = property.FindPropertyRelative("_objectId");
-            // EditorGUI.LabelField(position, objIdProp.stringValue);
             EditorGUI.BeginChangeCheck();
             GameObject gameObject = src.Get();
 
             GUIContent labelContent = new()
             {
-                tooltip = objIdProp.stringValue,
-                text = label.text
+                tooltip = objIdProp.stringValue, text = label.text,
             };
 
             Object obj = EditorGUI.ObjectField(position, labelContent, gameObject, typeof(GameObject), true);
@@ -41,9 +39,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
             {
                 objIdProp.stringValue = obj switch
                 {
-                    GameObject go => ReferenceManager.GetGuidOf(go),
-                    null => ReferenceManager.NoneReference,
-                    _ => objIdProp.stringValue
+                    GameObject go => ReferenceManager.GetGuidOf(go), null => ReferenceManager.NoneReference, _ => objIdProp.stringValue,
                 };
 
                 property.serializedObject.ApplyModifiedProperties();
@@ -65,43 +61,14 @@ namespace NodeSystem.Editor.Editors.RefEditors
             SearchContext searchContext = SearchService.CreateContext(searchProvider);
             SearchViewState searchViewState = new(searchContext, SearchViewFlags)
             {
-                hideTabs = true,
-                title = "Select a referenced GameObject...",
-                windowTitle = new GUIContent("Select a referenced GameObject...") // Great, doesn't work... thanks Unity
+                hideTabs = true, title = "Select a referenced GameObject...", windowTitle =
+                    new GUIContent("Select a referenced GameObject..."), // Great, doesn't work... thanks Unity
             };
-
-            /*
-            // Create a SearchContext for our object selector.
-            var provider = CreateProvider();
-            var searchContext = SearchService.CreateContext(provider);
-
-            // Create the SearchViewFlags for our object selector. We want it to show as a borderless window, in grid view and without the ability to show the saved search queries.
-            var searchViewFlags = SearchViewFlags.Borderless | SearchViewFlags.GridView | SearchViewFlags.DisableSavedSearchQuery;
-
-            // Create the SearchViewState of our object selector.
-            var searchViewState = new SearchViewState(searchContext, searchViewFlags);
-
-            // Set the group we want to show
-            searchViewState.group = "all"; // Group that shows all results plus the "None" item. This is the default.
-            */
 
             ObjectField objectField = new()
             {
-                objectType = typeof(GameObject),
-                value = ownerGo,
-                focusable = true,
-                name = property.displayName,
-
-                tooltip = property.tooltip,
-                label = property.displayName,
-
-                searchContext = searchContext,
-                searchViewFlags = SearchViewFlags,
-                searchViewState = searchViewState
-                // style =
-                // {
-                //     flexGrow = 1
-                // }
+                objectType = typeof(GameObject), value = ownerGo, focusable = true, name = property.displayName, tooltip = property.tooltip,
+                label = property.displayName, searchContext = searchContext, searchViewFlags = SearchViewFlags, searchViewState = searchViewState,
             };
 
             objectField.RegisterValueChangedCallback(evt =>

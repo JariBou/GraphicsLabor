@@ -13,13 +13,10 @@ namespace NodeSystem.Editor.Editors
         public static bool OnOpenAsset(EntityId instanceID, int index)
         {
             Object asset = EditorUtility.EntityIdToObject(instanceID);
-            if (asset.GetType() == typeof(NodeSystemAsset))
-            {
-                NodeSystemEditorWindow.Open((NodeSystemAsset)asset);
-                return true;
-            }
+            if (asset.GetType() != typeof(NodeSystemAsset)) return false;
 
-            return false;
+            NodeSystemEditorWindow.Open((NodeSystemAsset)asset);
+            return true;
         }
 
         public override void OnInspectorGUI()

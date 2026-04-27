@@ -40,20 +40,24 @@ namespace NodeSystem.Editor.Ports
             _edgesToCreate.Add(edge);
             _edgesToDelete.Clear();
             if (edge.input.capacity == Port.Capacity.Single)
+            {
                 foreach (Edge connection in edge.input.connections)
-                    if (connection != edge)
-                        _edgesToDelete.Add(connection);
+                {
+                    if (connection != edge) _edgesToDelete.Add(connection);
+                }
+            }
 
             if (edge.output.capacity == Port.Capacity.Single)
+            {
                 foreach (Edge connection in edge.output.connections)
-                    if (connection != edge)
-                        _edgesToDelete.Add(connection);
+                {
+                    if (connection != edge) _edgesToDelete.Add(connection);
+                }
+            }
 
-            if (_edgesToDelete.Count > 0)
-                graphView.DeleteElements(_edgesToDelete);
+            if (_edgesToDelete.Count > 0) graphView.DeleteElements(_edgesToDelete);
             List<Edge> edgesToCreate = _edgesToCreate;
-            if (graphView.graphViewChanged != null)
-                edgesToCreate = graphView.graphViewChanged(_graphViewChange).edgesToCreate;
+            if (graphView.graphViewChanged != null) edgesToCreate = graphView.graphViewChanged(_graphViewChange).edgesToCreate;
             foreach (Edge edge1 in edgesToCreate)
             {
                 graphView.AddElement(edge1);

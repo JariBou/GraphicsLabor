@@ -10,7 +10,7 @@ namespace NodeSystem.Runtime.NodesLibrary
     public class ObjectRefNode : NodeSystemNode
     {
         [FormerlySerializedAs("Source"), ExposedProperty(PropPortDirection.Output,
-             preferredLocation: PropContainerLocation.OutputContainer)]
+                                                         preferredLocation: PropContainerLocation.OutputContainer)]
         public SerializableGameObjectRef source = new();
     }
 }
