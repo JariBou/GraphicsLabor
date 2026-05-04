@@ -131,7 +131,7 @@ namespace NodeSystem.Editor.Editors.RefEditors
 
             container.Add(objectField);
 
-            Component displayedComp = ownerGo.GetReferencedComponent(compIdProp.stringValue);
+            Component displayedComp = ownerGo?.GetReferencedComponent(compIdProp.stringValue);
             Type refType = typedRef.GetRefType();
 
             NsGameObjectCompSearchProvider searchProvider = new("RefSearchCompProvider", refType);

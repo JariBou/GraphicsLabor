@@ -66,7 +66,6 @@ namespace NodeSystem.Editor.Ports
 
         public override void Connect(Edge edge)
         {
-            Debug.LogWarning("Connect!");
             // This breaks when deleting nodes
             NotifyConnectionChanged(true);
             base.Connect(edge);
@@ -74,7 +73,6 @@ namespace NodeSystem.Editor.Ports
 
         public override void Disconnect(Edge edge)
         {
-            Debug.LogWarning("Disconnect!");
             // This breaks when deleting nodes
             NotifyConnectionChanged(false);
             base.Disconnect(edge);

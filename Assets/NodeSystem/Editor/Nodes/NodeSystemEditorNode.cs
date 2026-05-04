@@ -121,8 +121,9 @@ namespace NodeSystem.Editor.Nodes
             }
 
             if (info.HasFlowInput)
-                if (nodeEditor == null || !nodeEditor.AddInputPorts(this))
-                    CreateFlowInputPort();
+            {
+                if (nodeEditor == null || !nodeEditor.AddInputPorts(this)) CreateFlowInputPort();
+            }
 
             CreateExposedVariables(typeInfo);
 
@@ -333,7 +334,6 @@ namespace NodeSystem.Editor.Nodes
 
             Debug.LogError("Problem with exposed property creation (m_serializedProperty is null)");
             return null;
-
         }
 
         public int GetIndexOfPort(Port port)
