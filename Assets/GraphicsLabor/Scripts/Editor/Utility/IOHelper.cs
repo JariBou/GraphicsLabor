@@ -50,6 +50,7 @@ namespace GraphicsLabor.Scripts.Editor.Utility
         {
             CreateAssetIfNeeded<Object>(obj, path, saveAssets);
         }
+        
         /// <summary>
         /// Creates the asset at path if it cannot load it
         /// </summary>

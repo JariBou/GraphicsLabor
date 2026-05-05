@@ -83,7 +83,7 @@ namespace NodeSystem.Runtime
             PortInfo exposedPropertyPortInfo = GetExposedPropertyPortInfo(exposedPropName);
             NodeSystemNode connectedNode = GetNodeConnectedToInputPort(context.GraphInstance, exposedPropertyPortInfo,
                                                                        out int connectedPortIndex);
-            
+
             if (connectedNode == null) return (T)GetType().GetField(exposedPropName).GetValue(this);
 
             await connectedNode.EnsurePureExecution(context);

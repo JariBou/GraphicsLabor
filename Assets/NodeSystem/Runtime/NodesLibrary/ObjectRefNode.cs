@@ -5,7 +5,6 @@ using UnityEngine.Serialization;
 
 namespace NodeSystem.Runtime.NodesLibrary
 {
-    // I have no clue how to tackle this
     [NodeInfo("Object Ref", "WIP/Object Ref", FlowDirection.None, true)]
     public class ObjectRefNode : NodeSystemNode
     {

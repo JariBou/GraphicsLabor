@@ -103,7 +103,6 @@ namespace NodeSystem.Editor.Nodes
                 };
 
                 titleContainer.Insert(1, textField);
-                Debug.Log("EventNodeInfo defined");
             }
 
             if (customEditors.Any()) nodeEditor = Activator.CreateInstance(customEditors.First()) as NodeEditorBase;
@@ -121,9 +120,8 @@ namespace NodeSystem.Editor.Nodes
             }
 
             if (info.HasFlowInput)
-            {
-                if (nodeEditor == null || !nodeEditor.AddInputPorts(this)) CreateFlowInputPort();
-            }
+                if (nodeEditor == null || !nodeEditor.AddInputPorts(this))
+                    CreateFlowInputPort();
 
             CreateExposedVariables(typeInfo);
 

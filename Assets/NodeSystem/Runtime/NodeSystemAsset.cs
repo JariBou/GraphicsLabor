@@ -161,6 +161,7 @@ namespace NodeSystem.Runtime
         public EventNodeBase<T> FindEventNode<T>() where T : EventData
         {
             if (!_eventNodeLookup2.TryGetValue(typeof(T), out Dictionary<string, NodeSystemNode> container)) return null;
+
             return container.FirstOrDefault().Value as EventNodeBase<T>;
             // if (container.Count > 0) return container.FirstOrDefault().Value as EventNodeBase<T>;
             //

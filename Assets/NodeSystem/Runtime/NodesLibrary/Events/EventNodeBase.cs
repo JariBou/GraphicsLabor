@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace NodeSystem.Runtime.NodesLibrary.Events
 {
-    //TODO: For now we will support only 1 node of each event type
     [Serializable]
     public abstract class EventNodeBase<T> : NodeSystemNode, IEventNode where T : EventData
     {

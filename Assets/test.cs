@@ -14,13 +14,6 @@ public class test : MonoBehaviour
     void Start()
     {
         _graphInstance = NodeSystemBank.GetGraphInstance(_graph);
-        FlowerSetEventData fEventData = new()
-        {
-            flower = "Flower",
-            leftFlower = "Left flower!",
-            rightFlower = "Right flower!",
-        };
-        _graphInstance.TryCallEvent(fEventData);
         // Alternative ways:
         // EventNodeBase<FlowerSetEvent> eventNode = _graphInstance.FindEventNode<FlowerSetEvent>();
         

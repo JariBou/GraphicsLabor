@@ -15,7 +15,6 @@ MonoBehaviour:
   _graphId: 4b5907b2-ef54-4b62-8633-a65485280c04
   _nodes:
   - rid: 2224113340452962376
-  - rid: 1463373357213024256
   - rid: 1463373357213024328
   - rid: 1463373357213024329
   - rid: 1463373357213024330
@@ -70,35 +69,6 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 1463373357213024256
-      type: {class: FlowerSetEventNode, ns: NodeSystem.Runtime.NodesLibrary.Events, asm: NodeSystem}
-      data:
-        position:
-          serializedVersion: 2
-          x: -445
-          y: -142
-          width: 176
-          height: 126
-        guid: c86d75c7-e89e-4ab8-8367-e4c2b6f71a7b
-        isPure: 0
-        ports:
-        - _exposedPropertyName: flower
-          _ownerId: c86d75c7-e89e-4ab8-8367-e4c2b6f71a7b
-          _portIndex: 1
-          _portDirection: 2
-        - _exposedPropertyName: leftFlower
-          _ownerId: c86d75c7-e89e-4ab8-8367-e4c2b6f71a7b
-          _portIndex: 2
-          _portDirection: 2
-        - _exposedPropertyName: rightFlower
-          _ownerId: c86d75c7-e89e-4ab8-8367-e4c2b6f71a7b
-          _portIndex: 3
-          _portDirection: 2
-        _pureExecutionDone: 1
-        eventName: 
-        flower: 
-        leftFlower: 
-        rightFlower: 
     - rid: 1463373357213024328
       type: {class: GameObjectSourceNode, ns: NodeSystem.Runtime.NodesLibrary.Process, asm: NodeSystem}
       data:
@@ -187,6 +157,7 @@ MonoBehaviour:
         source:
           _objectId: 
           _refTypename: 
+        _go: {fileID: 0}
         testCompRef:
           _compId: 2aa0029b-692e-4922-b91b-4381502b481e
           _ownerId: f0007441-4ab6-44d2-bb73-e671c006261e
@@ -199,7 +170,6 @@ MonoBehaviour:
           _objectId: 4d24254d-fb19-442a-86ba-5ceb2aadd8de
           _refTypename: 
         testIn2: {fileID: 11400000, guid: f952c082cb03451daed3ee968ac6c63e, type: 2}
-        _go: {fileID: 0}
         testList:
         - 3
         - dzqdqsdqzd
@@ -262,7 +232,7 @@ MonoBehaviour:
           _portIndex: 1
           _portDirection: 2
         _pureExecutionDone: 1
-        eventName: 
+        _eventName: New Event
         eventData:
           someInt: 0
           someString: 

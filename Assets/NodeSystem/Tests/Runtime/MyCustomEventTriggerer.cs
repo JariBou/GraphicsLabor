@@ -34,6 +34,12 @@ namespace NodeSystem.Tests.Runtime
                 someBool = _sommeBoolToggle.isOn
             };
             graphInstance.TryCallEvent(eventData);
+            // Alternative ways:
+            // EventNodeBase<MyCustomEventData> eventNode = _graphInstance.FindEventNode<MyCustomEventData>();
+        
+            // >  _graphInstance.CallEvent(eventNode, eventData);
+            // >  eventNode?.Invoke(new ExecContext(_graphInstance), eventData);
+            
         }
     }
 }

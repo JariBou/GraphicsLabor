@@ -1,4 +1,5 @@
 using NodeSystem.Editor.Graph;
+using NodeSystem.Editor.Windows;
 using NodeSystem.Runtime;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -15,6 +16,7 @@ namespace NodeSystem.Editor.Editors
             Object asset = EditorUtility.EntityIdToObject(instanceID);
             if (asset.GetType() != typeof(NodeSystemAsset)) return false;
 
+            NodeSystemSetup.OpenIfNeeded();
             NodeSystemEditorWindow.Open((NodeSystemAsset)asset);
             return true;
         }

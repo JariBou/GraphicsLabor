@@ -1,4 +1,5 @@
-﻿using NodeSystem.Runtime.References;
+﻿using System;
+using NodeSystem.Runtime.References;
 using NodeSystem.Runtime.Utils;
 using UnityEditor;
 using UnityEngine;
@@ -222,6 +223,11 @@ namespace NodeSystem.Editor.Windows
                 NodeSystemStatus.MissingGraphBankAsset => "Missing graph bank asset on NodeSystemBank component!",
                 NodeSystemStatus.NotFound              => "NodeSystemBank not found!", _ => "",
             };
+        }
+
+        public static void OpenIfNeeded(params Type[] desiredDockNextTo)
+        {
+            if (!HasOpenInstances<NodeSystemSetup>()) GetWindow<NodeSystemSetup>(desiredDockNextTo);
         }
 
         private enum NodeSystemStatus
