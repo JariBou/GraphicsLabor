@@ -255,7 +255,9 @@ namespace NodeSystem.Editor.Windows
 
             foreach (FieldInfo fieldInfo in type.GetFields())
             {
-                string typeUsing = "using " + fieldInfo.FieldType.Namespace + ";\n";
+                string fieldTypeNamespace = fieldInfo.FieldType.Namespace;
+                
+                string typeUsing = !string.IsNullOrEmpty(fieldTypeNamespace) ? "using " + fieldTypeNamespace + ";\n" : "";
 
                 fields.Append("\t\t[EventExposedProperty]\n");
 
@@ -364,6 +366,7 @@ namespace NodeSystem.Editor.Windows
             }
 
             content.Append("}\n");
+            IOHelper.CreateFolder(_eventNodesGeneratedPath); // Just in case
 
             File.WriteAllText(_eventNodesGeneratedPath + $"/{className}.cs", content.ToString());
         }
